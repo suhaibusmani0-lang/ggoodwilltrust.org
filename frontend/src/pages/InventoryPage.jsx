@@ -5,7 +5,7 @@ import Footer from '../components/Footer';
 import PopularBrowseSection from '../components/PopularBrowseSection';
 import axios from 'axios';
 import { useToast } from '../hooks/use-toast';
-import { Mail, Phone, Search, ChevronLeft, ChevronRight, ChevronsRight, ChevronDown } from 'lucide-react';
+import { Mail, Phone, Search, ChevronLeft, ChevronRight, ChevronsRight, ChevronDown, Filter, X } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -22,27 +22,22 @@ const getPrimaryImage = (v) => {
   return v.image || FALLBACK_IMAGE;
 };
 
-// ============== Vehicle Card (With HOLD & SOLD Stickers) ==============
+// ============== Vehicle Card ==============
 const VehicleCard = ({ vehicle }) => (
   <div className="bg-white border border-gray-200 hover:shadow-md transition-shadow relative" data-testid={`vehicle-card-${vehicle.id}`}>
-    
-    {/* ===== HIGH-CLASS STATUS STICKERS ===== */}
     {vehicle.status === 'hold' && (
-      <div className="absolute top-3 left-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-1.5 font-extrabold text-xs uppercase tracking-widest rounded shadow-[0_0_15px_rgba(250,204,21,0.6)] z-10 border border-yellow-300">
+      <div className="absolute top-3 left-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-1.5 font-extrabold text-xs uppercase tracking-widest rounded shadow-lg z-10 border border-yellow-300">
         Hold / Deposit
       </div>
     )}
-    
     {vehicle.status === 'sold' && (
-      <div className="absolute top-3 left-3 bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-1.5 font-extrabold text-xs uppercase tracking-widest rounded shadow-[0_0_15px_rgba(220,38,38,0.6)] z-10 border border-red-500">
+      <div className="absolute top-3 left-3 bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-1.5 font-extrabold text-xs uppercase tracking-widest rounded shadow-lg z-10 border border-red-500">
         Sold Out
       </div>
     )}
-    {/* ======================================= */}
 
     <Link to={`/vehicle/${vehicle.id}`} className="block">
       <div className="aspect-[16/10] overflow-hidden bg-gray-100 relative">
-        {/* Agar gaadi sold hai, toh photo ko thoda black-and-white (grayscale) kar denge taaki aur realistic lage */}
         <img
           src={getPrimaryImage(vehicle)}
           alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
@@ -59,7 +54,6 @@ const VehicleCard = ({ vehicle }) => (
         </h3>
       </Link>
 
-      {/* Agar gaadi Sold hai, toh "Apply Now" button chhupa do */}
       {vehicle.status !== 'sold' ? (
         <Link to="/finance" className="inline-block text-xs text-red-600 hover:underline mt-1 mb-3">Apply Now</Link>
       ) : (
@@ -77,28 +71,12 @@ const VehicleCard = ({ vehicle }) => (
         </div>
       </div>
 
-      <div className="space-y-1 text-xs mb-3">
-        {vehicle.engine && (
-          <div className="flex justify-between gap-2"><span className="text-gray-500">Engine</span><span className="text-gray-900 text-right">{vehicle.engine}</span></div>
-        )}
-        {vehicle.transmission && (
-          <div className="flex justify-between gap-2"><span className="text-gray-500">Transmission</span><span className="text-gray-900 text-right">{vehicle.transmission}</span></div>
-        )}
-        {vehicle.drivetrain && (
-          <div className="flex justify-between gap-2"><span className="text-gray-500">Drivetrain</span><span className="text-gray-900 text-right">{vehicle.drivetrain}</span></div>
-        )}
-        {vehicle.exteriorColor && (
-          <div className="flex justify-between gap-2"><span className="text-gray-500">Ext. Color</span><span className="text-gray-900 text-right">{vehicle.exteriorColor}</span></div>
-        )}
-      </div>
-
       <div className="grid grid-cols-2 gap-1.5">
         <Link
           to="/contact"
           state={{ vehicleId: vehicle.id }}
           className={`flex items-center justify-center gap-1.5 py-2 text-xs font-medium transition-colors ${vehicle.status === 'sold' ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-900 text-white hover:bg-gray-800'}`}
           onClick={(e) => vehicle.status === 'sold' && e.preventDefault()}
-          data-testid={`email-vehicle-${vehicle.id}`}
         >
           <Mail className="w-3.5 h-3.5" /> Email
         </Link>
@@ -106,7 +84,6 @@ const VehicleCard = ({ vehicle }) => (
           href={vehicle.status === 'sold' ? '#' : 'tel:5167885722'}
           className={`flex items-center justify-center gap-1.5 py-2 text-xs font-medium border transition-colors ${vehicle.status === 'sold' ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed' : 'bg-white border-gray-900 text-gray-900 hover:bg-gray-100'}`}
           onClick={(e) => vehicle.status === 'sold' && e.preventDefault()}
-          data-testid={`call-vehicle-${vehicle.id}`}
         >
           <Phone className="w-3.5 h-3.5" /> Call
         </a>
@@ -120,13 +97,8 @@ const FilterGroup = ({ title, children, defaultOpen = true }) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-b border-gray-200 py-3">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className="w-full flex justify-between items-center text-left text-sm font-semibold text-gray-900"
-      >
-        {title}
-        <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+      <button type="button" onClick={() => setOpen(!open)} className="w-full flex justify-between items-center text-left text-sm font-semibold text-gray-900">
+        {title} <ChevronDown className={`w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && <div className="mt-3">{children}</div>}
     </div>
@@ -159,7 +131,7 @@ const SidebarContact = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2 text-sm" data-testid="sidebar-contact-form">
+    <form onSubmit={handleSubmit} className="space-y-2 text-sm">
       <input required type="text" placeholder="First Name *" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:border-gray-500" />
       <input required type="text" placeholder="Last Name *" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:border-gray-500" />
       <input required type="email" placeholder="Email Address *" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-3 py-2 border border-gray-300 focus:outline-none focus:border-gray-500" />
@@ -180,6 +152,7 @@ const InventoryPage = () => {
   const [sort, setSort] = useState('newest');
   const [stockSearch, setStockSearch] = useState('');
   const [page, setPage] = useState(1);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   const [filters, setFilters] = useState({
     conditions: [],
@@ -230,7 +203,6 @@ const InventoryPage = () => {
     setSearchParams({}, { replace: true });
   };
 
-  // Derive filter options dynamically from inventory
   const allMakes = useMemo(() => Array.from(new Set(vehicles.map((v) => v.make).filter(Boolean))).sort(), [vehicles]);
   const allModels = useMemo(() => {
     if (!filters.make) return Array.from(new Set(vehicles.map((v) => v.model).filter(Boolean))).sort();
@@ -269,39 +241,88 @@ const InventoryPage = () => {
         case 'yearNew': return (b.year || 0) - (a.year || 0);
         case 'yearOld': return (a.year || 0) - (b.year || 0);
         case 'newest':
-        default:
-          return (b.createdAt || '').localeCompare(a.createdAt || '');
+        default: return (b.createdAt || '').localeCompare(a.createdAt || '');
       }
     });
     return list;
   }, [vehicles, filters, stockSearch, sort]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredSorted.length / PAGE_SIZE));
+  const totalPages = Math.ceil(filteredSorted.length / PAGE_SIZE);
   const pagedVehicles = filteredSorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const showingFrom = filteredSorted.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1;
   const showingTo = Math.min(page * PAGE_SIZE, filteredSorted.length);
-
-  // Body type counts for sidebar
   const bodyCounts = useMemo(() => {
     const counts = {};
     vehicles.forEach((v) => { counts[v.bodyType] = (counts[v.bodyType] || 0) + 1; });
     return counts;
   }, [vehicles]);
 
+  const FilterSidebarContent = () => (
+    <>
+      <div className="flex justify-between items-center pb-3 border-b border-gray-200 mb-2">
+        <h2 className="font-bold text-gray-900">Filter Inventory</h2>
+        <button onClick={clearFilters} className="text-xs text-red-600 hover:underline">Clear</button>
+      </div>
+
+      <FilterGroup title="Condition">
+        <div className="space-y-2">
+          {CONDITIONS.map((c) => (
+            <label key={c} className="flex items-center gap-2 text-sm text-gray-700">
+              <input type="checkbox" checked={filters.conditions.includes(c)} onChange={() => toggleArray('conditions', c)} className="w-4 h-4" />
+              <span>{c} {vehicles.filter((v) => v.condition === c).length > 0 && <span className="text-gray-500">({vehicles.filter((v) => v.condition === c).length})</span>}</span>
+            </label>
+          ))}
+        </div>
+      </FilterGroup>
+
+      <FilterGroup title="Make, Model & Trim">
+        <select value={filters.make} onChange={(e) => updateFilter('make', e.target.value)} className="w-full px-2 py-1.5 border border-gray-300 text-sm mb-2">
+          <option value="">All Makes</option>
+          {allMakes.map((m) => <option key={m}>{m}</option>)}
+        </select>
+        <select value={filters.model} onChange={(e) => updateFilter('model', e.target.value)} className="w-full px-2 py-1.5 border border-gray-300 text-sm mb-2">
+          <option value="">All Models</option>
+          {allModels.map((m) => <option key={m}>{m}</option>)}
+        </select>
+        <input type="text" value={filters.trim} onChange={(e) => updateFilter('trim', e.target.value)} placeholder="All Trims" className="w-full px-2 py-1.5 border border-gray-300 text-sm" />
+      </FilterGroup>
+
+      <FilterGroup title="Price">
+        <div className="flex gap-2 items-center">
+          <input type="number" value={filters.minPrice} onChange={(e) => updateFilter('minPrice', e.target.value)} placeholder="$0" className="w-full px-2 py-1.5 border border-gray-300 text-xs" />
+          <input type="number" value={filters.maxPrice} onChange={(e) => updateFilter('maxPrice', e.target.value)} placeholder="$200K" className="w-full px-2 py-1.5 border border-gray-300 text-xs" />
+        </div>
+      </FilterGroup>
+
+      <FilterGroup title="Body Style">
+        <select value={filters.bodyType} onChange={(e) => updateFilter('bodyType', e.target.value)} className="w-full px-2 py-1.5 border border-gray-300 text-sm">
+          <option value="">All Body Styles</option>
+          {allBodyStyles.map((b) => <option key={b}>{b} ({bodyCounts[b] || 0})</option>)}
+        </select>
+      </FilterGroup>
+      
+      {/* View Results Button for Mobile */}
+      <button 
+        onClick={() => setIsMobileFilterOpen(false)}
+        className="lg:hidden w-full bg-red-600 text-white py-3 mt-6 font-bold uppercase tracking-widest"
+      >
+        View {filteredSorted.length} Results
+      </button>
+    </>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      {/* Hero - small dark band */}
       <div className="bg-gray-900 text-white py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-2xl md:text-3xl font-bold tracking-wide text-center">CARS FOR SALE IN HICKSVILLE, NY</h1>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-wide text-center uppercase">CARS FOR SALE IN HICKSVILLE, NY</h1>
         </div>
       </div>
 
-      {/* Breadcrumb */}
       <div className="container mx-auto px-4 py-3">
-        <nav className="text-sm text-gray-600" data-testid="breadcrumb">
+        <nav className="text-sm text-gray-600">
           <Link to="/" className="text-red-600 hover:underline">Home</Link>
           <span className="mx-2">/</span>
           <span className="text-gray-900">Cars For Sale</span>
@@ -309,210 +330,90 @@ const InventoryPage = () => {
       </div>
 
       <div className="container mx-auto px-4 pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
-
-          {/* ============= LEFT SIDEBAR ============= */}
-          <aside className="bg-white border border-gray-200 p-4 h-fit lg:sticky lg:top-4" data-testid="filter-sidebar">
-            <div className="flex justify-between items-center pb-3 border-b border-gray-200 mb-2">
-              <h2 className="font-bold text-gray-900">Filter Inventory</h2>
-              <button onClick={clearFilters} className="text-xs text-red-600 hover:underline" data-testid="clear-filters">Clear</button>
+        {/* Mobile Filter Trigger */}
+        <div className="lg:hidden mb-4">
+          <button 
+            onClick={() => setIsMobileFilterOpen(true)}
+            className="w-full bg-white border border-gray-300 py-3 px-4 flex justify-between items-center font-bold text-gray-900 shadow-sm"
+          >
+            <div className="flex items-center gap-2 uppercase tracking-tighter">
+              <Filter size={18} /> Filter Inventory
             </div>
+            <div className="flex items-center gap-1 text-gray-400">
+               <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+               <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+               <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            </div>
+          </button>
+        </div>
 
-            <FilterGroup title="Condition">
-              <div className="space-y-2">
-                {CONDITIONS.map((c) => {
-                  const count = vehicles.filter((v) => v.condition === c).length;
-                  return (
-                    <label key={c} className="flex items-center gap-2 text-sm text-gray-700">
-                      <input
-                        type="checkbox"
-                        checked={filters.conditions.includes(c)}
-                        onChange={() => toggleArray('conditions', c)}
-                        className="w-4 h-4"
-                      />
-                      <span>{c} {count > 0 && <span className="text-gray-500">({count})</span>}</span>
-                    </label>
-                  );
-                })}
-              </div>
-            </FilterGroup>
-
-            <FilterGroup title="Make, Model & Trim">
-              <select value={filters.make} onChange={(e) => updateFilter('make', e.target.value)} className="w-full px-2 py-1.5 border border-gray-300 text-sm mb-2">
-                <option value="">All Makes</option>
-                {allMakes.map((m) => <option key={m}>{m}</option>)}
-              </select>
-              <select value={filters.model} onChange={(e) => updateFilter('model', e.target.value)} className="w-full px-2 py-1.5 border border-gray-300 text-sm mb-2">
-                <option value="">All Models</option>
-                {allModels.map((m) => <option key={m}>{m}</option>)}
-              </select>
-              <input type="text" value={filters.trim} onChange={(e) => updateFilter('trim', e.target.value)} placeholder="All Trims" className="w-full px-2 py-1.5 border border-gray-300 text-sm" />
-            </FilterGroup>
-
-            <FilterGroup title="Price">
-              <div className="flex gap-2 items-center">
-                <input type="number" value={filters.minPrice} onChange={(e) => updateFilter('minPrice', e.target.value)} placeholder="$0" className="w-full px-2 py-1.5 border border-gray-300 text-xs" />
-                <span className="text-xs text-gray-500">to</span>
-                <input type="number" value={filters.maxPrice} onChange={(e) => updateFilter('maxPrice', e.target.value)} placeholder="$200K" className="w-full px-2 py-1.5 border border-gray-300 text-xs" />
-              </div>
-            </FilterGroup>
-
-            <FilterGroup title="Mileage">
-              <div className="flex gap-2 items-center">
-                <input type="number" value={filters.minMileage} onChange={(e) => updateFilter('minMileage', e.target.value)} placeholder="0" className="w-full px-2 py-1.5 border border-gray-300 text-xs" />
-                <span className="text-xs text-gray-500">to</span>
-                <input type="number" value={filters.maxMileage} onChange={(e) => updateFilter('maxMileage', e.target.value)} placeholder="200K" className="w-full px-2 py-1.5 border border-gray-300 text-xs" />
-              </div>
-            </FilterGroup>
-
-            <FilterGroup title="Year">
-              <div className="flex gap-2 items-center">
-                <input type="number" value={filters.minYear} onChange={(e) => updateFilter('minYear', e.target.value)} placeholder="2000" className="w-full px-2 py-1.5 border border-gray-300 text-xs" />
-                <span className="text-xs text-gray-500">to</span>
-                <input type="number" value={filters.maxYear} onChange={(e) => updateFilter('maxYear', e.target.value)} placeholder="2026" className="w-full px-2 py-1.5 border border-gray-300 text-xs" />
-              </div>
-            </FilterGroup>
-
-            <FilterGroup title="Body Style">
-              <select value={filters.bodyType} onChange={(e) => updateFilter('bodyType', e.target.value)} className="w-full px-2 py-1.5 border border-gray-300 text-sm">
-                <option value="">All Body Styles</option>
-                {allBodyStyles.map((b) => <option key={b}>{b} ({bodyCounts[b] || 0})</option>)}
-              </select>
-            </FilterGroup>
-
-            <FilterGroup title="Exterior Color" defaultOpen={false}>
-              <div className="grid grid-cols-2 gap-1 text-xs">
-                {EXTERIOR_COLORS.map((c) => (
-                  <label key={c} className="flex items-center gap-1.5 text-gray-700">
-                    <input
-                      type="checkbox"
-                      checked={filters.exteriorColors.includes(c)}
-                      onChange={() => toggleArray('exteriorColors', c)}
-                      className="w-3.5 h-3.5"
-                    />
-                    {c}
-                  </label>
-                ))}
-              </div>
-            </FilterGroup>
-
-            <FilterGroup title="Interior Color" defaultOpen={false}>
-              <div className="grid grid-cols-2 gap-1 text-xs">
-                {INTERIOR_COLORS.map((c) => (
-                  <label key={c} className="flex items-center gap-1.5 text-gray-700">
-                    <input
-                      type="checkbox"
-                      checked={filters.interiorColors.includes(c)}
-                      onChange={() => toggleArray('interiorColors', c)}
-                      className="w-3.5 h-3.5"
-                    />
-                    {c}
-                  </label>
-                ))}
-              </div>
-            </FilterGroup>
-
-            {/* Contact Us inline form */}
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block bg-white border border-gray-200 p-4 h-fit sticky top-4">
+            <FilterSidebarContent />
             <div className="pt-4 mt-4 border-t border-gray-200">
               <h2 className="font-bold text-gray-900 mb-3">Contact Us</h2>
               <SidebarContact />
             </div>
           </aside>
 
-          {/* ============= RIGHT GRID ============= */}
+          {/* Right Section */}
           <div className="min-w-0">
-            {/* Top results bar */}
             <div className="bg-white border border-gray-200 px-4 py-3 mb-4 flex flex-wrap items-center gap-3">
-              <p className="text-sm text-gray-700" data-testid="results-count">
-                Showing {showingFrom} - {showingTo} of {filteredSorted.length}
-              </p>
-
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-                className="px-3 py-1.5 border border-gray-300 text-sm focus:outline-none focus:border-gray-500"
-                data-testid="inventory-sort"
-              >
+              <p className="text-sm text-gray-700">Showing {showingFrom} - {showingTo} of {filteredSorted.length}</p>
+              <select value={sort} onChange={(e) => setSort(e.target.value)} className="px-3 py-1.5 border border-gray-300 text-sm outline-none">
                 <option value="newest">Date Added: Newest</option>
                 <option value="priceLow">Price: Low to High</option>
                 <option value="priceHigh">Price: High to Low</option>
                 <option value="mileageLow">Mileage: Low to High</option>
-                <option value="yearNew">Year: Newest First</option>
-                <option value="yearOld">Year: Oldest First</option>
               </select>
-
               <div className="flex-1 min-w-[200px] ml-auto">
                 <div className="relative">
                   <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                  <input
-                    type="text"
-                    value={stockSearch}
-                    onChange={(e) => setStockSearch(e.target.value)}
-                    placeholder="Search Stock # or VIN"
-                    className="w-full pl-9 pr-3 py-1.5 border border-gray-300 text-sm focus:outline-none focus:border-gray-500"
-                    data-testid="search-stock-vin"
-                  />
+                  <input type="text" value={stockSearch} onChange={(e) => setStockSearch(e.target.value)} placeholder="Search Stock # or VIN" className="w-full pl-9 pr-3 py-1.5 border border-gray-300 text-sm focus:outline-none" />
                 </div>
               </div>
             </div>
 
-            {/* Grid */}
             {loading ? (
               <div className="text-center py-16 text-gray-600">Loading inventory…</div>
             ) : filteredSorted.length === 0 ? (
-              <div className="text-center py-16 bg-white border border-gray-200">
-                <p className="text-gray-700 mb-3">No vehicles match your search.</p>
-                <Link to="/find-a-car" className="inline-block bg-red-600 text-white py-2 px-6 hover:bg-red-700">
-                  No matches? Let us find it for you →
-                </Link>
-              </div>
+              <div className="text-center py-16 bg-white border border-gray-200"><p className="text-gray-700 mb-3">No vehicles match your search.</p></div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" data-testid="inventory-grid">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {pagedVehicles.map((v) => <VehicleCard key={v.id} vehicle={v} />)}
               </div>
             )}
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-2" data-testid="pagination">
-                <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} className="p-2 border border-gray-300 disabled:opacity-40 hover:bg-gray-50">
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+                <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1} className="p-2 border border-gray-300 disabled:opacity-40"><ChevronLeft className="w-4 h-4" /></button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setPage(p)}
-                    className={`w-10 h-10 border text-sm ${p === page ? 'bg-red-600 text-white border-red-600' : 'border-gray-300 hover:bg-gray-50'}`}
-                  >
-                    {p}
-                  </button>
+                  <button key={p} onClick={() => setPage(p)} className={`w-10 h-10 border text-sm ${p === page ? 'bg-red-600 text-white border-red-600' : 'border-gray-300'}`}>{p}</button>
                 ))}
-                <button onClick={() => setPage(Math.min(totalPages, page + 1))} disabled={page === totalPages} className="p-2 border border-gray-300 disabled:opacity-40 hover:bg-gray-50">
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-                <button onClick={() => setPage(totalPages)} disabled={page === totalPages} className="p-2 border border-gray-300 disabled:opacity-40 hover:bg-gray-50">
-                  <ChevronsRight className="w-4 h-4" />
-                </button>
-                <span className="ml-2 text-xs text-gray-600 w-full text-center sm:w-auto sm:ml-4">
-                  Showing {showingFrom} - {showingTo} of {filteredSorted.length} Results
-                </span>
+                <button onClick={() => setPage(Math.min(totalPages, page + 1))} disabled={page === totalPages} className="p-2 border border-gray-300 disabled:opacity-40"><ChevronRight className="w-4 h-4" /></button>
               </div>
             )}
-
-            {/* CTA Footer */}
-            <div className="mt-12 py-8 border-t border-gray-200">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">FIND YOUR NEXT VEHICLE IN HICKSVILLE, NY AT XEN MOTORS INC.</h2>
-              <p className="text-sm text-gray-600 max-w-3xl">
-                Xen Motors Inc. has {bodyCounts.Sedan || 0} Sedan, {bodyCounts.SUV || 0} SUV{(bodyCounts.Coupe ? `, and ${bodyCounts.Coupe} Coupe` : '')} listings for sale in Hicksville, NY. Shop top brands and get a great deal on your next vehicle.
-              </p>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* Popular Browse tabs at bottom */}
-      <PopularBrowseSection />
+      {/* Mobile Filter Drawer Overlay */}
+      {isMobileFilterOpen && (
+        <div className="fixed inset-0 z-[1000] lg:hidden">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setIsMobileFilterOpen(false)}></div>
+          <div className="absolute right-0 top-0 h-full w-[85%] max-w-[400px] bg-white shadow-xl animate-in slide-in-from-right duration-300 p-6 overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold uppercase italic text-gray-900">Filter Options</h2>
+              <button onClick={() => setIsMobileFilterOpen(false)} className="p-2 bg-gray-100 rounded-full"><X size={20} /></button>
+            </div>
+            <FilterSidebarContent />
+          </div>
+        </div>
+      )}
 
+      <PopularBrowseSection />
       <Footer />
     </div>
   );
