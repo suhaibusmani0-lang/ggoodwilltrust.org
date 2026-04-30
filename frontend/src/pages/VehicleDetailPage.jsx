@@ -51,7 +51,6 @@ const PhotoGallery = ({ vehicle }) => {
 
   return (
     <div className="relative">
-      {/* Main Feature Image */}
       <div 
         className="aspect-[4/3] bg-gray-100 overflow-hidden mb-2 cursor-zoom-in group relative"
         onClick={() => setIsModalOpen(true)}
@@ -67,7 +66,6 @@ const PhotoGallery = ({ vehicle }) => {
         </div>
       </div>
 
-      {/* Thumbnails */}
       {photos.length > 1 && (
         <div className="grid grid-cols-5 gap-1.5">
           {photos.slice(0, 10).map((p, i) => (
@@ -82,39 +80,19 @@ const PhotoGallery = ({ vehicle }) => {
         </div>
       )}
 
-      {/* Fullscreen Modal (Lightbox) */}
       {isModalOpen && (
-        <div 
-          className="fixed inset-0 z-[2000] bg-black/95 flex items-center justify-center p-4"
-          onClick={() => setIsModalOpen(false)}
-        >
+        <div className="fixed inset-0 z-[2000] bg-black/95 flex items-center justify-center p-4" onClick={() => setIsModalOpen(false)}>
           <button className="absolute top-6 right-6 text-white hover:text-red-500 transition-colors z-[2001]">
             <X size={40} />
           </button>
-
-          <button 
-            className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all z-[2001]"
-            onClick={handlePrev}
-          >
+          <button className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all z-[2001]" onClick={handlePrev}>
             <ChevronLeft size={32} />
           </button>
-
           <div className="relative max-w-5xl max-h-[85vh] flex flex-col items-center">
-            <img
-              src={photos[active]}
-              className="max-w-full max-h-[80vh] object-contain shadow-2xl"
-              alt="Fullscreen view"
-              onClick={(e) => e.stopPropagation()} 
-            />
-            <p className="text-white mt-4 font-bold tracking-widest">
-              {active + 1} / {photos.length}
-            </p>
+            <img src={photos[active]} className="max-w-full max-h-[80vh] object-contain shadow-2xl" alt="Fullscreen view" onClick={(e) => e.stopPropagation()} />
+            <p className="text-white mt-4 font-bold tracking-widest">{active + 1} / {photos.length}</p>
           </div>
-
-          <button 
-            className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all z-[2001]"
-            onClick={handleNext}
-          >
+          <button className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all z-[2001]" onClick={handleNext}>
             <ChevronRight size={32} />
           </button>
         </div>
@@ -182,18 +160,9 @@ const SidebarDealership = () => {
       <p className="text-sm font-semibold text-gray-900">Xen Motors Inc.</p>
       <p className="text-xs text-gray-600">45 W John Street Unit B</p>
       <p className="text-xs text-gray-600 mb-3">Hicksville, NY 11801</p>
-
       <div className="aspect-[16/9] bg-gray-100 mb-3 overflow-hidden">
-        <iframe
-          title="Dealership location"
-          src="https://maps.google.com/maps?q=45+W+John+Street+Hicksville+NY+11801&t=&z=14&ie=UTF8&iwloc=&output=embed"
-          width="100%"
-          height="100%"
-          style={{ border: 0 }}
-          loading="lazy"
-        ></iframe>
+        <iframe title="Dealership location" src="https://maps.google.com/maps?q=45+W+John+Street+Hicksville+NY+11801&t=&z=14&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style={{ border: 0 }} loading="lazy"></iframe>
       </div>
-
       <button onClick={() => setHoursOpen(!hoursOpen)} className="w-full inline-flex items-center justify-between text-xs text-gray-700 mb-2 py-1.5 px-2 border border-gray-200">
         <span className="inline-flex items-center gap-1 text-green-600 font-medium"><Clock className="w-3.5 h-3.5" /> Open Now</span>
         <span>8:00 am - 8:00 pm</span>
@@ -206,7 +175,6 @@ const SidebarDealership = () => {
           ))}
         </div>
       )}
-
       <a href="tel:5167885722" className="inline-flex items-center justify-center gap-1.5 w-full bg-gray-900 text-white py-2 text-sm font-medium hover:bg-gray-800 mb-2"><Phone className="w-4 h-4" /> (516) 788-5722</a>
       <Link to="/schedule-visit" className="inline-flex items-center justify-center gap-2 w-full bg-white border border-gray-900 text-gray-900 py-2 text-sm font-medium hover:bg-gray-100">Schedule Test Drive</Link>
     </div>
@@ -221,12 +189,12 @@ const SidebarLoanCalc = ({ price }) => {
   const [creditScore, setCreditScore] = useState('Good');
   const [termMonths, setTermMonths] = useState(60);
 
-  const creditRates = {
-    'Rebuilding': 11,
-    'Fair': 6.85,
-    'Good': 5.85,
-    'Excellent': 4
-  };
+  const creditData = [
+    { label: 'Rebuilding', range: '0 - 620', rate: 11 },
+    { label: 'Fair', range: '621 - 699', rate: 6.85 },
+    { label: 'Good', range: '700 - 759', rate: 5.85 },
+    { label: 'Excellent', range: '760 - 850', rate: 4 }
+  ];
 
   useEffect(() => { setDownPayment(Math.round(price * 0.1)); }, [price]);
 
@@ -238,9 +206,9 @@ const SidebarLoanCalc = ({ price }) => {
     return { monthly: Math.max(0, m), total: p };
   }, [price, tradeInValue, interestRate, downPayment, termMonths]);
 
-  const handleScoreClick = (label) => {
-    setCreditScore(label);
-    setInterestRate(creditRates[label]);
+  const handleScoreClick = (item) => {
+    setCreditScore(item.label);
+    setInterestRate(item.rate);
   };
 
   return (
@@ -277,24 +245,25 @@ const SidebarLoanCalc = ({ price }) => {
         </div>
       </div>
 
-      <label className="block text-[11px] text-gray-600 mb-1">Estimated Credit Score</label>
-      <div className="grid grid-cols-4 gap-0.5 border border-gray-300 mb-3">
-        {Object.keys(creditRates).map((label) => (
+      <label className="block text-[11px] font-bold text-gray-600 mb-2">Estimated Credit Score</label>
+      <div className="grid grid-cols-4 border border-gray-300 mb-3 overflow-hidden">
+        {creditData.map((item) => (
           <button 
-            key={label} 
+            key={item.label} 
             type="button" 
-            onClick={() => handleScoreClick(label)} 
-            className={`py-1.5 text-[10px] ${creditScore === label ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+            onClick={() => handleScoreClick(item)} 
+            className={`py-2 flex flex-col items-center justify-center border-r last:border-r-0 border-gray-300 transition-all ${creditScore === item.label ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
           >
-            {label}
+            <span className="text-[10px] font-bold uppercase">{item.label}</span>
+            <span className="text-[11px]">{item.range}</span>
           </button>
         ))}
       </div>
 
       <label className="block text-[11px] text-gray-600 mb-1">Term Length (months)</label>
-      <div className="grid grid-cols-5 gap-0.5 border border-gray-300 mb-4">
+      <div className="grid grid-cols-5 border border-gray-300 mb-4 overflow-hidden">
         {[36, 48, 60, 72, 84].map((m) => (
-          <button key={m} type="button" onClick={() => setTermMonths(m)} className={`py-1.5 text-[10px] ${termMonths === m ? 'bg-red-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>{m}</button>
+          <button key={m} type="button" onClick={() => setTermMonths(m)} className={`py-1.5 text-[10px] border-r last:border-r-0 border-gray-300 ${termMonths === m ? 'bg-red-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>{m}</button>
         ))}
       </div>
 
@@ -460,100 +429,6 @@ const VehicleDetailPage = () => {
                     )}
                   </div>
                 )}
-              </div>
-            </div>
-
-            {(vehicle.mpgCity || vehicle.mpgHwy) && (
-              <div className="bg-white border border-gray-200 p-4 mb-6 flex flex-wrap justify-between items-center gap-3">
-                <div className="flex items-center gap-5">
-                  <div className="text-center">
-                    <p className="text-[10px] text-gray-500 uppercase">City</p>
-                    <p className="text-xl font-bold text-gray-900">{vehicle.mpgCity || '—'}</p>
-                  </div>
-                  <Fuel className="w-7 h-7 text-gray-400" />
-                  <div className="text-center">
-                    <p className="text-[10px] text-gray-500 uppercase">Hwy</p>
-                    <p className="text-xl font-bold text-gray-900">{vehicle.mpgHwy || '—'}</p>
-                  </div>
-                  <p className="text-sm text-gray-600">Fuel Economy</p>
-                </div>
-                <Link to="/finance" className="inline-flex items-center gap-2 bg-gray-200 text-gray-900 px-4 py-2 text-sm font-medium hover:bg-gray-300">
-                  Financing Available — <span className="text-red-600 font-bold">Apply Now!</span>
-                </Link>
-              </div>
-            )}
-
-            {vehicle.engine && (
-              <div className="bg-white border border-gray-200 p-4 mb-6">
-                <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">Engine</h2>
-                <p className="text-sm text-gray-700">{vehicle.engine}</p>
-              </div>
-            )}
-
-            <div className="bg-white border border-gray-200 p-4 mb-6">
-              <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">Standard Specifications</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-1 text-sm text-gray-700">
-                {vehicle.transmission && <div>• Transmission: {vehicle.transmission}</div>}
-                {vehicle.drivetrain && <div>• Drivetrain: {vehicle.drivetrain}</div>}
-                {vehicle.fuelType && <div>• Fuel Type: {vehicle.fuelType}</div>}
-                {vehicle.maxSeating && <div>• Max Seating: {vehicle.maxSeating}</div>}
-                {vehicle.seatingRows && <div>• Seating Rows: {vehicle.seatingRows}</div>}
-                {vehicle.bodyType && <div>• Body Style: {vehicle.bodyType}</div>}
-              </div>
-            </div>
-
-            <div className="bg-white border border-gray-200 p-4 mb-6">
-              <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">NHTSA Crash Test Ratings</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-                {[
-                  ['Frontal Driver', 5], ['Frontal Overall', 5], ['Frontal Passenger', 5],
-                  ['Combined Front', 4], ['Combined Rear', 5], ['Side Overall', 5],
-                  ['Rollover', 4]
-                ].map(([label, rating]) => (
-                  <div key={label}>
-                    <p className="text-gray-600 mb-1 text-xs">{label}</p>
-                    <StarRating value={rating} />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-white border border-gray-200 p-4 mb-6">
-              <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">Awards</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-700">
-                <div>
-                  <p className="font-semibold text-gray-900">Automotive Science Group</p>
-                  <p className="text-xs text-gray-600">Automotive Performance, Execution and Layout (APEAL) Award.</p>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">Edmunds</p>
-                  <p className="text-xs text-gray-600">Edmunds Best Retained Value Award.</p>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">Insurance Institute for Highway Safety</p>
-                  <p className="text-xs text-gray-600">IIHS Top Safety Pick Award.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white border border-gray-200 p-4 mb-6">
-              <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">Safety Equipment</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-1 text-sm text-gray-700">
-                {['Anti-lock Brakes', 'Airbags Side Curtain', 'Airbags Side Impact', 'Daytime Running Lights', 'Electronic Stability Control', 'Brake Assist', 'Tire Pressure Monitoring System', 'Electronic Traction Control'].map((s) => (
-                  <div key={s}>• {s}</div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-white border border-gray-200 p-4">
-              <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">EPA Green Scores</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-1 text-sm text-gray-700">
-                <div>• Air Pollution Score: 5</div>
-                <div>• Greenhouse Gas Score: 6</div>
-                <div>• Greenhouse Gas Emissions: A</div>
-                <div>• Hydrogen Vehicle: No</div>
-                <div>• Greenhouse CO2: 372 g/mile</div>
-                <div>• Fuel Type: {vehicle.fuelType || 'Gasoline'}</div>
               </div>
             </div>
           </div>
