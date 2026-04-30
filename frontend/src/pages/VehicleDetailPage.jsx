@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { Phone, Fuel, Star, ChevronDown, Clock } from 'lucide-react';
+import { Phone, Fuel, Star, ChevronDown, Clock, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import axios from 'axios';
 
@@ -29,7 +29,7 @@ const BUSINESS_HOURS = [
   { label: 'Saturday', hours: '9:00 AM - 6:00 PM' }
 ];
 
-// ============== Photo Gallery ==============
+// ============== Photo Gallery (With Zoom & Navigation) ==============
 const PhotoGallery = ({ vehicle }) => {
   const photos = useMemo(() => {
     const list = (vehicle.images && vehicle.images.length ? vehicle.images : [vehicle.image]).filter(Boolean);
@@ -37,29 +37,86 @@ const PhotoGallery = ({ vehicle }) => {
   }, [vehicle]);
 
   const [active, setActive] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleNext = (e) => {
+    e?.stopPropagation();
+    setActive((prev) => (prev + 1) % photos.length);
+  };
+
+  const handlePrev = (e) => {
+    e?.stopPropagation();
+    setActive((prev) => (prev - 1 + photos.length) % photos.length);
+  };
 
   return (
-    <div>
-      <div className="aspect-[4/3] bg-gray-100 overflow-hidden mb-2">
+    <div className="relative">
+      {/* Main Feature Image */}
+      <div 
+        className="aspect-[4/3] bg-gray-100 overflow-hidden mb-2 cursor-zoom-in group relative"
+        onClick={() => setIsModalOpen(true)}
+      >
         <img
           src={photos[active]}
           alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
         />
+        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <span className="bg-white/80 px-4 py-2 rounded-full text-xs font-bold shadow-lg">View Fullscreen</span>
+        </div>
       </div>
+
+      {/* Thumbnails */}
       {photos.length > 1 && (
         <div className="grid grid-cols-5 gap-1.5">
           {photos.slice(0, 10).map((p, i) => (
             <button
               key={i}
               onClick={() => setActive(i)}
-              className={`aspect-square overflow-hidden border-2 ${i === active ? 'border-red-600' : 'border-transparent'}`}
-              data-testid={`thumb-${i}`}
+              className={`aspect-square overflow-hidden border-2 transition-all ${i === active ? 'border-red-600 scale-95' : 'border-transparent hover:border-gray-300'}`}
             >
               <img src={p} alt="" className="w-full h-full object-cover" onError={(e) => { e.target.src = FALLBACK_IMAGE; }} />
             </button>
           ))}
+        </div>
+      )}
+
+      {/* Fullscreen Modal (Lightbox) */}
+      {isModalOpen && (
+        <div 
+          className="fixed inset-0 z-[2000] bg-black/95 flex items-center justify-center p-4"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <button className="absolute top-6 right-6 text-white hover:text-red-500 transition-colors z-[2001]">
+            <X size={40} />
+          </button>
+
+          <button 
+            className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all z-[2001]"
+            onClick={handlePrev}
+          >
+            <ChevronLeft size={32} />
+          </button>
+
+          <div className="relative max-w-5xl max-h-[85vh] flex flex-col items-center">
+            <img
+              src={photos[active]}
+              className="max-w-full max-h-[80vh] object-contain shadow-2xl"
+              alt="Fullscreen view"
+              onClick={(e) => e.stopPropagation()} 
+            />
+            <p className="text-white mt-4 font-bold tracking-widest">
+              {active + 1} / {photos.length}
+            </p>
+          </div>
+
+          <button 
+            className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all z-[2001]"
+            onClick={handleNext}
+          >
+            <ChevronRight size={32} />
+          </button>
         </div>
       )}
     </div>
@@ -156,13 +213,20 @@ const SidebarDealership = () => {
   );
 };
 
-// ============== Sidebar Loan Calculator ==============
+// ============== Sidebar Loan Calculator (FIXED) ==============
 const SidebarLoanCalc = ({ price }) => {
   const [tradeInValue, setTradeInValue] = useState(0);
-  const [interestRate, setInterestRate] = useState(8.99);
+  const [interestRate, setInterestRate] = useState(5.85); 
   const [downPayment, setDownPayment] = useState(Math.round(price * 0.1));
   const [creditScore, setCreditScore] = useState('Good');
   const [termMonths, setTermMonths] = useState(60);
+
+  const creditRates = {
+    'Rebuilding': 11,
+    'Fair': 6.85,
+    'Good': 5.85,
+    'Excellent': 4
+  };
 
   useEffect(() => { setDownPayment(Math.round(price * 0.1)); }, [price]);
 
@@ -173,6 +237,11 @@ const SidebarLoanCalc = ({ price }) => {
     const m = r === 0 ? p / n : (p * r) / (1 - Math.pow(1 + r, -n));
     return { monthly: Math.max(0, m), total: p };
   }, [price, tradeInValue, interestRate, downPayment, termMonths]);
+
+  const handleScoreClick = (label) => {
+    setCreditScore(label);
+    setInterestRate(creditRates[label]);
+  };
 
   return (
     <div className="bg-white border border-gray-200 p-4" data-testid="loan-calculator">
@@ -188,7 +257,7 @@ const SidebarLoanCalc = ({ price }) => {
           <input type="number" value={tradeInValue} onChange={(e) => setTradeInValue(Number(e.target.value) || 0)} className="w-full px-2 py-1.5 border border-gray-300 text-sm" />
         </div>
         <div>
-          <label className="block text-[11px] text-gray-600 mb-1">Interest Rate (APR)</label>
+          <label className="block text-[11px] text-gray-600 mb-1">Interest Rate (APR %)</label>
           <input type="number" step="0.01" value={interestRate} onChange={(e) => setInterestRate(Number(e.target.value) || 0)} className="w-full px-2 py-1.5 border border-gray-300 text-sm" />
         </div>
         <div>
@@ -210,8 +279,15 @@ const SidebarLoanCalc = ({ price }) => {
 
       <label className="block text-[11px] text-gray-600 mb-1">Estimated Credit Score</label>
       <div className="grid grid-cols-4 gap-0.5 border border-gray-300 mb-3">
-        {['Rebuilding', 'Fair', 'Good', 'Excellent'].map((label) => (
-          <button key={label} type="button" onClick={() => setCreditScore(label)} className={`py-1.5 text-[10px] ${creditScore === label ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}>{label}</button>
+        {Object.keys(creditRates).map((label) => (
+          <button 
+            key={label} 
+            type="button" 
+            onClick={() => handleScoreClick(label)} 
+            className={`py-1.5 text-[10px] ${creditScore === label ? 'bg-gray-900 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}`}
+          >
+            {label}
+          </button>
         ))}
       </div>
 
@@ -293,7 +369,6 @@ const VehicleDetailPage = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      {/* Breadcrumb */}
       <div className="container mx-auto px-4 py-3">
         <nav className="text-sm text-gray-600" data-testid="breadcrumb">
           <Link to="/" className="text-red-600 hover:underline">Home</Link>
@@ -307,7 +382,6 @@ const VehicleDetailPage = () => {
       </div>
 
       <div className="container mx-auto px-4 pb-12">
-        {/* TOP: Photo + Title/Price banner */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 mb-6">
           <div>
             <PhotoGallery vehicle={vehicle} />
@@ -326,7 +400,6 @@ const VehicleDetailPage = () => {
             </div>
           </div>
 
-          {/* Right Sidebar (3rd column) - Sticky */}
           <aside className="lg:sticky lg:top-4 h-fit">
             <SidebarMessage vehicle={vehicle} />
             <SidebarDealership />
@@ -334,11 +407,9 @@ const VehicleDetailPage = () => {
           </aside>
         </div>
 
-        {/* MIDDLE: Vehicle Info + Description + Features (2-col within left) */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 mb-6">
           <div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              {/* Vehicle Info */}
               <div className="bg-white border border-gray-200 p-4">
                 <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">Vehicle Info</h2>
                 <SpecRow label="Condition" value={vehicle.condition} />
@@ -358,7 +429,6 @@ const VehicleDetailPage = () => {
                 <SpecRow label="Size" value={vehicle.size} />
               </div>
 
-              {/* Description + Features */}
               <div>
                 <div className="bg-white border border-gray-200 p-4 mb-4">
                   <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">Description</h2>
@@ -393,7 +463,6 @@ const VehicleDetailPage = () => {
               </div>
             </div>
 
-            {/* Fuel Economy */}
             {(vehicle.mpgCity || vehicle.mpgHwy) && (
               <div className="bg-white border border-gray-200 p-4 mb-6 flex flex-wrap justify-between items-center gap-3">
                 <div className="flex items-center gap-5">
@@ -414,7 +483,6 @@ const VehicleDetailPage = () => {
               </div>
             )}
 
-            {/* Engine */}
             {vehicle.engine && (
               <div className="bg-white border border-gray-200 p-4 mb-6">
                 <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">Engine</h2>
@@ -422,7 +490,6 @@ const VehicleDetailPage = () => {
               </div>
             )}
 
-            {/* Standard Specifications */}
             <div className="bg-white border border-gray-200 p-4 mb-6">
               <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">Standard Specifications</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-1 text-sm text-gray-700">
@@ -435,7 +502,6 @@ const VehicleDetailPage = () => {
               </div>
             </div>
 
-            {/* NHTSA Crash Test Ratings */}
             <div className="bg-white border border-gray-200 p-4 mb-6">
               <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">NHTSA Crash Test Ratings</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
@@ -452,7 +518,6 @@ const VehicleDetailPage = () => {
               </div>
             </div>
 
-            {/* Awards */}
             <div className="bg-white border border-gray-200 p-4 mb-6">
               <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">Awards</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-700">
@@ -471,7 +536,6 @@ const VehicleDetailPage = () => {
               </div>
             </div>
 
-            {/* Safety Equipment */}
             <div className="bg-white border border-gray-200 p-4 mb-6">
               <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">Safety Equipment</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-1 text-sm text-gray-700">
@@ -481,7 +545,6 @@ const VehicleDetailPage = () => {
               </div>
             </div>
 
-            {/* EPA Green Scores */}
             <div className="bg-white border border-gray-200 p-4">
               <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-2 mb-3">EPA Green Scores</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-1 text-sm text-gray-700">
@@ -494,12 +557,9 @@ const VehicleDetailPage = () => {
               </div>
             </div>
           </div>
-
-          {/* Empty placeholder column - sidebar already rendered as sticky */}
           <div className="hidden lg:block"></div>
         </div>
       </div>
-
       <Footer />
     </div>
   );
