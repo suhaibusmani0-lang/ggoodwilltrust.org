@@ -1,71 +1,79 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, MapPin, ChevronDown } from 'lucide-react';
+import { Phone, MapPin, ChevronDown, Menu, X } from 'lucide-react';
 
 const Header = () => {
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const inventoryItems = [
-    { label: 'All Inventory', path: '/inventory' },
-    { label: 'Coupe', path: '/inventory?bodyType=Coupe' },
-    { label: 'Minivan', path: '/inventory?bodyType=Minivan' },
-    { label: 'Pickup', path: '/inventory?bodyType=Pickup' },
-    { label: 'Sedan', path: '/inventory?bodyType=Sedan' },
-    { label: 'SUV', path: '/inventory?bodyType=SUV' },
-    { label: 'Wagon', path: '/inventory?bodyType=Wagon' }
+  const navigationData = [
+    { label: 'INVENTORY', items: [
+      { label: 'All Inventory', path: '/inventory' },
+      { label: 'Coupe', path: '/inventory?bodyType=Coupe' },
+      { label: 'Minivan', path: '/inventory?bodyType=Minivan' },
+      { label: 'Pickup', path: '/inventory?bodyType=Pickup' },
+      { label: 'Sedan', path: '/inventory?bodyType=Sedan' },
+      { label: 'SUV', path: '/inventory?bodyType=SUV' },
+      { label: 'Wagon', path: '/inventory?bodyType=Wagon' }
+    ]},
+    { label: 'FIND A CAR', items: [
+      { label: 'Start Your Vehicle Purchase', path: '/start-your-vehicle-purchase' },
+      { label: 'Find a Car', path: '/find-a-car' }
+    ]},
+    { label: 'FINANCE', items: [
+      { label: 'Loan Application', path: '/finance' },
+      { label: 'Value My Trade', path: '/trade-in' }
+    ]},
+    { label: 'SERVICES', items: [
+      { label: 'Service Dept', path: '/services/service-dept' },
+      { label: 'Parts Dept', path: '/services/parts-dept' },
+      { label: 'Body Shop', path: '/services/body-shop' },
+      { label: 'Glass Installation and Repair', path: '/services/glass' }
+    ]},
+    { label: 'WARRANTY', items: [
+      { label: 'Request Warranty Information', path: '/warranty/info' },
+      { label: 'Schedule Warranty Appt', path: '/warranty/schedule' }
+    ]},
+    { label: 'CONTACT US', items: [
+      { label: 'About Us', path: '/about' },
+      { label: 'Contact', path: '/contact' },
+      { label: 'Schedule Visit', path: '/schedule-visit' },
+      { label: 'Referral Program', path: '/referral' }
+    ]}
   ];
 
-  const findACarItems = [
-    { label: 'Start Your Vehicle Purchase', path: '/start-your-vehicle-purchase' },
-    { label: 'Find a Car', path: '/find-a-car' }
-  ];
-
-  const financeItems = [
-    { label: 'Loan Application', path: '/finance' },
-    { label: 'Value My Trade', path: '/trade-in' }
-  ];
-
-  const servicesItems = [
-    { label: 'Service Dept', path: '/services/service-dept' },
-    { label: 'Parts Dept', path: '/services/parts-dept' },
-    { label: 'Body Shop', path: '/services/body-shop' },
-    { label: 'Glass Installation and Repair', path: '/services/glass' }
-  ];
-
-  const warrantyItems = [
-    { label: 'Request Warranty Information', path: '/warranty/info' },
-    { label: 'Schedule Warranty Appt', path: '/warranty/schedule' }
-  ];
-
-  const contactItems = [
-    { label: 'About Us', path: '/about' },
-    { label: 'Contact', path: '/contact' },
-    { label: 'Schedule Visit', path: '/schedule-visit' },
-    { label: 'Referral Program', path: '/referral' }
-  ];
-
-  const NavDropdown = ({ label, items, isActive }) => {
+  // Desktop Dropdown Component
+  const NavDropdown = ({ label, items }) => {
     const [isOpen, setIsOpen] = useState(false);
-
     return (
-      <div 
-        className="relative"
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
-      >
-        <button className={`px-6 py-3 ${isActive ? 'bg-gray-900 text-white' : 'text-gray-900 hover:bg-gray-100'} transition-colors font-medium flex items-center gap-1`}>
-          {label}
-          <ChevronDown size={16} />
+      <div className="relative" onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
+        <button className="px-4 py-3 text-gray-900 hover:bg-gray-100 transition-colors font-bold text-sm flex items-center gap-1">
+          {label} <ChevronDown size={14} />
         </button>
-        
         {isOpen && (
-          <div className="absolute top-full left-0 bg-white shadow-lg border border-gray-200 min-w-[250px] z-50">
+          <div className="absolute top-full left-0 bg-white shadow-xl border border-gray-100 min-w-[250px] z-50">
             {items.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                className="block px-6 py-3 text-gray-900 hover:bg-gray-100 transition-colors border-b border-gray-100 last:border-b-0"
-              >
+              <Link key={index} to={item.path} className="block px-6 py-3 text-sm text-gray-700 hover:bg-red-600 hover:text-white transition-colors border-b border-gray-50 last:border-b-0">
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Mobile Accordion Component
+  const MobileAccordion = ({ label, items }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+      <div className="border-b border-gray-800">
+        <button onClick={() => setIsOpen(!isOpen)} className="w-full flex justify-between items-center py-4 px-6 text-white font-bold text-sm">
+          {label} <ChevronDown size={16} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
+        {isOpen && (
+          <div className="bg-gray-800 py-2">
+            {items.map((item, index) => (
+              <Link key={index} to={item.path} onClick={() => setIsMobileMenuOpen(false)} className="block py-3 px-10 text-gray-300 text-sm hover:text-white">
                 {item.label}
               </Link>
             ))}
@@ -76,51 +84,66 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full">
-      {/* Top Bar */}
+    <header className="w-full sticky top-0 z-[100] shadow-md bg-white">
+      {/* Top Bar - Hidden on very small screens for better space */}
       <div className="bg-gray-900 text-white py-2">
-        <div className="container mx-auto px-4 flex justify-center items-center text-sm">
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1">
-            <a href="tel:5167885722" className="flex items-center gap-2 hover:text-red-500 transition-colors" data-testid="top-phone">
-              <Phone size={16} />
-              (516) 788-5722
+        <div className="container mx-auto px-4 flex justify-center items-center text-[10px] md:text-xs">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 md:gap-x-8 gap-y-1">
+            <a href="tel:5167885722" className="flex items-center gap-2 hover:text-red-500 transition-colors">
+              <Phone size={14} /> (516) 788-5722
             </a>
-            <a href="#map" className="flex items-center gap-2 hover:text-red-500 transition-colors" data-testid="top-address">
-              <MapPin size={16} />
-              45 W JOHN STREET UNIT B | HICKSVILLE, NY 11801
+            <a href="#map" className="flex items-center gap-2 hover:text-red-500 transition-colors">
+              <MapPin size={14} /> 45 W JOHN STREET UNIT B | HICKSVILLE, NY 11801
             </a>
           </div>
         </div>
       </div>
 
-      {/* Main Navigation */}
-      <div className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link to="/" className="flex items-center" data-testid="header-logo">
-              <img
-                src="https://customer-assets.emergentagent.com/job_vehicle-xen/artifacts/orscmp93_XenMotors_Logo.jpg"
-                alt="Xen Motors Inc."
-                className="h-14 md:h-16 w-auto object-contain"
-              />
+      {/* Main Header */}
+      <div className="container mx-auto px-4 py-3 md:py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center">
+            <img
+              src="https://customer-assets.emergentagent.com/job_vehicle-xen/artifacts/orscmp93_XenMotors_Logo.jpg"
+              alt="Xen Motors Inc."
+              className="h-10 md:h-16 w-auto object-contain"
+            />
+          </Link>
+
+          {/* Desktop Navigation - Hidden on Mobile */}
+          <nav className="hidden xl:flex items-center">
+            <Link to="/" className="px-4 py-3 bg-gray-900 text-white hover:bg-red-600 transition-colors font-bold text-sm mr-1">
+              HOME
             </Link>
+            {navigationData.map((nav, idx) => (
+              <NavDropdown key={idx} label={nav.label} items={nav.items} />
+            ))}
+          </nav>
 
-            {/* Navigation */}
-            <nav className="flex items-center gap-1">
-              <Link to="/" className="px-6 py-3 bg-gray-900 text-white hover:bg-red-600 transition-colors font-medium">
-                HOME
-              </Link>
-              <NavDropdown label="INVENTORY" items={inventoryItems} />
-              <NavDropdown label="FIND A CAR" items={findACarItems} />
-              <NavDropdown label="FINANCE" items={financeItems} />
-              <NavDropdown label="SERVICES" items={servicesItems} />
-              <NavDropdown label="WARRANTY" items={warrantyItems} />
-              <NavDropdown label="CONTACT US" items={contactItems} />
-            </nav>
-          </div>
+          {/* Mobile Menu Toggle Button */}
+          <button 
+            className="xl:hidden p-2 text-gray-900 hover:bg-gray-100 rounded-md"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Drawer Navigation */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 top-[100px] bg-gray-900 z-[1000] xl:hidden overflow-y-auto">
+          <nav className="flex flex-col pb-20">
+            <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="py-4 px-6 text-white font-bold text-sm border-b border-gray-800">
+              HOME
+            </Link>
+            {navigationData.map((nav, idx) => (
+              <MobileAccordion key={idx} label={nav.label} items={nav.items} />
+            ))}
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
