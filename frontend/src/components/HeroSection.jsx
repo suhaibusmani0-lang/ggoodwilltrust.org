@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { makes } from '../mockData';
 
-// --- ANIMATION VARIANTS (Ye jadoo ke rules hain) ---
+// --- ANIMATION VARIANTS ---
 const containerVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: {
@@ -12,8 +12,8 @@ const containerVariants = {
     transition: {
       type: "spring",
       stiffness: 50,
-      staggerChildren: 0.1, // Har dabbe ke aane mein 0.1s ka gap (Domino effect)
-      delayChildren: 0.8  // Text aane ke baad ye shuru hoga
+      staggerChildren: 0.1,
+      delayChildren: 0.8 
     }
   }
 };
@@ -40,7 +40,7 @@ const HeroSection = () => {
       setCurrentImage((prev) => (prev + 1) % backgroundImages.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [backgroundImages.length]); // Fix: Dependency add kar di taaki build fail na ho
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 40 }, (_, i) => currentYear - i + 1);
@@ -62,7 +62,7 @@ const HeroSection = () => {
           <motion.img
             key={currentImage}
             src={backgroundImages[currentImage]}
-            initial={{ opacity: 0, scale: 1.1 }} // Thoda aur zyada zoom in effect
+            initial={{ opacity: 0, scale: 1.1 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
             transition={{ duration: 1.2, ease: "easeInOut" }}
@@ -77,7 +77,7 @@ const HeroSection = () => {
           <div className="text-left md:text-center text-white md:mt-0 mt-10">
             
             <motion.h1 
-              initial={{ x: -100, opacity: 0, filter: "blur(10px)" }} // Blur se clear hone ka effect
+              initial={{ x: -100, opacity: 0, filter: "blur(10px)" }}
               animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
               transition={{ type: "spring", stiffness: 60, duration: 1 }}
               className="text-5xl md:text-7xl font-extrabold tracking-tight drop-shadow-2xl"
@@ -97,11 +97,10 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* --- ANIMATED SEARCH STRIP --- */}
       <div className="bg-white border-b border-gray-200 shadow-xl relative z-30 transform -translate-y-6 mx-4 md:mx-auto md:max-w-6xl rounded-lg">
         <div className="px-6 py-5">
           <motion.form 
-            variants={containerVariants} // Container animation apply kiya
+            variants={containerVariants}
             initial="hidden"
             animate="visible"
             onSubmit={handleSearch} 
@@ -178,11 +177,10 @@ const HeroSection = () => {
               </select>
             </motion.div>
 
-            {/* ANIMATED BUTTON */}
             <motion.button
               variants={itemVariants}
-              whileHover={{ scale: 1.03, backgroundColor: "#dc2626" }} // Hover pe thoda bada hoga aur red ho jayega
-              whileTap={{ scale: 0.95 }} // Click karne pe andar dabega
+              whileHover={{ scale: 1.03, backgroundColor: "#dc2626" }}
+              whileTap={{ scale: 0.95 }}
               type="submit"
               className="col-span-2 md:col-span-1 bg-gray-900 text-white py-2.5 px-4 rounded text-sm font-bold tracking-wide shadow-md transition-colors w-full h-[42px] flex items-center justify-center"
             >

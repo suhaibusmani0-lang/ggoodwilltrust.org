@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useToast } from '../../hooks/use-toast';
-import { X, Upload, Image as ImageIcon } from 'lucide-react';
+import { X, Upload } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -32,7 +32,7 @@ const emptyForm = {
   mpgCity: '',
   mpgHwy: '',
   condition: 'Used',
-  status: 'available', // Naya status field
+  status: 'available',
   description: '',
   features: [],
   featuresInput: '',
@@ -69,7 +69,7 @@ const VehicleForm = () => {
           features: data.features || [],
           imageUrlInput: '',
           featuresInput: '',
-          status: data.status || 'available' // Purana status load karo
+          status: data.status || 'available'
         });
       } catch (err) {
         console.error(err);
@@ -77,7 +77,7 @@ const VehicleForm = () => {
       }
     };
     fetchVehicle();
-  }, [id, isEdit]);
+  }, [id, isEdit, toast]); // Fix: Added toast to dependency array
 
   const setField = (field, value) => setFormData((prev) => ({ ...prev, [field]: value }));
 
@@ -101,31 +101,7 @@ const VehicleForm = () => {
     e.target.value = '';
   };
 
-  const handleAddImageUrl = () => {
-    const url = formData.imageUrlInput.trim();
-    if (!url || formData.images.length >= MAX_IMAGES) return;
-    setField('images', [...formData.images, url]);
-    setField('imageUrlInput', '');
-  };
-
   const removeImage = (index) => setField('images', formData.images.filter((_, i) => i !== index));
-
-  const reorderImage = (from, to) => {
-    if (to < 0 || to >= formData.images.length) return;
-    const list = [...formData.images];
-    const [item] = list.splice(from, 1);
-    list.splice(to, 0, item);
-    setField('images', list);
-  };
-
-  const handleAddFeature = () => {
-    const f = formData.featuresInput.trim();
-    if (!f) return;
-    setField('features', [...formData.features, f]);
-    setField('featuresInput', '');
-  };
-
-  const removeFeature = (index) => setField('features', formData.features.filter((_, i) => i !== index));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -141,7 +117,7 @@ const VehicleForm = () => {
         mpgHwy: formData.mpgHwy ? parseInt(formData.mpgHwy, 10) : null,
         seatingRows: formData.seatingRows ? parseInt(formData.seatingRows, 10) : null,
         maxSeating: formData.maxSeating ? parseInt(formData.maxSeating, 10) : null,
-        status: formData.status // Status backend bhejo
+        status: formData.status
       };
 
       if (isEdit) {
@@ -192,12 +168,11 @@ const VehicleForm = () => {
               </div>
             </section>
 
-            {/* Basics & High-Class Status Management */}
+            {/* Basics & Status */}
             <section className="mb-8">
               <h2 className="text-lg font-bold text-gray-900 mb-3">Vehicle Basics & Status</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 
-                {/* INVENTORY STATUS DROPDOWN */}
                 <div className="bg-gray-50 p-3 border border-gray-200 rounded-md">
                   <label className="block text-sm font-bold text-red-600 mb-1 uppercase tracking-tighter">Inventory Status</label>
                   <select 
@@ -248,7 +223,6 @@ const VehicleForm = () => {
               </div>
             </section>
 
-            {/* Specifications */}
             <section className="mb-8">
               <h2 className="text-lg font-bold text-gray-900 mb-3">Specifications</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -258,7 +232,6 @@ const VehicleForm = () => {
               </div>
             </section>
 
-            {/* Description & Features (unchanged) */}
             <section className="mb-8">
               <h2 className="text-lg font-bold text-gray-900 mb-3">Description</h2>
               <textarea rows={5} value={formData.description} onChange={(e) => setField('description', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded"></textarea>
