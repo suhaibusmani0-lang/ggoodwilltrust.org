@@ -41,12 +41,11 @@ const Header = () => {
     ]}
   ];
 
-  // Desktop Dropdown Component
   const NavDropdown = ({ label, items }) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <div className="relative" onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
-        <button className="px-4 py-3 text-gray-900 hover:bg-gray-100 transition-colors font-bold text-sm flex items-center gap-1">
+        <button className="px-4 py-3 text-gray-900 hover:bg-gray-100 transition-colors font-bold text-sm flex items-center gap-1 uppercase">
           {label} <ChevronDown size={14} />
         </button>
         {isOpen && (
@@ -62,12 +61,11 @@ const Header = () => {
     );
   };
 
-  // Mobile Accordion Component
   const MobileAccordion = ({ label, items }) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <div className="border-b border-gray-800">
-        <button onClick={() => setIsOpen(!isOpen)} className="w-full flex justify-between items-center py-4 px-6 text-white font-bold text-sm">
+        <button onClick={() => setIsOpen(!isOpen)} className="w-full flex justify-between items-center py-4 px-6 text-white font-bold text-sm uppercase">
           {label} <ChevronDown size={16} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </button>
         {isOpen && (
@@ -84,10 +82,11 @@ const Header = () => {
   };
 
   return (
-    <header className="w-full sticky top-0 z-[100] shadow-md bg-white">
-      {/* Top Bar - Hidden on very small screens for better space */}
+    /* FIXED: Sticky class hata di hai, ab ye scroll karne par upar chala jayega */
+    <header className="w-full relative z-[100] shadow-sm bg-white">
+      {/* Top Bar */}
       <div className="bg-gray-900 text-white py-2">
-        <div className="container mx-auto px-4 flex justify-center items-center text-[10px] md:text-xs">
+        <div className="container mx-auto px-4 flex justify-center items-center text-[10px] md:text-xs text-center">
           <div className="flex flex-wrap items-center justify-center gap-x-4 md:gap-x-8 gap-y-1">
             <a href="tel:5167885722" className="flex items-center gap-2 hover:text-red-500 transition-colors">
               <Phone size={14} /> (516) 788-5722
@@ -111,7 +110,7 @@ const Header = () => {
             />
           </Link>
 
-          {/* Desktop Navigation - Hidden on Mobile */}
+          {/* Desktop Navigation */}
           <nav className="hidden xl:flex items-center">
             <Link to="/" className="px-4 py-3 bg-gray-900 text-white hover:bg-red-600 transition-colors font-bold text-sm mr-1">
               HOME
@@ -121,9 +120,9 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Mobile Menu Toggle Button */}
+          {/* Mobile Menu Toggle */}
           <button 
-            className="xl:hidden p-2 text-gray-900 hover:bg-gray-100 rounded-md"
+            className="xl:hidden p-2 text-gray-900"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
@@ -131,10 +130,10 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Drawer Navigation */}
+      {/* Mobile Menu Drawer */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 top-[100px] bg-gray-900 z-[1000] xl:hidden overflow-y-auto">
-          <nav className="flex flex-col pb-20">
+        <div className="absolute top-full left-0 w-full bg-gray-900 z-[1000] xl:hidden overflow-y-auto max-h-[80vh]">
+          <nav className="flex flex-col pb-10">
             <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="py-4 px-6 text-white font-bold text-sm border-b border-gray-800">
               HOME
             </Link>
