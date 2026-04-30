@@ -22,15 +22,31 @@ const getPrimaryImage = (v) => {
   return v.image || FALLBACK_IMAGE;
 };
 
-// ============== Vehicle Card ==============
+// ============== Vehicle Card (With HOLD & SOLD Stickers) ==============
 const VehicleCard = ({ vehicle }) => (
-  <div className="bg-white border border-gray-200 hover:shadow-md transition-shadow" data-testid={`vehicle-card-${vehicle.id}`}>
+  <div className="bg-white border border-gray-200 hover:shadow-md transition-shadow relative" data-testid={`vehicle-card-${vehicle.id}`}>
+    
+    {/* ===== HIGH-CLASS STATUS STICKERS ===== */}
+    {vehicle.status === 'hold' && (
+      <div className="absolute top-3 left-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-1.5 font-extrabold text-xs uppercase tracking-widest rounded shadow-[0_0_15px_rgba(250,204,21,0.6)] z-10 border border-yellow-300">
+        Hold / Deposit
+      </div>
+    )}
+    
+    {vehicle.status === 'sold' && (
+      <div className="absolute top-3 left-3 bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-1.5 font-extrabold text-xs uppercase tracking-widest rounded shadow-[0_0_15px_rgba(220,38,38,0.6)] z-10 border border-red-500">
+        Sold Out
+      </div>
+    )}
+    {/* ======================================= */}
+
     <Link to={`/vehicle/${vehicle.id}`} className="block">
-      <div className="aspect-[16/10] overflow-hidden bg-gray-100">
+      <div className="aspect-[16/10] overflow-hidden bg-gray-100 relative">
+        {/* Agar gaadi sold hai, toh photo ko thoda black-and-white (grayscale) kar denge taaki aur realistic lage */}
         <img
           src={getPrimaryImage(vehicle)}
           alt={`${vehicle.year} ${vehicle.make} ${vehicle.model}`}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          className={`w-full h-full object-cover hover:scale-105 transition-transform duration-300 ${vehicle.status === 'sold' ? 'grayscale opacity-80' : ''}`}
           onError={(e) => { e.target.src = FALLBACK_IMAGE; }}
         />
       </div>
@@ -43,7 +59,12 @@ const VehicleCard = ({ vehicle }) => (
         </h3>
       </Link>
 
-      <Link to="/finance" className="inline-block text-xs text-red-600 hover:underline mt-1 mb-3">Apply Now</Link>
+      {/* Agar gaadi Sold hai, toh "Apply Now" button chhupa do */}
+      {vehicle.status !== 'sold' ? (
+        <Link to="/finance" className="inline-block text-xs text-red-600 hover:underline mt-1 mb-3">Apply Now</Link>
+      ) : (
+        <div className="text-xs text-gray-400 mt-1 mb-3">Unavailable for Financing</div>
+      )}
 
       <div className="flex justify-between items-end mb-3 pb-3 border-b border-gray-200">
         <div>
@@ -75,14 +96,16 @@ const VehicleCard = ({ vehicle }) => (
         <Link
           to="/contact"
           state={{ vehicleId: vehicle.id }}
-          className="flex items-center justify-center gap-1.5 bg-gray-900 text-white py-2 text-xs font-medium hover:bg-gray-800"
+          className={`flex items-center justify-center gap-1.5 py-2 text-xs font-medium transition-colors ${vehicle.status === 'sold' ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-900 text-white hover:bg-gray-800'}`}
+          onClick={(e) => vehicle.status === 'sold' && e.preventDefault()}
           data-testid={`email-vehicle-${vehicle.id}`}
         >
           <Mail className="w-3.5 h-3.5" /> Email
         </Link>
         <a
-          href="tel:5167885722"
-          className="flex items-center justify-center gap-1.5 bg-white border border-gray-900 text-gray-900 py-2 text-xs font-medium hover:bg-gray-100"
+          href={vehicle.status === 'sold' ? '#' : 'tel:5167885722'}
+          className={`flex items-center justify-center gap-1.5 py-2 text-xs font-medium border transition-colors ${vehicle.status === 'sold' ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed' : 'bg-white border-gray-900 text-gray-900 hover:bg-gray-100'}`}
+          onClick={(e) => vehicle.status === 'sold' && e.preventDefault()}
           data-testid={`call-vehicle-${vehicle.id}`}
         >
           <Phone className="w-3.5 h-3.5" /> Call

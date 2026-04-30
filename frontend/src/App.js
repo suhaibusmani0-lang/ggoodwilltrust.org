@@ -24,6 +24,7 @@ import VehicleForm from "./pages/admin/VehicleForm";
 import { AuthProvider } from "./auth/AuthContext";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { Toaster } from "./components/ui/sonner";
+import TermsAndConditions from "./components/TermsAndConditions";
 
 function App() {
   return (
@@ -53,6 +54,9 @@ function App() {
             {/* Warranty Routes */}
             <Route path="/warranty/info" element={<WarrantyInfoPage />} />
             <Route path="/warranty/schedule" element={<WarrantySchedulePage />} />
+
+            {/* T&C Route */}
+            <Route path="/terms" element={<TermsAndConditions />} />
 
             {/* Admin Routes */}
             <Route path="/admin/login" element={<AdminLoginPage />} />

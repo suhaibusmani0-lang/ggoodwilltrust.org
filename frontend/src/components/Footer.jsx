@@ -100,6 +100,8 @@ const Footer = () => {
             <Link to="/services" className="hover:text-red-500 transition-colors">Services</Link>
             <Link to="/warranty" className="hover:text-red-500 transition-colors">Warranty</Link>
             <Link to="/contact" className="hover:text-red-500 transition-colors">Contact Us</Link>
+            {/* T&C Link Added Here */}
+            <Link to="/terms" className="hover:text-red-500 transition-colors">Terms & Conditions</Link>
           </nav>
           
           {/* Copyright + Branding Section */}
