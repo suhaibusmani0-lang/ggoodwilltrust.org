@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { makes } from '../mockData';
+import axios from 'axios'; // Real data fetch karne ke liye axios add kiya
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 // --- ANIMATION VARIANTS ---
 const containerVariants = {
@@ -25,6 +28,9 @@ const itemVariants = {
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  
+  // States
+  const [vehicles, setVehicles] = useState([]);
   const [searchData, setSearchData] = useState({
     make: '', model: '', minYear: '', maxYear: '', maxPrice: '', maxMileage: ''
   });
@@ -35,12 +41,45 @@ const HeroSection = () => {
 
   const [currentImage, setCurrentImage] = useState(0);
 
+  // Background Image Interval
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % backgroundImages.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, [backgroundImages.length]); // Fix: Dependency add kar di taaki build fail na ho
+  }, [backgroundImages.length]);
+
+  // NAYA CODE: Real inventory fetch karna jab Hero load ho
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const res = await axios.get(`${API}/vehicles`);
+        setVehicles(res.data);
+      } catch (e) {
+        console.error('Error fetching inventory for hero section', e);
+      }
+    };
+    fetchVehicles();
+  }, []);
+
+  // NAYA CODE: Real vehicles data se unique Makes aur Models nikalna (same logic as InventoryPage)
+  const availableMakes = useMemo(() => {
+    return Array.from(new Set(vehicles.map((v) => v.make).filter(Boolean))).sort();
+  }, [vehicles]);
+
+  const availableModels = useMemo(() => {
+    if (!searchData.make) {
+      return Array.from(new Set(vehicles.map((v) => v.model).filter(Boolean))).sort();
+    }
+    return Array.from(
+      new Set(vehicles.filter((v) => v.make === searchData.make).map((v) => v.model).filter(Boolean))
+    ).sort();
+  }, [vehicles, searchData.make]);
+
+  // Make change hone par model ko empty/reset kar do
+  const handleMakeChange = (e) => {
+    setSearchData({ ...searchData, make: e.target.value, model: '' });
+  };
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 40 }, (_, i) => currentYear - i + 1);
@@ -110,11 +149,12 @@ const HeroSection = () => {
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Make</label>
               <select
                 value={searchData.make}
-                onChange={(e) => setSearchData({ ...searchData, make: e.target.value })}
+                onChange={handleMakeChange}
                 className="w-full px-4 py-2.5 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-gray-50 transition-all cursor-pointer"
               >
                 <option value="">All Makes</option>
-                {makes.map((m) => <option key={m} value={m}>{m}</option>)}
+                {/* Dynamically mapped actual makes */}
+                {availableMakes.map((m) => <option key={m} value={m}>{m}</option>)}
               </select>
             </motion.div>
 
@@ -124,8 +164,13 @@ const HeroSection = () => {
                 value={searchData.model}
                 onChange={(e) => setSearchData({ ...searchData, model: e.target.value })}
                 className="w-full px-4 py-2.5 border border-gray-200 rounded text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-gray-50 transition-all cursor-pointer"
+                disabled={!searchData.make} 
               >
                 <option value="">All Models</option>
+                {/* Dynamically mapped actual models based on Make */}
+                {availableModels.map((mod) => (
+                  <option key={mod} value={mod}>{mod}</option>
+                ))}
               </select>
             </motion.div>
 
