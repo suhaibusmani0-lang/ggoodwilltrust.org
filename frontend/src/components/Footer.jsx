@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import { Phone, Mail, MapPin, ChevronDown } from 'lucide-react'; // NAYA: ChevronDown import kiya
 
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white font-sans">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
-          {/* Contact Info */}
+          {/* Contact Info (No Changes Here) */}
           <div>
             <h3 className="text-2xl font-bold mb-6">Contact Us</h3>
             <div className="space-y-4">
@@ -29,7 +29,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Business Hours */}
+          {/* Business Hours (No Changes Here) */}
           <div>
             <h3 className="text-2xl font-bold mb-6">BUSINESS HOURS</h3>
             <div className="space-y-2">
@@ -64,7 +64,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Map Section */}
+          {/* Map Section (No Changes Here) */}
           <div>
             <h3 className="text-2xl font-bold mb-6">DIRECTIONS</h3>
             <div className="bg-gray-800 h-64 rounded-lg overflow-hidden" data-testid="footer-map">
@@ -90,46 +90,50 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Navigation Links */}
-        <div className="border-t border-gray-800 pt-8">
-          <nav className="flex justify-center items-center gap-8 flex-wrap mb-8">
+        {/* =======================================================
+            NAYA CODE: Bilkul image_3bd2e3.png jaisa structure 
+        ======================================================== */}
+        <div className="border-t border-gray-700 pt-6">
+          
+          {/* Top Navbar (Centered with Dropdown arrows) */}
+          <nav className="flex justify-center items-center gap-6 md:gap-8 flex-wrap mb-6 font-bold text-[15px] text-white">
             <Link to="/" className="hover:text-red-500 transition-colors">Home</Link>
             <Link to="/inventory" className="hover:text-red-500 transition-colors">Cars For Sale</Link>
-            <Link to="/find-car" className="hover:text-red-500 transition-colors">Find a Car</Link>
-            <Link to="/finance" className="hover:text-red-500 transition-colors">Finance</Link>
-            <Link to="/services" className="hover:text-red-500 transition-colors">Services</Link>
-            <Link to="/warranty" className="hover:text-red-500 transition-colors">Warranty</Link>
-            <Link to="/contact" className="hover:text-red-500 transition-colors">Contact Us</Link>
-            {/* T&C Link Added Here */}
-            <Link to="/terms" className="hover:text-red-500 transition-colors">Terms & Conditions</Link>
+            <Link to="/find-car" className="flex items-center gap-1 hover:text-red-500 transition-colors">Find a Car <ChevronDown size={16} strokeWidth={3} /></Link>
+            <Link to="/finance" className="flex items-center gap-1 hover:text-red-500 transition-colors">Finance <ChevronDown size={16} strokeWidth={3} /></Link>
+            <Link to="/services" className="flex items-center gap-1 hover:text-red-500 transition-colors">Services <ChevronDown size={16} strokeWidth={3} /></Link>
+            <Link to="/warranty" className="flex items-center gap-1 hover:text-red-500 transition-colors">Warranty <ChevronDown size={16} strokeWidth={3} /></Link>
+            <Link to="/contact" className="flex items-center gap-1 hover:text-red-500 transition-colors">Contact Us <ChevronDown size={16} strokeWidth={3} /></Link>
           </nav>
           
-          {/* Copyright + Branding Section */}
-          <div className="border-t border-gray-800/50 pt-8 flex flex-col items-center gap-4">
-            <div className="text-center text-sm text-gray-400">
-              <p>© 2026 Xen Motors Inc. All rights reserved.</p>
-              <p className="mt-1">
-                Developed by{' '}
-                <a 
-                  href="https://www.zarnetic.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-white hover:text-red-500 transition-colors font-semibold"
-                >
-                  Zarnetic
-                </a>
+          {/* Bottom Copyright & Link Section (Left-Right Split like Image) */}
+          <div className="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            
+            {/* Left Side: Copyright & Terms Agreement */}
+            <div className="text-center md:text-left text-white">
+              <p className="font-bold text-sm mb-2">
+                © 2026 Powered by <a href="https://www.zarnetic.com" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors">Zarnetic</a>™
+              </p>
+              <p className="text-xs text-gray-300">
+                By placing calls, you agree to the <Link to="/terms" className="underline hover:text-red-500">Terms and Conditions of Use</Link>.
               </p>
             </div>
 
-            <a
-              href="/admin/login"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2 border border-gray-700 text-gray-400 hover:text-white hover:border-red-500 transition-all text-[10px] tracking-widest uppercase rounded-sm"
-              data-testid="footer-admin-login"
-            >
-              Admin Login
-            </a>
+            {/* Right Side: Sitemap, Terms & Account Login */}
+            <div className="flex items-center gap-6 text-sm font-bold text-white">
+              <Link to="/sitemap" className="hover:text-red-500 transition-colors">Sitemap</Link>
+              <Link to="/terms" className="hover:text-red-500 transition-colors">Terms & Conditions</Link>
+              <a 
+                href="/admin/login" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-red-500 transition-colors"
+                data-testid="footer-admin-login"
+              >
+                Account Login
+              </a>
+            </div>
+
           </div>
         </div>
       </div>
