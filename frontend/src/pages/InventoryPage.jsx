@@ -154,17 +154,18 @@ const InventoryPage = () => {
   const [page, setPage] = useState(1);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
+  // UPDATED: Now reads from URL search params correctly
   const [filters, setFilters] = useState({
     conditions: [],
-    make: '',
-    model: '',
-    trim: '',
-    minPrice: '',
-    maxPrice: '',
-    minMileage: '',
-    maxMileage: '',
-    minYear: '',
-    maxYear: '',
+    make: searchParams.get('make') || '',
+    model: searchParams.get('model') || '',
+    trim: searchParams.get('trim') || '',
+    minPrice: searchParams.get('maxPrice') ? '' : '', // handled logic below
+    maxPrice: searchParams.get('maxPrice') || '',
+    minMileage: searchParams.get('maxMileage') ? '' : '',
+    maxMileage: searchParams.get('maxMileage') || '',
+    minYear: searchParams.get('minYear') || '',
+    maxYear: searchParams.get('maxYear') || '',
     bodyType: searchParams.get('bodyType') || '',
     exteriorColors: [],
     interiorColors: []
