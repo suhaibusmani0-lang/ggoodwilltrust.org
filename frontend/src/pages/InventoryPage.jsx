@@ -22,9 +22,9 @@ const getPrimaryImage = (v) => {
   return v.image || FALLBACK_IMAGE;
 };
 
-// ============== Vehicle Card ==============
+// ============== Vehicle Card (UPDATED TO MATCH PHOTO) ==============
 const VehicleCard = ({ vehicle }) => (
-  <div className="bg-white border border-gray-200 hover:shadow-md transition-shadow relative" data-testid={`vehicle-card-${vehicle.id}`}>
+  <div className="bg-white border border-gray-200 hover:shadow-md transition-shadow relative flex flex-col h-full" data-testid={`vehicle-card-${vehicle.id}`}>
     {vehicle.status === 'hold' && (
       <div className="absolute top-3 left-3 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-4 py-1.5 font-extrabold text-xs uppercase tracking-widest rounded shadow-lg z-10 border border-yellow-300">
         Hold / Deposit
@@ -47,42 +47,78 @@ const VehicleCard = ({ vehicle }) => (
       </div>
     </Link>
 
-    <div className="p-4">
-      <Link to={`/vehicle/${vehicle.id}`} className="block">
+    <div className="p-4 flex flex-col flex-grow">
+      {/* Title & Trim (Centered like image) */}
+      <Link to={`/vehicle/${vehicle.id}`} className="block text-center mb-1">
         <h3 className="text-base font-bold text-gray-900 leading-tight uppercase truncate hover:text-red-600">
           {vehicle.year} {vehicle.make} {vehicle.model}
         </h3>
+        <p className="text-xs text-gray-500 font-medium truncate mt-1">{vehicle.trim || '\u00A0'}</p>
       </Link>
 
-      {vehicle.status !== 'sold' ? (
-        <Link to="/finance" className="inline-block text-xs text-red-600 hover:underline mt-1 mb-3">Apply Now</Link>
-      ) : (
-        <div className="text-xs text-gray-400 mt-1 mb-3">Unavailable for Financing</div>
-      )}
+      {/* Finance Link */}
+      <div className="text-center">
+        {vehicle.status !== 'sold' ? (
+          <Link to="/finance" className="inline-block text-[11px] font-bold text-red-600 hover:underline mt-1 mb-3">Apply Now</Link>
+        ) : (
+          <div className="text-[11px] text-gray-400 mt-1 mb-3">Unavailable for Financing</div>
+        )}
+      </div>
 
-      <div className="flex justify-between items-end mb-3 pb-3 border-b border-gray-200">
-        <div>
-          <p className="text-xs text-gray-500">Price</p>
-          <p className="text-xl font-bold text-gray-900">${Number(vehicle.price || 0).toLocaleString()}</p>
+      {/* Price & Mileage (Centered Side by Side) */}
+      <div className="flex justify-center items-center gap-8 mb-4 pb-4 border-b border-gray-200">
+        <div className="text-center">
+          <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold mb-0.5">Price</p>
+          <p className="text-xl font-extrabold text-gray-900">${Number(vehicle.price || 0).toLocaleString()}</p>
         </div>
-        <div className="text-right">
-          <p className="text-xs text-gray-500">Mileage</p>
-          <p className="text-base font-semibold text-gray-900">{Number(vehicle.mileage || 0).toLocaleString()}</p>
+        <div className="w-px h-10 bg-gray-300"></div>
+        <div className="text-center">
+          <p className="text-[10px] text-gray-500 uppercase tracking-wider font-bold mb-0.5">Mileage</p>
+          <p className="text-lg font-bold text-gray-900">{Number(vehicle.mileage || 0).toLocaleString()} <span className="text-xs font-normal text-gray-500">mi</span></p>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-1.5">
+      {/* Detailed Specs List (From Photo) */}
+      <div className="space-y-1.5 mb-5 text-[11px] text-gray-700">
+        <div className="flex justify-between border-b border-gray-100 pb-1">
+          <span className="font-bold text-gray-500 uppercase tracking-wider">Engine</span>
+          <span className="text-right font-medium">{vehicle.engine || '-'}</span>
+        </div>
+        <div className="flex justify-between border-b border-gray-100 pb-1">
+          <span className="font-bold text-gray-500 uppercase tracking-wider">Trans</span>
+          <span className="text-right font-medium">{vehicle.transmission || '-'}</span>
+        </div>
+        <div className="flex justify-between border-b border-gray-100 pb-1">
+          <span className="font-bold text-gray-500 uppercase tracking-wider">Ext. Color</span>
+          <span className="text-right font-medium">{vehicle.exteriorColor || '-'}</span>
+        </div>
+        <div className="flex justify-between border-b border-gray-100 pb-1">
+          <span className="font-bold text-gray-500 uppercase tracking-wider">Int. Color</span>
+          <span className="text-right font-medium">{vehicle.interiorColor || '-'}</span>
+        </div>
+        <div className="flex justify-between border-b border-gray-100 pb-1">
+          <span className="font-bold text-gray-500 uppercase tracking-wider">Stock #</span>
+          <span className="text-right font-medium">{vehicle.stockNumber || '-'}</span>
+        </div>
+        <div className="flex justify-between border-b border-gray-100 pb-1">
+          <span className="font-bold text-gray-500 uppercase tracking-wider">VIN</span>
+          <span className="text-right font-medium uppercase">{vehicle.vin || '-'}</span>
+        </div>
+      </div>
+
+      {/* Buttons (Pushed to bottom) */}
+      <div className="grid grid-cols-2 gap-1.5 mt-auto">
         <Link
           to="/contact"
           state={{ vehicleId: vehicle.id }}
-          className={`flex items-center justify-center gap-1.5 py-2 text-xs font-medium transition-colors ${vehicle.status === 'sold' ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-900 text-white hover:bg-gray-800'}`}
+          className={`flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold uppercase tracking-wider transition-colors ${vehicle.status === 'sold' ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-900 text-white hover:bg-gray-800'}`}
           onClick={(e) => vehicle.status === 'sold' && e.preventDefault()}
         >
           <Mail className="w-3.5 h-3.5" /> Email
         </Link>
         <a
           href={vehicle.status === 'sold' ? '#' : 'tel:5167885722'}
-          className={`flex items-center justify-center gap-1.5 py-2 text-xs font-medium border transition-colors ${vehicle.status === 'sold' ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed' : 'bg-white border-gray-900 text-gray-900 hover:bg-gray-100'}`}
+          className={`flex items-center justify-center gap-1.5 py-2.5 text-xs font-bold uppercase tracking-wider border transition-colors ${vehicle.status === 'sold' ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed' : 'bg-white border-gray-900 text-gray-900 hover:bg-gray-100'}`}
           onClick={(e) => vehicle.status === 'sold' && e.preventDefault()}
         >
           <Phone className="w-3.5 h-3.5" /> Call
