@@ -1,13 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, ChevronDown } from 'lucide-react'; // NAYA: ChevronDown import kiya
+import { Phone, Mail, MapPin, ChevronDown } from 'lucide-react';
+
+// NAYA COMPONENT: Footer me upar khulne wale dropdown ke liye
+const FooterDropdown = ({ label, items }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <div 
+      className="relative" 
+      onMouseEnter={() => setIsOpen(true)} 
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      <button className="flex items-center gap-1 hover:text-red-500 transition-colors py-2 cursor-pointer">
+        {label} <ChevronDown size={16} strokeWidth={3} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      
+      {isOpen && (
+        <div className="absolute bottom-full left-0 mb-2 bg-[#1a1a1a] border border-gray-700 shadow-2xl min-w-[220px] z-50 py-2 rounded-sm">
+          {items.map((item, index) => (
+            <Link 
+              key={index} 
+              to={item.path} 
+              onClick={() => {
+                window.scrollTo(0, 0); // Click karne par page top par jayega
+                setIsOpen(false);
+              }}
+              className="block px-5 py-2.5 text-sm font-normal text-white hover:bg-gray-800 hover:text-red-500 transition-colors"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Footer = () => {
+  // Page top par bhejne ke liye helper function
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
+
   return (
     <footer className="bg-gray-900 text-white font-sans">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
-          {/* Contact Info (No Changes Here) */}
+          {/* Contact Info */}
           <div>
             <h3 className="text-2xl font-bold mb-6">Contact Us</h3>
             <div className="space-y-4">
@@ -29,7 +69,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Business Hours (No Changes Here) */}
+          {/* Business Hours */}
           <div>
             <h3 className="text-2xl font-bold mb-6">BUSINESS HOURS</h3>
             <div className="space-y-2">
@@ -64,7 +104,7 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Map Section (No Changes Here) */}
+          {/* Map Section */}
           <div>
             <h3 className="text-2xl font-bold mb-6">DIRECTIONS</h3>
             <div className="bg-gray-800 h-64 rounded-lg overflow-hidden" data-testid="footer-map">
@@ -91,38 +131,60 @@ const Footer = () => {
         </div>
 
         {/* =======================================================
-            NAYA CODE: Bilkul image_3bd2e3.png jaisa structure 
+            UPDATED: Links with window.scrollTo aur Hover Dropdowns
         ======================================================== */}
         <div className="border-t border-gray-700 pt-6">
           
-          {/* Top Navbar (Centered with Dropdown arrows) */}
           <nav className="flex justify-center items-center gap-6 md:gap-8 flex-wrap mb-6 font-bold text-[15px] text-white">
-            <Link to="/" className="hover:text-red-500 transition-colors">Home</Link>
-            <Link to="/inventory" className="hover:text-red-500 transition-colors">Cars For Sale</Link>
-            <Link to="/find-car" className="flex items-center gap-1 hover:text-red-500 transition-colors">Find a Car <ChevronDown size={16} strokeWidth={3} /></Link>
-            <Link to="/finance" className="flex items-center gap-1 hover:text-red-500 transition-colors">Finance <ChevronDown size={16} strokeWidth={3} /></Link>
-            <Link to="/services" className="flex items-center gap-1 hover:text-red-500 transition-colors">Services <ChevronDown size={16} strokeWidth={3} /></Link>
-            <Link to="/warranty" className="flex items-center gap-1 hover:text-red-500 transition-colors">Warranty <ChevronDown size={16} strokeWidth={3} /></Link>
-            <Link to="/contact" className="flex items-center gap-1 hover:text-red-500 transition-colors">Contact Us <ChevronDown size={16} strokeWidth={3} /></Link>
+            <Link to="/" onClick={scrollToTop} className="hover:text-red-500 transition-colors py-2">Home</Link>
+            <Link to="/inventory" onClick={scrollToTop} className="hover:text-red-500 transition-colors py-2">Cars For Sale</Link>
+            
+            <FooterDropdown label="Find a Car" items={[
+              { label: 'Start Your Vehicle Purchase', path: '/start-your-vehicle-purchase' },
+              { label: 'Car Finder', path: '/find-car' }
+            ]} />
+            
+            <FooterDropdown label="Finance" items={[
+              { label: 'Loan Application', path: '/finance' },
+              { label: 'Value My Trade', path: '/trade-in' }
+            ]} />
+            
+            <FooterDropdown label="Services" items={[
+              { label: 'Service Dept', path: '/services/service-dept' },
+              { label: 'Parts Dept', path: '/services/parts-dept' },
+              { label: 'Body Shop', path: '/services/body-shop' },
+              { label: 'Glass Installation and Repair', path: '/services/glass' }
+            ]} />
+            
+            <FooterDropdown label="Warranty" items={[
+              { label: 'Request Warranty Information', path: '/warranty/info' },
+              { label: 'Schedule Warranty Appt', path: '/warranty/schedule' }
+            ]} />
+            
+            <FooterDropdown label="Contact Us" items={[
+              { label: 'About Us', path: '/about' },
+              { label: 'Contact', path: '/contact' },
+              { label: 'Schedule Visit', path: '/schedule-visit' },
+              { label: 'Referral Program', path: '/referral' }
+            ]} />
           </nav>
           
-          {/* Bottom Copyright & Link Section (Left-Right Split like Image) */}
           <div className="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
             
-            {/* Left Side: Copyright & Terms Agreement */}
+            {/* Left Side: Developed By Zarnetic */}
             <div className="text-center md:text-left text-white">
               <p className="font-bold text-sm mb-2">
-                © 2026 Powered by <a href="https://www.zarnetic.com" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors">Zarnetic</a>™
+                © {new Date().getFullYear()} Developed by <a href="https://www.zarnetic.com" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors">Zarnetic</a>™
               </p>
               <p className="text-xs text-gray-300">
-                By placing calls, you agree to the <Link to="/terms" className="underline hover:text-red-500">Terms and Conditions of Use</Link>.
+                By placing calls, you agree to the <Link to="/terms" onClick={scrollToTop} className="underline hover:text-red-500">Terms and Conditions of Use</Link>.
               </p>
             </div>
 
             {/* Right Side: Sitemap, Terms & Account Login */}
             <div className="flex items-center gap-6 text-sm font-bold text-white">
-              <Link to="/sitemap" className="hover:text-red-500 transition-colors">Sitemap</Link>
-              <Link to="/terms" className="hover:text-red-500 transition-colors">Terms & Conditions</Link>
+              <Link to="/sitemap" onClick={scrollToTop} className="hover:text-red-500 transition-colors">Sitemap</Link>
+              <Link to="/terms" onClick={scrollToTop} className="hover:text-red-500 transition-colors">Terms & Conditions</Link>
               <a 
                 href="/admin/login" 
                 target="_blank" 
