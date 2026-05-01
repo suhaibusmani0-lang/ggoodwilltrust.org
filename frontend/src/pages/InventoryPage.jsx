@@ -190,15 +190,14 @@ const InventoryPage = () => {
   const [page, setPage] = useState(1);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-  // UPDATED: Now reads from URL search params correctly
   const [filters, setFilters] = useState({
     conditions: [],
     make: searchParams.get('make') || '',
     model: searchParams.get('model') || '',
     trim: searchParams.get('trim') || '',
-    minPrice: searchParams.get('maxPrice') ? '' : '', // handled logic below
+    minPrice: '',
     maxPrice: searchParams.get('maxPrice') || '',
-    minMileage: searchParams.get('maxMileage') ? '' : '',
+    minMileage: '',
     maxMileage: searchParams.get('maxMileage') || '',
     minYear: searchParams.get('minYear') || '',
     maxYear: searchParams.get('maxYear') || '',
@@ -207,13 +206,26 @@ const InventoryPage = () => {
     interiorColors: []
   });
 
+  // NEW: Synchronize filters when URL search params change (Dropdown fix)
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      make: searchParams.get('make') || '',
+      model: searchParams.get('model') || '',
+      bodyType: searchParams.get('bodyType') || '',
+      maxPrice: searchParams.get('maxPrice') || '',
+      maxMileage: searchParams.get('maxMileage') || '',
+    }));
+    setPage(1);
+    window.scrollTo(0, 0);
+  }, [searchParams]);
+
   useEffect(() => {
     const fetchVehicles = async () => {
       setLoading(true);
       try {
         const res = await axios.get(`${API}/vehicles`);
         setVehicles(res.data);
-        setPage(1);
       } catch (e) {
         console.error('fetch inventory error', e);
       } finally {
