@@ -17,6 +17,7 @@ import BodyShopPage from "./pages/BodyShopPage";
 import GlassRepairPage from "./pages/GlassRepairPage";
 import StartPurchasePage from "./pages/StartPurchasePage";
 import CarFinderPage from "./pages/CarFinderPage";
+import SitemapPage from "./pages/SitemapPage"; // NAYA: Sitemap import kiya
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminInboxPage from "./pages/admin/AdminInboxPage";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
@@ -54,6 +55,9 @@ function App() {
             {/* Warranty Routes */}
             <Route path="/warranty/info" element={<WarrantyInfoPage />} />
             <Route path="/warranty/schedule" element={<WarrantySchedulePage />} />
+
+            {/* Sitemap Route Added Here */}
+            <Route path="/sitemap" element={<SitemapPage />} />
 
             {/* T&C Route */}
             <Route path="/terms" element={<TermsAndConditions />} />
