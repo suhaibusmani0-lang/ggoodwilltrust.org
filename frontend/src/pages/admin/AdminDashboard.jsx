@@ -50,7 +50,7 @@ const AdminDashboard = () => {
             // Node.js Backend se Donations lana stats ke liye
             let totalAmt = 0;
             try {
-                const res = await fetch('http://localhost:5000/api/donations');
+                const res = await fetch('https://spreadsmilesfoundation.onrender.com/api/donations');
                 if (res.ok) {
                     const d = await res.json();
                     totalAmt = d.reduce((sum, item) => sum + (item.amount || 0), 0);
@@ -77,7 +77,7 @@ const AdminDashboard = () => {
         try {
             if (activeTab === 'donations') {
                 // Fetching from Node.js (MongoDB)
-                const response = await fetch('http://localhost:5000/api/donations');
+                const response = await fetch('https://spreadsmilesfoundation.onrender.com/api/donations');
                 if (!response.ok) throw new Error("Failed to fetch donations");
                 const data = await response.json();
                 setDonationsList(data);

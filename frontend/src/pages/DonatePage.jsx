@@ -42,7 +42,7 @@ const DonatePage = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/api/create-order', {
+            const response = await fetch('https://spreadsmilesfoundation.onrender.com/api/create-order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount: donor.amount })
@@ -57,7 +57,7 @@ const DonatePage = () => {
                 description: "Donation Contribution",
                 order_id: orderData.id,
                 handler: async function (response) {
-                    const verifyCall = await fetch('http://localhost:5000/api/verify-payment', {
+                    const verifyCall = await fetch('https://spreadsmilesfoundation.onrender.com/api/verify-payment', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({

@@ -19,7 +19,7 @@ const ContactPage = () => {
         e.preventDefault();
         setVolStatus('submitting');
         try {
-            const response = await fetch('http://localhost:5000/api/volunteer', {
+            const response = await fetch('https://spreadsmilesfoundation.onrender.com/api/volunteer', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(volunteerData)
@@ -40,7 +40,7 @@ const ContactPage = () => {
         e.preventDefault();
         setContactStatus('submitting');
         try {
-            const response = await fetch('http://localhost:5000/api/contact', {
+            const response = await fetch('https://spreadsmilesfoundation.onrender.com/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(contactData)
