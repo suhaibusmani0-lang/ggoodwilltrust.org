@@ -1,5 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ScrollToTop from "./ScrollToTop"; // 👇 Yahan import kiya hai
 
 // --- NGO PAGES IMPORTS ---
 import Header from "./components/Header";
@@ -26,6 +27,10 @@ function App() {
     <div className="App flex flex-col min-h-screen">
       <AuthProvider>
         <BrowserRouter>
+          
+          {/* 👇 Ye component har route change pe page ko top pe le jayega 👇 */}
+          <ScrollToTop />
+
           <Routes>
             
             {/* 🔴 --- ADMIN ROUTES (Bina Header/Footer ke bilkul alag khulenge) --- 🔴 */}

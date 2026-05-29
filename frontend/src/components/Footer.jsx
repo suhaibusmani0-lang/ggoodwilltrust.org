@@ -80,6 +80,19 @@ const Footer = () => {
                 <div className="pt-8 border-t border-gray-700 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400 gap-4">
                     <p>© {new Date().getFullYear()} Spread Smiles Foundation. All rights reserved.</p>
                     
+                    {/* Added Zarnetic link here */}
+                    <p>
+                        Developed by{' '}
+                        <a 
+                            href="https://www.zarnetic.com" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="font-semibold text-gray-300 hover:text-white transition-colors"
+                        >
+                            Zarnetic
+                        </a>
+                    </p>
+                    
                     <div className="flex items-center gap-6">
                         <Link to="/admin/login" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white transition-colors">
                             <Lock size={12} /> Admin Login

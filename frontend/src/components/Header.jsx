@@ -1,10 +1,30 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X } from 'lucide-react';
 
 const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    
+    // URL ka current path pata karne ke liye useLocation hook
+    const location = useLocation();
+
+    // Desktop links ke liye class banane wala function
+    const getDesktopLinkClass = (path) => {
+        return location.pathname === path
+            ? "bg-[#2081e2] text-white px-6 py-2 rounded-full font-semibold text-sm transition-colors"
+            : "text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm transition-colors";
+    };
+
+    // Mobile links ke liye class banane wala function
+    const getMobileLinkClass = (path) => {
+        return location.pathname === path
+            ? "block font-medium text-[#2081e2] bg-blue-50 px-3 py-2 rounded-md"
+            : "block font-medium text-gray-700 hover:text-[#2081e2] px-3 py-2";
+    };
+
+    // Check agar press release section me hai
+    const isPressActive = location.pathname.startsWith('/press');
 
     return (
         <header className="bg-[#f8f9fc] py-4 px-6 md:px-8 relative z-50">
@@ -12,43 +32,41 @@ const Header = () => {
                 
                 {/* 1. Logo Section */}
                 <Link to="/" className="flex-shrink-0">
-                    {/* Yahan aap apne actual logo ki path update kar dijiyega (jaise '/logo.png') */}
                     <img 
                         src="/logo.png" 
                         alt="Spread Smiles Foundation" 
                         className="h-14 object-contain" 
                         onError={(e) => {
-                            e.target.style.display = 'none'; // Agar image na mile toh error na aaye
+                            e.target.style.display = 'none'; 
                         }}
                     />
-                    {/* Agar logo image abhi nahi hai, toh ye text dikhega */}
                     <span className="font-bold text-sm text-[#ea3a72] hidden">Spread Smiles Foundation</span>
                 </Link>
 
                 {/* 2. Center Navigation Pill (Desktop) */}
                 <nav className="hidden lg:flex items-center bg-white shadow-sm rounded-full px-2 py-1.5">
                     
-                    <Link to="/" className="bg-[#2081e2] text-white px-6 py-2 rounded-full font-semibold text-sm">
+                    <Link to="/" className={getDesktopLinkClass('/')}>
                         Home
                     </Link>
                     
-                    <Link to="/about" className="text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm transition-colors">
+                    <Link to="/about" className={getDesktopLinkClass('/about')}>
                         About Us
                     </Link>
                     
-                    <Link to="/programs" className="text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm transition-colors">
+                    <Link to="/programs" className={getDesktopLinkClass('/programs')}>
                         Programs
                     </Link>
                     
-                    <Link to="/projects" className="text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm transition-colors">
+                    <Link to="/projects" className={getDesktopLinkClass('/projects')}>
                         Projects
                     </Link>
                     
-                    <Link to="/donate" className="text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm transition-colors">
+                    <Link to="/donate" className={getDesktopLinkClass('/donate')}>
                         Donate
                     </Link>
                     
-                    <Link to="/contact" className="text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm transition-colors">
+                    <Link to="/contact" className={getDesktopLinkClass('/contact')}>
                         Contact
                     </Link>
 
@@ -58,14 +76,18 @@ const Header = () => {
                         onMouseEnter={() => setIsDropdownOpen(true)}
                         onMouseLeave={() => setIsDropdownOpen(false)}
                     >
-                        <button className="flex items-center gap-1 text-gray-700 hover:text-[#2081e2] px-2 font-semibold text-sm focus:outline-none transition-colors">
+                        <button className={`flex items-center gap-1 focus:outline-none transition-colors ${
+                            isPressActive 
+                            ? "bg-[#2081e2] text-white px-6 py-2 rounded-full font-semibold text-sm" 
+                            : "text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm"
+                        }`}>
                             Press Releases
-                            <ChevronDown className="w-4 h-4 text-gray-500" />
+                            <ChevronDown className={`w-4 h-4 ${isPressActive ? "text-white" : "text-gray-500"}`} />
                         </button>
                         
                         {/* Dropdown Items */}
                         {isDropdownOpen && (
-                            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-100 shadow-xl rounded-lg overflow-hidden py-2">
+                            <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-gray-100 shadow-xl rounded-lg overflow-hidden py-2">
                                 <Link to="/press/news-gallery" className="block px-5 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#2081e2]">
                                     News Gallery
                                 </Link>
@@ -79,7 +101,6 @@ const Header = () => {
 
                 {/* 3. Call to Action Button (Right Side) */}
                 <div className="hidden lg:block">
-                    {/* 👇 Link changed to /contact 👇 */}
                     <Link to="/contact" className="bg-[#2081e2] text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:bg-blue-600 transition-colors shadow-sm">
                         Join the Movement
                     </Link>
@@ -94,18 +115,22 @@ const Header = () => {
                 </button>
             </div>
 
-            {/* Mobile Menu Dropdown (Simplified for small screens) */}
+            {/* Mobile Menu Dropdown */}
             {isMobileMenuOpen && (
-                <div className="lg:hidden absolute top-full left-0 w-full bg-white text-black p-4 space-y-4 shadow-lg border-t">
-                    <Link to="/" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
-                    <Link to="/about" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>About Us</Link>
-                    <Link to="/programs" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Programs</Link>
-                    <Link to="/projects" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Projects</Link>
-                    <Link to="/donate" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Donate</Link>
-                    <Link to="/contact" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
-                    <Link to="/press/news-gallery" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>News Gallery</Link>
-                    <Link to="/press/documents" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Documents</Link>
-                    {/* 👇 Link changed to /contact 👇 */}
+                <div className="lg:hidden absolute top-full left-0 w-full bg-white text-black p-4 space-y-2 shadow-lg border-t">
+                    <Link to="/" className={getMobileLinkClass('/')} onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+                    <Link to="/about" className={getMobileLinkClass('/about')} onClick={() => setIsMobileMenuOpen(false)}>About Us</Link>
+                    <Link to="/programs" className={getMobileLinkClass('/programs')} onClick={() => setIsMobileMenuOpen(false)}>Programs</Link>
+                    <Link to="/projects" className={getMobileLinkClass('/projects')} onClick={() => setIsMobileMenuOpen(false)}>Projects</Link>
+                    <Link to="/donate" className={getMobileLinkClass('/donate')} onClick={() => setIsMobileMenuOpen(false)}>Donate</Link>
+                    <Link to="/contact" className={getMobileLinkClass('/contact')} onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+                    
+                    <div className="pt-2 pb-1 border-t border-gray-100 mt-2">
+                        <p className="px-3 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Press Releases</p>
+                        <Link to="/press/news-gallery" className={getMobileLinkClass('/press/news-gallery')} onClick={() => setIsMobileMenuOpen(false)}>News Gallery</Link>
+                        <Link to="/press/documents" className={getMobileLinkClass('/press/documents')} onClick={() => setIsMobileMenuOpen(false)}>Documents</Link>
+                    </div>
+
                     <Link to="/contact" className="block text-center bg-[#2081e2] text-white py-3 rounded-lg font-bold mt-4 shadow-md" onClick={() => setIsMobileMenuOpen(false)}>
                         Join the Movement
                     </Link>
