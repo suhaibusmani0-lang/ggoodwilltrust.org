@@ -1,0 +1,45 @@
+{
+  "summary": "End-to-end smoke + regression for vehicle-detail 3-column rebuild and 'Cars For Sale' header dropdown removal. Backend: new-submission + vehicle-extended suites 26/26 PASS; auth enforced (401 without token, 200 with token); admin/me, counts/contacts (29 total / 22 unread), POST /api/contacts public all OK. Frontend: 16 public routes navigated successfully; HEADER → 'FIND A CAR' dropdown now shows ONLY ['Start Your Vehicle Purchase','Find a Car'] (Cars For Sale removed ✅); INVENTORY dropdown shows All Inventory + 6 body types ✅; top-phone tel:5167885722 ✅; footer-admin-login target=_blank href=/admin/login ✅. /vehicle/{id} renders rebuilt 3-column layout: message-us-form (6 fields) + send-message-btn + loan-calculator + apply-financing-btn + 2 iframes (Google map embed) all present. Admin login (admin@xenmotors.com / XenAdmin@2026) → /admin/inbox shows all 11 tabs incl. purchase_requests + car_finder_requests. Loan calculator first input is readonly (auto-computed loan amount from price - down) which is by-design; remaining 3 inputs editable. Two new low-priority console warnings discovered on /inventory (option-with-span hydration warning) and /vehicle/{id} (empty img src 2x).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/admin/submissions/* (test_admin_submissions.py)", "issue": "26 pre-existing test failures because the test file does not authenticate; endpoints correctly return 401 (auth IS enforced) - these are TEST BUGS, not code regressions. Recommend adding an auth fixture in test_admin_submissions.py."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "InventoryPage filter dropdown <select>/<option>", "issue": "React hydration warning: '<span> cannot be a child of <option>' + 'Cannot infer the option value of complex children. Pass a value prop or use a plain string as children to <option>.' Some option elements wrap formatted text (likely price/mileage/year ranges) in a <span>. Fix: <option value=...>plain text</option>.", "selector": "InventoryPage.jsx <option> elements", "priority": "MEDIUM"},
+      {"component": "VehicleDetailPage thumbnails or send-message form", "issue": "React warning: 'An empty string (\"\") was passed to the src attribute' (2 instances on /vehicle/{id}). Likely thumbnail <img> rendered when vehicle has fewer images than slots, or a placeholder. Use src={url || undefined} or conditional render.", "selector": "<img src=''>", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "/vehicle/{id} (carry-over from iter 4)", "issues": ["Seed images still show non-car content (gauges, factory robots) — informational only; user did not re-flag this iteration."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_new_submissions.py",
+    "/app/backend/tests/test_vehicle_extended.py",
+    "/app/test_reports/pytest/iteration5_results.xml"
+  ],
+  "action_items": [
+    "Refactor InventoryPage <option> children: replace <span>...</span> with plain string text and add value prop to fix hydration warning.",
+    "Fix empty img src on VehicleDetailPage by conditionally rendering <img> (likely in thumbnail gallery when vehicle has only 1 image, or in dealership-info logo slot).",
+    "(Optional) Add auth fixture to /app/backend/tests/test_admin_submissions.py so 26 pre-existing tests pass — they currently get 401 because they never login."
+  ],
+  "critical_code_review_comments": [
+    "InventoryPage <select><option><span>...</span></option></select> is a React anti-pattern; <option> only accepts string children. Generates dev-mode hydration warnings on every render of /inventory.",
+    "VehicleDetailPage continues to emit empty-src warning (still present from iter 4 even after rebuild). Audit all <img> tags and apply src={url || undefined} guard.",
+    "test_admin_submissions.py test file has zero auth - all 26 tests rely on endpoints being public, which they correctly are not. Should be updated to use a token fixture similar to test_new_submissions.py."
+  ],
+  "updated_files": [],
+  "success_rate": {
+    "backend": "100% on iteration-relevant suites (test_new_submissions.py 16/16 + test_vehicle_extended.py 10/10); overall 88/114 (26 pre-existing test_admin_submissions.py failures due to missing auth fixture, NOT code regressions)",
+    "frontend": "~98% (all critical user flows + dropdowns + 3-col vehicle detail + admin login + 11 inbox tabs all pass; only 2 low/medium console hygiene warnings)"
+  },
+  "test_credentials": "admin@xenmotors.com / XenAdmin@2026 (verified working, JWT token len=249)",
+  "seed_data_creation": "Created TEST_smoke contact via POST /api/contacts (200). Pytest suites create + cleanup TEST_-prefixed vehicles and submissions automatically.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Confirmed 'Cars For Sale' removed from FIND A CAR dropdown (only 2 items now). Vehicle detail 3-col layout fully rendered with all data-testids. Admin inbox has 11 tabs incl. tab-purchase_requests + tab-car_finder_requests. Loan calculator's first input is intentionally readonly (auto-computed loan amount). 2 new console warnings to fix: (1) <option><span>...</span></option> on /inventory (medium) — react hydration error; (2) empty-src <img> on /vehicle/{id} (low). 26 test_admin_submissions.py failures are pre-existing test-fixture bugs (no auth), not code defects — endpoints correctly return 401 when token absent. All 16 public routes navigated cleanly. Form POST endpoints respond 200/422 per pydantic schema; new POST /api/purchase-requests + /api/car-finder-requests fully tested in test_new_submissions.py.",
+  "rca of the issue": "InventoryPage warning RCA: <option> elements wrap formatted text in <span> (e.g. price ranges with $ formatting) — React 18 strict mode emits hydration error because <option> only allows string children. Reproduction: navigate to /inventory and check console. Mitigation: change `<option><span>$10k - $20k</span></option>` → `<option value=\"10000-20000\">$10k - $20k</option>` (plain string child)."
+}
