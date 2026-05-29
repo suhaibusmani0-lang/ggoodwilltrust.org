@@ -1,206 +1,94 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, Mail, MapPin, ChevronDown } from 'lucide-react';
-
-// NAYA COMPONENT: Footer me upar khulne wale dropdown ke liye
-const FooterDropdown = ({ label, items }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  
-  return (
-    <div 
-      className="relative" 
-      onMouseEnter={() => setIsOpen(true)} 
-      onMouseLeave={() => setIsOpen(false)}
-    >
-      <button className="flex items-center gap-1 hover:text-red-500 transition-colors py-2 cursor-pointer">
-        {label} <ChevronDown size={16} strokeWidth={3} className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-      
-      {isOpen && (
-        <div className="absolute bottom-full left-0 mb-2 bg-[#1a1a1a] border border-gray-700 shadow-2xl min-w-[220px] z-50 py-2 rounded-sm">
-          {items.map((item, index) => (
-            <Link 
-              key={index} 
-              to={item.path} 
-              onClick={() => {
-                window.scrollTo(0, 0); // Click karne par page top par jayega
-                setIsOpen(false);
-              }}
-              className="block px-5 py-2.5 text-sm font-normal text-white hover:bg-gray-800 hover:text-red-500 transition-colors"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+import { 
+    MapPin, 
+    Mail, 
+    Phone, 
+    Instagram, 
+    Facebook, 
+    Send, 
+    MessageCircle, 
+    Twitter, 
+    Youtube,
+    Lock
+} from 'lucide-react';
 
 const Footer = () => {
-  // Page top par bhejne ke liye helper function
-  const scrollToTop = () => {
-    window.scrollTo(0, 0);
-  };
+    return (
+        <footer className="print:hidden bg-[#2c303a] text-gray-300 pt-16 pb-8 border-t border-gray-800">
+            <div className="max-w-7xl mx-auto px-6 md:px-8">
+                
+                {/* Main Grid Content */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                    
+                    {/* Column 1: Brand & Socials */}
+                    <div className="flex flex-col">
+                        <div className="flex items-center gap-3 mb-4">
+                            <img src="/logo.png" alt="Logo" className="h-12 w-auto object-contain" />
+                            <div>
+                                <h3 className="text-white font-bold text-lg leading-tight">Spread Smiles Foundation</h3>
+                                <p className="text-sm text-gray-400">Est. 2023</p>
+                            </div>
+                        </div>
+                        <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                            Our mission is to serve humanity by providing education, healthcare, and essential support to underprivileged communities.
+                        </p>
+                        
+                        <div className="flex flex-wrap gap-2">
+                            <a href="https://www.instagram.com/spread.smilesfoundation/" target="_blank" rel="noreferrer" className="bg-[#3a3e49] p-2.5 rounded-lg hover:bg-pink-600 transition-colors text-white"><Instagram size={18} /></a>
+                            <a href="https://www.facebook.com/spread.smilesfoundation.2025" target="_blank" rel="noreferrer" className="bg-[#3a3e49] p-2.5 rounded-lg hover:bg-blue-600 transition-colors text-white"><Facebook size={18} /></a>
+                            <a href="https://t.me/spreadsmilesfoundation" target="_blank" rel="noreferrer" className="bg-[#3a3e49] p-2.5 rounded-lg hover:bg-sky-500 transition-colors text-white"><Send size={18} /></a>
+                            <a href="https://api.whatsapp.com/send?phone=917840008043&text=Welcome%20to%20Spread%20Smiles%20Foundation!" target="_blank" rel="noreferrer" className="bg-[#3a3e49] p-2.5 rounded-lg hover:bg-green-500 transition-colors text-white"><MessageCircle size={18} /></a>
+                            <a href="https://x.com/smiles_spreads?t=yg_TJk5VwTKK07N4rDCxEQ&s=09" target="_blank" rel="noreferrer" className="bg-[#3a3e49] p-2.5 rounded-lg hover:bg-gray-800 transition-colors text-white"><Twitter size={18} /></a>
+                            <a href="https://youtube.com/@spreadsmilesfoundation?si=4Z7uiaCFUPY1tpST" target="_blank" rel="noreferrer" className="bg-[#3a3e49] p-2.5 rounded-lg hover:bg-red-600 transition-colors text-white"><Youtube size={18} /></a>
+                        </div>
+                    </div>
 
-  return (
-    <footer className="bg-gray-900 text-white font-sans">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-8">
-          {/* Contact Info */}
-          <div>
-            <h3 className="text-2xl font-bold mb-6">Contact Us</h3>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 mt-1 flex-shrink-0 text-red-500" />
-                <div>
-                  <p>45 W John Street Unit B</p>
-                  <p>Hicksville, NY 11801</p>
+                    {/* Column 2 & 3: Links */}
+                    <div>
+                        <h4 className="text-white font-bold mb-6 text-lg">Quick Links</h4>
+                        <div className="flex flex-col space-y-3 text-sm">
+                            <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
+                            <Link to="/programs" className="hover:text-white transition-colors">Programs</Link>
+                            <Link to="/projects" className="hover:text-white transition-colors">Projects</Link>
+                            <Link to="/gallery" className="hover:text-white transition-colors">Gallery</Link>
+                            <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 className="text-white font-bold mb-6 text-lg">Support</h4>
+                        <div className="flex flex-col space-y-3 text-sm">
+                            <Link to="/donate" className="hover:text-white transition-colors">Donate</Link>
+                            <Link to="/volunteer" className="hover:text-white transition-colors">Volunteer</Link>
+                            <Link to="/terms" className="hover:text-white transition-colors">Terms and Conditions</Link>
+                        </div>
+                    </div>
+
+                    {/* Column 4: Contact */}
+                    <div>
+                        <h4 className="text-white font-bold mb-6 text-lg">Contact</h4>
+                        <div className="text-sm space-y-3">
+                            <p className="flex gap-2"><MapPin size={18} className="text-gray-400"/> F 235/3, Shaheen Bagh, New Delhi 110025</p>
+                            <p className="flex gap-2"><Mail size={18} className="text-gray-400"/> spreadsmilesfoundation8@gmail.com</p>
+                            <p className="flex gap-2"><Phone size={18} className="text-gray-400"/> +91 7840008043</p>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 flex-shrink-0 text-red-500" />
-                <a href="tel:5167885722" className="hover:text-red-500 transition-colors">(516) 788-5722</a>
-              </div>
-              <div className="flex items-center gap-3">
-                <Mail className="w-5 h-5 flex-shrink-0 text-red-500" />
-                <a href="mailto:xenmotors@gmail.com" className="hover:text-red-500 transition-colors">xenmotors@gmail.com</a>
-              </div>
-            </div>
-          </div>
 
-          {/* Business Hours */}
-          <div>
-            <h3 className="text-2xl font-bold mb-6">BUSINESS HOURS</h3>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span>Sunday</span>
-                <span className="text-gray-400">Closed</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-semibold">Monday</span>
-                <span className="font-semibold">8:00 AM - 8:00 PM EDT</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Tuesday</span>
-                <span>8:00 AM - 8:00 PM EDT</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Wednesday</span>
-                <span>8:00 AM - 8:00 PM EDT</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Thursday</span>
-                <span>8:00 AM - 8:00 PM EDT</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Friday</span>
-                <span>8:00 AM - 8:00 PM EDT</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Saturday</span>
-                <span>10:00 AM - 5:00 PM EDT</span>
-              </div>
+                {/* Bottom Bar */}
+                <div className="pt-8 border-t border-gray-700 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400 gap-4">
+                    <p>© {new Date().getFullYear()} Spread Smiles Foundation. All rights reserved.</p>
+                    
+                    <div className="flex items-center gap-6">
+                        <Link to="/admin/login" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white transition-colors">
+                            <Lock size={12} /> Admin Login
+                        </Link>
+                    </div>
+                </div>
             </div>
-          </div>
-
-          {/* Map Section */}
-          <div>
-            <h3 className="text-2xl font-bold mb-6">DIRECTIONS</h3>
-            <div className="bg-gray-800 h-64 rounded-lg overflow-hidden" data-testid="footer-map">
-              <iframe
-                title="Xen Motors Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3023.6334542159495!2d-73.5323214!3d40.72611!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c280629729864d%3A0x6b77c57099712571!2s45%20W%20John%20St%20%23%20B%2C%20Hicksville%2C%20NY%2011801%2C%20USA!5e0!3m2!1sen!2sin!4v1714310000000!5m2!1sen!2sin"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </div>
-            <a
-              href="https://maps.google.com/?q=45+W+John+Street+Unit+B+Hicksville+NY+11801"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mt-3 text-sm text-red-500 hover:text-red-400 transition-colors"
-              data-testid="footer-get-directions"
-            >
-              Get Directions →
-            </a>
-          </div>
-        </div>
-
-        {/* =======================================================
-            UPDATED: Links with window.scrollTo aur Hover Dropdowns
-        ======================================================== */}
-        <div className="border-t border-gray-700 pt-6">
-          
-          <nav className="flex justify-center items-center gap-6 md:gap-8 flex-wrap mb-6 font-bold text-[15px] text-white">
-            <Link to="/" onClick={scrollToTop} className="hover:text-red-500 transition-colors py-2">Home</Link>
-            <Link to="/inventory" onClick={scrollToTop} className="hover:text-red-500 transition-colors py-2">Cars For Sale</Link>
-            
-            <FooterDropdown label="Find a Car" items={[
-              { label: 'Start Your Vehicle Purchase', path: '/start-your-vehicle-purchase' },
-              { label: 'Car Finder', path: '/find-car' }
-            ]} />
-            
-            <FooterDropdown label="Finance" items={[
-              { label: 'Loan Application', path: '/finance' },
-              { label: 'Value My Trade', path: '/trade-in' }
-            ]} />
-            
-            <FooterDropdown label="Services" items={[
-              { label: 'Service Dept', path: '/services/service-dept' },
-              { label: 'Parts Dept', path: '/services/parts-dept' },
-              { label: 'Body Shop', path: '/services/body-shop' },
-              { label: 'Glass Installation and Repair', path: '/services/glass' }
-            ]} />
-            
-            <FooterDropdown label="Warranty" items={[
-              { label: 'Request Warranty Information', path: '/warranty/info' },
-              { label: 'Schedule Warranty Appt', path: '/warranty/schedule' }
-            ]} />
-            
-            <FooterDropdown label="Contact Us" items={[
-              { label: 'About Us', path: '/about' },
-              { label: 'Contact', path: '/contact' },
-              { label: 'Schedule Visit', path: '/schedule-visit' },
-              { label: 'Referral Program', path: '/referral' }
-            ]} />
-          </nav>
-          
-          <div className="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
-            
-            {/* Left Side: Developed By Zarnetic */}
-            <div className="text-center md:text-left text-white">
-              <p className="font-bold text-sm mb-2">
-                © {new Date().getFullYear()} Developed by <a href="https://www.zarnetic.com" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors">Zarnetic</a>™
-              </p>
-              <p className="text-xs text-gray-300">
-                By placing calls, you agree to the <Link to="/terms" onClick={scrollToTop} className="underline hover:text-red-500">Terms and Conditions of Use</Link>.
-              </p>
-            </div>
-
-            {/* Right Side: Sitemap, Terms & Account Login */}
-            <div className="flex items-center gap-6 text-sm font-bold text-white">
-              <Link to="/sitemap" onClick={scrollToTop} className="hover:text-red-500 transition-colors">Sitemap</Link>
-              <Link to="/terms" onClick={scrollToTop} className="hover:text-red-500 transition-colors">Terms & Conditions</Link>
-              <a 
-                href="/admin/login" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:text-red-500 transition-colors"
-                data-testid="footer-admin-login"
-              >
-                Account Login
-              </a>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
+        </footer>
+    );
 };
 
 export default Footer;

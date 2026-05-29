@@ -1,160 +1,185 @@
 import React, { useState } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import { useToast } from '../hooks/use-toast';
-import axios from 'axios';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import { MapPin, Mail, Phone, Send, CheckCircle, Loader2 } from 'lucide-react';
 
 const ContactPage = () => {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: ''
-  });
+    // --- States for Volunteer Form ---
+    const [volunteerData, setVolunteerData] = useState({ name: '', email: '', phone: '', city: '', message: '' });
+    const [volStatus, setVolStatus] = useState('idle'); // idle, submitting, success, error
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    try {
-      await axios.post(`${API}/contacts`, formData);
-      
-      toast({
-        title: "Message Sent!",
-        description: "We'll get back to you as soon as possible.",
-      });
-      
-      setFormData({ name: '', email: '', phone: '', message: '' });
-    } catch (error) {
-      console.error('Error submitting contact:', error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive"
-      });
-    }
-  };
+    // --- States for Contact Form ---
+    const [contactData, setContactData] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
+    const [contactStatus, setContactStatus] = useState('idle'); 
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-4xl font-bold text-center text-gray-900 mb-12">CONTACT US</h1>
-          
-          <div className="bg-white p-8 mb-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">First Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:border-gray-400"
-                />
-              </div>
+    // --- Handlers ---
+    const handleVolChange = (e) => setVolunteerData({ ...volunteerData, [e.target.name]: e.target.value });
+    const handleContactChange = (e) => setContactData({ ...contactData, [e.target.name]: e.target.value });
 
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">Email *</label>
-                <input
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:border-gray-400"
-                />
-              </div>
+    // 1. Volunteer Form Submit
+    const handleVolSubmit = async (e) => {
+        e.preventDefault();
+        setVolStatus('submitting');
+        try {
+            const response = await fetch('http://localhost:5000/api/volunteer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(volunteerData)
+            });
+            if (response.ok) {
+                setVolStatus('success');
+                setVolunteerData({ name: '', email: '', phone: '', city: '', message: '' });
+            } else {
+                setVolStatus('error');
+            }
+        } catch (error) {
+            setVolStatus('error');
+        }
+    };
 
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">Phone *</label>
-                <input
-                  type="tel"
-                  required
-                  value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:border-gray-400"
-                />
-              </div>
+    // 2. Contact Form Submit
+    const handleContactSubmit = async (e) => {
+        e.preventDefault();
+        setContactStatus('submitting');
+        try {
+            const response = await fetch('http://localhost:5000/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(contactData)
+            });
+            if (response.ok) {
+                setContactStatus('success');
+                setContactData({ name: '', email: '', phone: '', subject: '', message: '' });
+            } else {
+                setContactStatus('error');
+            }
+        } catch (error) {
+            setContactStatus('error');
+        }
+    };
 
-              <div>
-                <label className="block text-sm text-gray-700 mb-2">Comments</label>
-                <textarea
-                  rows={6}
-                  value={formData.message}
-                  onChange={(e) => setFormData({...formData, message: e.target.value})}
-                  className="w-full px-4 py-2 border border-gray-300 focus:outline-none focus:border-gray-400"
-                ></textarea>
-              </div>
+    return (
+        <div className="bg-gradient-to-b from-blue-50/30 to-white min-h-screen py-16 px-4">
+            <div className="max-w-6xl mx-auto">
+                
+                {/* Header Section */}
+                <div className="text-center mb-16">
+                    <span className="inline-block bg-blue-100 text-[#2081e2] px-4 py-1.5 rounded-full text-xs font-bold tracking-wider mb-6">
+                        Spread Smiles Foundation
+                    </span>
+                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                        Get in <span className="text-[#2081e2]">Touch</span>
+                    </h1>
+                    <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+                        Reach out to us and join our mission to create positive change.
+                    </p>
+                </div>
 
-              <button
-                type="submit"
-                className="w-full bg-gray-900 text-white py-3 px-8 font-medium text-lg hover:bg-gray-800 transition-colors"
-              >
-                Send
-              </button>
-            </form>
-          </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    {/* Left Column: Contact Details & Volunteer Form */}
+                    <div className="space-y-6">
+                        
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <div className="flex items-start gap-4">
+                                <MapPin className="text-[#2081e2] w-6 h-6 shrink-0 mt-1" />
+                                <div>
+                                    <h3 className="font-bold text-gray-900 mb-2">Address</h3>
+                                    <p className="text-gray-600 text-sm leading-relaxed uppercase">
+                                        F 235/3, COMMON SERVICES, SHAHEEN BAGH, ABUL FAZAL ENCLAVE, PART-II, JAMIA NAGAR, NEW DELHI 110025
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
 
-          {/* Contact Info Section */}
-          <div className="bg-white p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">XEN MOTORS INC.</h2>
-            
-            <div className="space-y-4 mb-8">
-              <div>
-                <p className="font-medium">45 W JOHN STREET UNIT B</p>
-                <p className="text-gray-600">HICKSVILLE, NY 11801</p>
-              </div>
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <div className="flex items-center gap-4">
+                                <Mail className="text-green-500 w-6 h-6 shrink-0" />
+                                <div>
+                                    <h3 className="font-bold text-gray-900 mb-1">Email</h3>
+                                    <p className="text-gray-600 text-sm">spreadsmilesfoundation8@gmail.com</p>
+                                </div>
+                            </div>
+                        </div>
 
-              <div>
-                <a href="tel:5167885722" className="font-medium hover:text-red-600">(516) 788-5722</a>
-              </div>
+                        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                            <div className="flex items-center gap-4">
+                                <Phone className="text-yellow-500 w-6 h-6 shrink-0" />
+                                <div>
+                                    <h3 className="font-bold text-gray-900 mb-1">Phone</h3>
+                                    <p className="text-gray-600 text-sm">+91 7840008043</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* VOLUNTEER REGISTRATION FORM */}
+                        <div className="bg-slate-50 p-6 md:p-8 rounded-3xl border border-gray-100">
+                            {volStatus === 'success' ? (
+                                <div className="text-center py-8">
+                                    <CheckCircle className="w-12 h-12 text-blue-500 mx-auto mb-4" />
+                                    <h2 className="text-xl font-bold text-gray-900 mb-2">Registration Successful!</h2>
+                                    <p className="text-sm text-gray-500 mb-4">Welcome to the team! We will contact you soon.</p>
+                                    <button onClick={() => setVolStatus('idle')} className="text-[#2081e2] text-sm font-semibold hover:underline">Register another volunteer</button>
+                                </div>
+                            ) : (
+                                <>
+                                    <h3 className="text-xl font-bold text-gray-900 mb-6">Volunteer Registration</h3>
+                                    <form onSubmit={handleVolSubmit} className="space-y-4">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <input type="text" name="name" value={volunteerData.name} onChange={handleVolChange} required placeholder="Full Name" className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:outline-none focus:border-[#2081e2] text-sm transition-colors" />
+                                            <input type="email" name="email" value={volunteerData.email} onChange={handleVolChange} required placeholder="Email" className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:outline-none focus:border-[#2081e2] text-sm transition-colors" />
+                                        </div>
+                                        <input type="tel" name="phone" value={volunteerData.phone} onChange={handleVolChange} required placeholder="Phone Number" className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:outline-none focus:border-[#2081e2] text-sm transition-colors" />
+                                        <input type="text" name="city" value={volunteerData.city} onChange={handleVolChange} required placeholder="City" className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:outline-none focus:border-[#2081e2] text-sm transition-colors" />
+                                        <textarea rows="4" name="message" value={volunteerData.message} onChange={handleVolChange} required placeholder="Tell us about your interest and availability" className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:outline-none focus:border-[#2081e2] text-sm resize-none transition-colors"></textarea>
+                                        
+                                        {volStatus === 'error' && <p className="text-red-500 text-xs text-center">Registration failed. Try again.</p>}
+                                        
+                                        <button type="submit" disabled={volStatus === 'submitting'} className="w-full bg-[#2081e2] text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2 text-sm disabled:opacity-70">
+                                            {volStatus === 'submitting' ? <><Loader2 className="w-4 h-4 animate-spin" /> Registering...</> : <>Register as Volunteer <Send className="w-4 h-4" /></>}
+                                        </button>
+                                    </form>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Right Column: Send Message Form */}
+                    <div className="bg-white p-6 md:p-10 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 h-fit">
+                        {/* CONTACT MESSAGE FORM */}
+                        {contactStatus === 'success' ? (
+                            <div className="text-center py-12">
+                                <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                                <h2 className="text-2xl font-bold text-gray-900 mb-2">Message Sent!</h2>
+                                <p className="text-gray-500 mb-6">Thank you for reaching out. We will get back to you shortly.</p>
+                                <button onClick={() => setContactStatus('idle')} className="text-green-600 font-semibold hover:underline">
+                                    Send another message
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-8">Send us a Message</h2>
+                                <form onSubmit={handleContactSubmit} className="space-y-5">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                        <input type="text" name="name" value={contactData.name} onChange={handleContactChange} required placeholder="Your Name" className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:outline-none focus:border-green-500 text-sm transition-colors" />
+                                        <input type="email" name="email" value={contactData.email} onChange={handleContactChange} required placeholder="Email" className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:outline-none focus:border-green-500 text-sm transition-colors" />
+                                    </div>
+                                    <input type="tel" name="phone" value={contactData.phone} onChange={handleContactChange} required placeholder="Phone Number" className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:outline-none focus:border-green-500 text-sm transition-colors" />
+                                    <input type="text" name="subject" value={contactData.subject} onChange={handleContactChange} required placeholder="Subject" className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:outline-none focus:border-green-500 text-sm transition-colors" />
+                                    <textarea rows="7" name="message" value={contactData.message} onChange={handleContactChange} required placeholder="Your Message" className="w-full px-4 py-3 rounded-lg bg-white border border-gray-200 focus:outline-none focus:border-green-500 text-sm resize-none transition-colors"></textarea>
+                                    
+                                    {contactStatus === 'error' && <p className="text-red-500 text-sm text-center">Failed to send message. Please try again.</p>}
+                                    
+                                    <button type="submit" disabled={contactStatus === 'submitting'} className="w-full bg-[#5cb85c] hover:bg-[#4cae4c] text-white font-bold py-3.5 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm disabled:opacity-70">
+                                        {contactStatus === 'submitting' ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : <>Send Message <Send className="w-4 h-4" /></>}
+                                    </button>
+                                </form>
+                            </>
+                        )}
+                    </div>
+
+                </div>
             </div>
-
-            <div className="border-t border-gray-200 pt-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">HOURS</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Sunday</span>
-                  <span className="font-medium">Closed</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Monday</span>
-                  <span className="font-medium">8:00 AM - 8:00 PM EDT</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Tuesday</span>
-                  <span className="font-medium">8:00 AM - 8:00 PM EDT</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Wednesday</span>
-                  <span className="font-medium">8:00 AM - 8:00 PM EDT</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Thursday</span>
-                  <span className="font-medium">8:00 AM - 8:00 PM EDT</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Friday</span>
-                  <span className="font-medium">8:00 AM - 8:00 PM EDT</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Saturday</span>
-                  <span className="font-medium">10:00 AM - 5:00 PM EDT</span>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-      
-      <Footer />
-    </div>
-  );
+    );
 };
 
 export default ContactPage;

@@ -1,78 +1,33 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../lib/supabase'; // Apna supabase connection
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-const STORAGE_KEY = 'xen_admin_token';
-
-const AuthContext = createContext(null);
-
-// Axios interceptor: inject Bearer token if present, unwrap 401 to trigger logout
-axios.interceptors.request.use((config) => {
-  if (config.url && config.url.startsWith(BACKEND_URL)) {
-    const token = localStorage.getItem(STORAGE_KEY);
-    if (token) {
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-  }
-  return config;
-});
+const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [status, setStatus] = useState('checking'); // checking | authenticated | anonymous
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-  const checkSession = useCallback(async () => {
-    const token = localStorage.getItem(STORAGE_KEY);
-    if (!token) {
-      setStatus('anonymous');
-      setUser(null);
-      return;
-    }
-    try {
-      const { data } = await axios.get(`${API}/auth/me`);
-      setUser(data);
-      setStatus('authenticated');
-    } catch (e) {
-      localStorage.removeItem(STORAGE_KEY);
-      setUser(null);
-      setStatus('anonymous');
-    }
-  }, []);
+    useEffect(() => {
+        // Pehle check karega ki koi user login hai ya nahi
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user ?? null);
+            setLoading(false);
+        });
 
-  useEffect(() => {
-    checkSession();
-  }, [checkSession]);
+        // Agar user login ya logout karta hai, toh ye update ho jayega
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null);
+        });
 
-  const login = async (email, password) => {
-    const { data } = await axios.post(`${API}/auth/login`, { email, password });
-    localStorage.setItem(STORAGE_KEY, data.access_token);
-    setUser(data.user);
-    setStatus('authenticated');
-    return data.user;
-  };
+        return () => subscription.unsubscribe();
+    }, []);
 
-  const logout = async () => {
-    try {
-      await axios.post(`${API}/auth/logout`);
-    } catch (e) {
-      // ignore logout errors; clear locally anyway
-    }
-    localStorage.removeItem(STORAGE_KEY);
-    setUser(null);
-    setStatus('anonymous');
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, status, login, logout, refresh: checkSession }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    return (
+        <AuthContext.Provider value={{ user, loading }}>
+            {/* Jab tak check chal raha hai tab tak white screen rahegi, phir app load hoga */}
+            {!loading && children} 
+        </AuthContext.Provider>
+    );
 };
 
-export const useAuth = () => {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
-  return ctx;
-};
+export const useAuth = () => useContext(AuthContext);

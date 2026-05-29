@@ -1,100 +1,90 @@
 import React, { useState } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { Lock } from 'lucide-react';
-import { useAuth } from '../../auth/AuthContext';
-
-const formatError = (detail) => {
-  if (!detail) return 'Something went wrong. Please try again.';
-  if (typeof detail === 'string') return detail;
-  if (Array.isArray(detail)) return detail.map((e) => e?.msg || JSON.stringify(e)).join(' ');
-  return String(detail);
-};
+import { Lock, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../lib/supabase';
+import { toast } from 'sonner';
 
 const AdminLoginPage = () => {
-  const { status, login } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-  const from = location.state?.from || '/admin';
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        
+        if (!email || !password) {
+            toast.error("Please enter both email and password!");
+            return;
+        }
 
-  if (status === 'authenticated') {
-    return <Navigate to={from} replace />;
-  }
+        setLoading(true);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSubmitting(true);
-    try {
-      await login(email.trim(), password);
-      navigate(from, { replace: true });
-    } catch (err) {
-      setError(formatError(err.response?.data?.detail) || err.message);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+        try {
+            // Supabase backend se login check kar rahe hain
+            const { error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
 
-  return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-8" data-testid="admin-login-card">
-        <div className="flex flex-col items-center mb-6">
-          <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center mb-3">
-            <Lock className="w-7 h-7 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">Admin Login</h1>
-          <p className="text-sm text-gray-500 mt-1">Xen Motors Inc.</p>
-        </div>
+            if (error) throw error;
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              required
-              autoFocus
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-600"
-              data-testid="login-email"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-600"
-              data-testid="login-password"
-            />
-          </div>
+            toast.success("Login Successful!");
+            navigate('/admin'); // Login hote hi dashboard par bhej dega
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-2 rounded" data-testid="login-error">
-              {error}
+        } catch (error) {
+            console.error("Login Error:", error.message);
+            toast.error("Invalid Email or Password!");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+            <div className="bg-white p-8 md:p-10 rounded-2xl shadow-lg max-w-md w-full">
+                <div className="flex justify-center mb-6">
+                    <div className="bg-blue-100 p-4 rounded-full">
+                        <Lock className="w-8 h-8 text-[#2081e2]" />
+                    </div>
+                </div>
+                
+                <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">Admin Panel</h1>
+                <p className="text-center text-gray-500 mb-8">Login to manage your NGO website</p>
+
+                {/* Form mein onSubmit laga hai */}
+                <form onSubmit={handleLogin} className="space-y-6">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                        <input 
+                            type="email" 
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:border-[#2081e2] bg-gray-50"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input 
+                            type="password" 
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:border-[#2081e2] bg-gray-50"
+                        />
+                    </div>
+                    <button 
+                        type="submit" 
+                        disabled={loading}
+                        className="w-full bg-[#2081e2] text-white font-bold py-3 rounded-lg hover:bg-blue-600 flex justify-center items-center gap-2"
+                    >
+                        {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Login"}
+                    </button>
+                </form>
             </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full bg-gray-900 text-white py-3 rounded font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
-            data-testid="login-submit"
-          >
-            {submitting ? 'Signing in…' : 'Sign In'}
-          </button>
-        </form>
-
-        <p className="text-xs text-gray-500 text-center mt-6">Authorized personnel only</p>
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default AdminLoginPage;

@@ -1,4 +1,4 @@
-document.title = "Xen Motors Inc.";
+document.title = "spread smiles foundation";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "@/index.css";

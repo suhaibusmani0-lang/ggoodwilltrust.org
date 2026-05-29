@@ -1,150 +1,118 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, MapPin, ChevronDown, Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 
 const Header = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const navigationData = [
-    { label: 'INVENTORY', items: [
-      { label: 'All Inventory', path: '/inventory' },
-      { label: 'Coupe', path: '/inventory?bodyType=Coupe' },
-      { label: 'Minivan', path: '/inventory?bodyType=Minivan' },
-      { label: 'Pickup', path: '/inventory?bodyType=Pickup' },
-      { label: 'Sedan', path: '/inventory?bodyType=Sedan' },
-      { label: 'SUV', path: '/inventory?bodyType=SUV' },
-      { label: 'Wagon', path: '/inventory?bodyType=Wagon' }
-    ]},
-    { label: 'FIND A CAR', items: [
-      { label: 'Start Your Vehicle Purchase', path: '/start-your-vehicle-purchase' },
-      { label: 'Find a Car', path: '/find-a-car' }
-    ]},
-    { label: 'FINANCE', items: [
-      { label: 'Loan Application', path: '/finance' },
-      { label: 'Value My Trade', path: '/trade-in' }
-    ]},
-    { label: 'SERVICES', items: [
-      { label: 'Service Dept', path: '/services/service-dept' },
-      { label: 'Parts Dept', path: '/services/parts-dept' },
-      { label: 'Body Shop', path: '/services/body-shop' },
-      { label: 'Glass Installation and Repair', path: '/services/glass' }
-    ]},
-    { label: 'WARRANTY', items: [
-      { label: 'Request Warranty Information', path: '/warranty/info' },
-      { label: 'Schedule Warranty Appt', path: '/warranty/schedule' }
-    ]},
-    { label: 'CONTACT US', items: [
-      { label: 'About Us', path: '/about' },
-      { label: 'Contact', path: '/contact' },
-      { label: 'Schedule Visit', path: '/schedule-visit' },
-      { label: 'Referral Program', path: '/referral' }
-    ]}
-  ];
-
-  const NavDropdown = ({ label, items }) => {
-    const [isOpen, setIsOpen] = useState(false);
     return (
-      <div className="relative" onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
-        <button className="px-4 py-3 text-gray-900 hover:bg-gray-100 transition-colors font-bold text-sm flex items-center gap-1 uppercase">
-          {label} <ChevronDown size={14} />
-        </button>
-        {isOpen && (
-          <div className="absolute top-full left-0 bg-white shadow-xl border border-gray-100 min-w-[250px] z-50">
-            {items.map((item, index) => (
-              <Link key={index} to={item.path} className="block px-6 py-3 text-sm text-gray-700 hover:bg-red-600 hover:text-white transition-colors border-b border-gray-50 last:border-b-0">
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
+        <header className="bg-[#f8f9fc] py-4 px-6 md:px-8 relative z-50">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+                
+                {/* 1. Logo Section */}
+                <Link to="/" className="flex-shrink-0">
+                    {/* Yahan aap apne actual logo ki path update kar dijiyega (jaise '/logo.png') */}
+                    <img 
+                        src="/logo.png" 
+                        alt="Spread Smiles Foundation" 
+                        className="h-14 object-contain" 
+                        onError={(e) => {
+                            e.target.style.display = 'none'; // Agar image na mile toh error na aaye
+                        }}
+                    />
+                    {/* Agar logo image abhi nahi hai, toh ye text dikhega */}
+                    <span className="font-bold text-sm text-[#ea3a72] hidden">Spread Smiles Foundation</span>
+                </Link>
+
+                {/* 2. Center Navigation Pill (Desktop) */}
+                <nav className="hidden lg:flex items-center bg-white shadow-sm rounded-full px-2 py-1.5">
+                    
+                    <Link to="/" className="bg-[#2081e2] text-white px-6 py-2 rounded-full font-semibold text-sm">
+                        Home
+                    </Link>
+                    
+                    <Link to="/about" className="text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm transition-colors">
+                        About Us
+                    </Link>
+                    
+                    <Link to="/programs" className="text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm transition-colors">
+                        Programs
+                    </Link>
+                    
+                    <Link to="/projects" className="text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm transition-colors">
+                        Projects
+                    </Link>
+                    
+                    <Link to="/donate" className="text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm transition-colors">
+                        Donate
+                    </Link>
+                    
+                    <Link to="/contact" className="text-gray-700 hover:text-[#2081e2] px-4 py-2 font-semibold text-sm transition-colors">
+                        Contact
+                    </Link>
+
+                    {/* Dropdown Menu for Press Releases */}
+                    <div 
+                        className="relative px-2 py-2"
+                        onMouseEnter={() => setIsDropdownOpen(true)}
+                        onMouseLeave={() => setIsDropdownOpen(false)}
+                    >
+                        <button className="flex items-center gap-1 text-gray-700 hover:text-[#2081e2] px-2 font-semibold text-sm focus:outline-none transition-colors">
+                            Press Releases
+                            <ChevronDown className="w-4 h-4 text-gray-500" />
+                        </button>
+                        
+                        {/* Dropdown Items */}
+                        {isDropdownOpen && (
+                            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-100 shadow-xl rounded-lg overflow-hidden py-2">
+                                <Link to="/press/news-gallery" className="block px-5 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#2081e2]">
+                                    News Gallery
+                                </Link>
+                                <Link to="/press/documents" className="block px-5 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#2081e2]">
+                                    Documents
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                </nav>
+
+                {/* 3. Call to Action Button (Right Side) */}
+                <div className="hidden lg:block">
+                    {/* 👇 Link changed to /contact 👇 */}
+                    <Link to="/contact" className="bg-[#2081e2] text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:bg-blue-600 transition-colors shadow-sm">
+                        Join the Movement
+                    </Link>
+                </div>
+
+                {/* Mobile Menu Hamburger Icon */}
+                <button 
+                    className="lg:hidden text-gray-700 p-2"
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                >
+                    {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                </button>
+            </div>
+
+            {/* Mobile Menu Dropdown (Simplified for small screens) */}
+            {isMobileMenuOpen && (
+                <div className="lg:hidden absolute top-full left-0 w-full bg-white text-black p-4 space-y-4 shadow-lg border-t">
+                    <Link to="/" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+                    <Link to="/about" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>About Us</Link>
+                    <Link to="/programs" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Programs</Link>
+                    <Link to="/projects" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Projects</Link>
+                    <Link to="/donate" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Donate</Link>
+                    <Link to="/contact" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+                    <Link to="/press/news-gallery" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>News Gallery</Link>
+                    <Link to="/press/documents" className="block font-medium hover:text-[#2081e2]" onClick={() => setIsMobileMenuOpen(false)}>Documents</Link>
+                    {/* 👇 Link changed to /contact 👇 */}
+                    <Link to="/contact" className="block text-center bg-[#2081e2] text-white py-3 rounded-lg font-bold mt-4 shadow-md" onClick={() => setIsMobileMenuOpen(false)}>
+                        Join the Movement
+                    </Link>
+                </div>
+            )}
+        </header>
     );
-  };
-
-  const MobileAccordion = ({ label, items }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    return (
-      <div className="border-b border-gray-800">
-        <button onClick={() => setIsOpen(!isOpen)} className="w-full flex justify-between items-center py-4 px-6 text-white font-bold text-sm uppercase">
-          {label} <ChevronDown size={16} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-        </button>
-        {isOpen && (
-          <div className="bg-gray-800 py-2">
-            {items.map((item, index) => (
-              <Link key={index} to={item.path} onClick={() => setIsMobileMenuOpen(false)} className="block py-3 px-10 text-gray-300 text-sm hover:text-white">
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  return (
-    /* FIXED: Sticky class hata di hai, ab ye scroll karne par upar chala jayega */
-    <header className="w-full relative z-[100] shadow-sm bg-white">
-      {/* Top Bar */}
-      <div className="bg-gray-900 text-white py-2">
-        <div className="container mx-auto px-4 flex justify-center items-center text-[10px] md:text-xs text-center">
-          <div className="flex flex-wrap items-center justify-center gap-x-4 md:gap-x-8 gap-y-1">
-            <a href="tel:5167885722" className="flex items-center gap-2 hover:text-red-500 transition-colors">
-              <Phone size={14} /> (516) 788-5722
-            </a>
-            <a href="#map" className="flex items-center gap-2 hover:text-red-500 transition-colors">
-              <MapPin size={14} /> 45 W JOHN STREET UNIT B | HICKSVILLE, NY 11801
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Header */}
-      <div className="container mx-auto px-4 py-3 md:py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <img
-              src="https://customer-assets.emergentagent.com/job_vehicle-xen/artifacts/orscmp93_XenMotors_Logo.jpg"
-              alt="Xen Motors Inc."
-              className="h-10 md:h-16 w-auto object-contain"
-            />
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden xl:flex items-center">
-            <Link to="/" className="px-4 py-3 bg-gray-900 text-white hover:bg-red-600 transition-colors font-bold text-sm mr-1">
-              HOME
-            </Link>
-            {navigationData.map((nav, idx) => (
-              <NavDropdown key={idx} label={nav.label} items={nav.items} />
-            ))}
-          </nav>
-
-          {/* Mobile Menu Toggle */}
-          <button 
-            className="xl:hidden p-2 text-gray-900"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu Drawer */}
-      {isMobileMenuOpen && (
-        <div className="absolute top-full left-0 w-full bg-gray-900 z-[1000] xl:hidden overflow-y-auto max-h-[80vh]">
-          <nav className="flex flex-col pb-10">
-            <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="py-4 px-6 text-white font-bold text-sm border-b border-gray-800">
-              HOME
-            </Link>
-            {navigationData.map((nav, idx) => (
-              <MobileAccordion key={idx} label={nav.label} items={nav.items} />
-            ))}
-          </nav>
-        </div>
-      )}
-    </header>
-  );
 };
 
 export default Header;

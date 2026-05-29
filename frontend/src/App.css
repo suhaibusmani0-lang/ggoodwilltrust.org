@@ -1,4 +1,7 @@
-/* Custom styles for Xen Motors */
+html {
+  scroll-behavior: smooth;
+}
+/* Custom styles for spread smiles */
 .App {
   min-height: 100vh;
 }

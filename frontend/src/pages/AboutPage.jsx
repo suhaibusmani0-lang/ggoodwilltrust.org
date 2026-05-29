@@ -1,101 +1,205 @@
 import React from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { 
+    Calendar, 
+    Users, 
+    MapPin, 
+    Target, 
+    Eye, 
+    CheckCircle2 
+} from 'lucide-react';
 
 const AboutPage = () => {
-  return (
-    <div className="min-h-screen">
-      <Header />
-      
-      <div className="bg-gray-900 text-white py-16">
-        <div className="container mx-auto px-4">
-          <h1 className="text-5xl font-bold text-center">ABOUT XEN MOTORS INC.</h1>
-        </div>
-      </div>
+    // Team Data - Aap yahan unki actual images update kar sakte hain
+    const teamMembers = [
+        {
+            name: "Mohd Minhaj Alam Khan",
+            role: "PRESIDENT",
+            description: "A visionary leader dedicated to uplifting underprivileged communities through impactful initiatives, committed to driving sustainable change and fostering equal opportunities for all.",
+            image: "/team/minhaj.jpg" 
+        },
+        {
+            name: "Afhaam Alam",
+            role: "Secretary",
+            description: "An enthusiastic social worker with a passion for organizing community programs, ensuring smooth operations, and building meaningful connections for the betterment of society.",
+            image: "/team/afhaam.jpg"
+        },
+        {
+            name: "Farhat Parveen",
+            role: "Treasurer",
+            description: "Trusted financial guardian ensuring transparency, accountability, and efficient use of every contribution for social good.",
+            image: "/team/farhat.jpg"
+        },
+        {
+            name: "Kabir Ahmad Ansari",
+            role: "Joint Secretary",
+            description: "A proactive team member dedicated to smooth operations and strengthening community-driven initiatives.",
+            image: "/team/kabir.jpg"
+        },
+        {
+            name: "Ateef Khan",
+            role: "Joint Secretary",
+            description: "Passionate about social service, fostering collaboration and driving impactful welfare programs with commitment.",
+            image: "/team/ateef.jpg"
+        },
+        {
+            name: "Devendra Deshbandhu",
+            role: "Joint Secretary",
+            description: "A problem-solver and dedicated team member, focused on implementing projects that create lasting positive change.",
+            image: "/team/devendra.jpg"
+        }
+    ];
 
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-6xl mx-auto">
-          {/* Hero Image */}
-          <div className="mb-12">
-            <img 
-              src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1200" 
-              alt="Xen Motors Showroom"
-              className="w-full h-96 object-cover rounded-lg shadow-xl"
-            />
-          </div>
-
-          {/* About Content */}
-          <div className="prose max-w-none">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">ABOUT XEN MOTORS INC.</h2>
+    return (
+        <div className="font-sans text-gray-800 bg-white">
             
-            <div className="text-lg text-gray-700 leading-relaxed space-y-6">
-              <p>
-                At Xen Motors Inc., we take pride in the way we do business. We believe that the car buying experience should be a positive one. Your satisfaction is our top priority. We are customer-focused, which means we work with you to find the vehicle that meets your needs and budget; not our sales goals. We have been working hard in the Hicksville area to build a reputation for honest, trustworthy sales practices. We're ready to earn your business and would be proud to earn your recommendation.
-              </p>
+            {/* 1. HERO SECTION */}
+            <section className="pt-20 pb-16 px-4 bg-gradient-to-b from-blue-50/50 to-white text-center">
+                <div className="max-w-4xl mx-auto">
+                    <span className="inline-block bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase mb-6">
+                        Spread Smiles Foundation
+                    </span>
+                    <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+                        About <span className="text-blue-500">Spread Smiles</span> <span className="text-green-500">Foundation</span>
+                    </h1>
+                    <p className="text-gray-500 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
+                        Founded with a mission to bring hope and happiness to underprivileged communities, Spread Smiles Foundation focuses on education, healthcare, and social upliftment. Our dedicated team works tirelessly to ensure that every individual gets the opportunity to live with dignity and a smile.
+                    </p>
+                </div>
+            </section>
 
-              <p>
-                Stop in today and shop our great inventory, check out our affordable financing options, and see if you're ready to take home your next vehicle.
-              </p>
+            {/* 2. STATS CARDS */}
+            <section className="py-8 px-4">
+                <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-blue-50/50 p-8 rounded-3xl text-center border border-blue-100/50 hover:shadow-md transition-all">
+                        <Calendar className="w-8 h-8 text-blue-500 mx-auto mb-4" />
+                        <h3 className="font-bold text-gray-900 text-lg mb-1">Established</h3>
+                        <p className="text-blue-500 font-semibold">April 20, 2023</p>
+                    </div>
+                    <div className="bg-green-50/50 p-8 rounded-3xl text-center border border-green-100/50 hover:shadow-md transition-all">
+                        <Users className="w-8 h-8 text-green-500 mx-auto mb-4" />
+                        <h3 className="font-bold text-gray-900 text-lg mb-1">Lives Impacted</h3>
+                        <p className="text-green-500 font-semibold">5,000+</p>
+                    </div>
+                    <div className="bg-yellow-50/50 p-8 rounded-3xl text-center border border-yellow-100/50 hover:shadow-md transition-all">
+                        <MapPin className="w-8 h-8 text-yellow-500 mx-auto mb-4" />
+                        <h3 className="font-bold text-gray-900 text-lg mb-1">Location</h3>
+                        <p className="text-yellow-600 font-semibold">Delhi, India</p>
+                    </div>
+                </div>
+            </section>
 
-              <div className="bg-gray-50 p-8 rounded-lg my-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Commitment to You</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start gap-3">
-                    <span className="text-red-600 font-bold">•</span>
-                    <span>Over 24 years of experience in the auto industry</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-red-600 font-bold">•</span>
-                    <span>Knowledgeable sales team ready to answer all your questions</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-red-600 font-bold">•</span>
-                    <span>Vehicle history reports to help you buy with confidence</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-red-600 font-bold">•</span>
-                    <span>Meticulous 185-point inspection for every vehicle</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-red-600 font-bold">•</span>
-                    <span>Flexible financing options for all credit types</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-red-600 font-bold">•</span>
-                    <span>Top-dollar trade-in valuations</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-red-600 font-bold">•</span>
-                    <span>Extended warranty options available</span>
-                  </li>
-                </ul>
-              </div>
+            {/* 3. MISSION & VISION */}
+            <section className="py-12 px-4">
+                <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+                    {/* Mission */}
+                    <div className="bg-white p-8 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 relative">
+                        <div className="absolute -top-6 left-8 bg-blue-500 p-3 rounded-2xl shadow-lg">
+                            <Target className="w-6 h-6 text-white" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-gray-900 mt-4 mb-4">Our Mission</h3>
+                        <p className="text-gray-600 leading-relaxed">
+                            Our mission is to serve humanity by providing education, healthcare, and essential support to underprivileged communities, empowering them to lead a life of dignity, hope, and opportunity.
+                        </p>
+                    </div>
+                    
+                    {/* Vision */}
+                    <div className="bg-white p-8 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 relative mt-8 md:mt-0">
+                        <div className="absolute -top-6 left-8 bg-green-500 p-3 rounded-2xl shadow-lg">
+                            <Eye className="w-6 h-6 text-white" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-gray-900 mt-4 mb-4">Our Vision</h3>
+                        <p className="text-gray-600 leading-relaxed">
+                            To create a compassionate and empowered society where every individual has access to education, healthcare, and the resources needed to live a dignified life.
+                        </p>
+                    </div>
+                </div>
+            </section>
 
-              <p>
-                We invite you to contact us today and let us try to connect you with a great vehicle. We are in the business of satisfying all our clients. Xen Motors is with you from start to finish during your vehicle purchasing process.
-              </p>
+            {/* 4. OUR APPROACH */}
+            <section className="py-16 px-4 bg-gray-50/50">
+                <div className="max-w-5xl mx-auto">
+                    <h2 className="text-3xl font-bold text-center mb-12">Our Approach</h2>
+                    
+                    <div className="grid md:grid-cols-2 gap-12">
+                        {/* What We Do */}
+                        <div>
+                            <h3 className="text-xl font-bold mb-6">What We Do</h3>
+                            <ul className="space-y-4">
+                                <li className="flex items-start gap-3">
+                                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                                    <span className="text-gray-600">Work with schools under Vidyanjali initiatives</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                                    <span className="text-gray-600">Distribute winter sweaters to students</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                                    <span className="text-gray-600">Provide school uniforms to underprivileged children</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                                    <span className="text-gray-600">Organize health camps in communities</span>
+                                </li>
+                            </ul>
+                        </div>
 
-              <p className="font-semibold text-xl text-gray-900">
-                Ask us about our referral program for your friends and family! At Xen Motors you are getting the best vehicle and the best price saving you thousands of dollars.
-              </p>
-            </div>
+                        {/* Where We Work */}
+                        <div>
+                            <h3 className="text-xl font-bold mb-6">Where We Work</h3>
+                            <p className="text-gray-600 mb-6">
+                                Currently active in Delhi, we focus our efforts on areas with the greatest need, particularly in Shaheen Bagh, Jamia Nagar, and surrounding communities.
+                            </p>
+                            
+                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                                <h4 className="font-bold text-gray-900 mb-2">Primary Location</h4>
+                                <p className="text-sm text-gray-500 leading-relaxed">
+                                    F 235/3, Common Services, Shaheen Bagh, Abul Fazal Enclave, Part-II, Jamia Nagar, New Delhi 110025
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-            {/* Contact CTA */}
-            <div className="mt-12 text-center">
-              <a 
-                href="/contact"
-                className="inline-block bg-red-600 text-white py-4 px-12 text-lg font-bold hover:bg-red-700 transition-colors rounded-sm shadow-lg"
-              >
-                Contact Us Today
-              </a>
-            </div>
-          </div>
+            {/* 5. MEET OUR TEAM */}
+            <section className="py-20 px-4">
+                <div className="max-w-6xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl font-bold mb-4">Meet Our <span className="text-blue-500">Team</span></h2>
+                        <p className="text-gray-500 max-w-2xl mx-auto">
+                            Our passionate team of leaders who are dedicated to making a positive impact in the lives of those who need it most.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {teamMembers.map((member, index) => (
+                            <div key={index} className="bg-white p-8 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] border border-gray-100 text-center hover:-translate-y-1 transition-transform duration-300">
+                                {/* Profile Image */}
+                                <div className="w-24 h-24 mx-auto mb-6 rounded-full overflow-hidden border-4 border-gray-50 bg-gray-100">
+                                    <img 
+                                        src={member.image} 
+                                        alt={member.name} 
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => {
+                                            e.target.style.display = 'none'; // image na hone par fallback
+                                        }}
+                                    />
+                                </div>
+                                
+                                <h3 className="text-xl font-bold text-gray-900 mb-1">{member.name}</h3>
+                                <p className="text-blue-500 text-sm font-bold tracking-wide uppercase mb-4">{member.role}</p>
+                                <p className="text-gray-500 text-sm leading-relaxed">
+                                    {member.description}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
         </div>
-      </div>
-      
-      <Footer />
-    </div>
-  );
+    );
 };
 
 export default AboutPage;
