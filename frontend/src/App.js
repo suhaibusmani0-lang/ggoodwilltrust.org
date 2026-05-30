@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ScrollToTop from "./ScrollToTop"; // 👇 Yahan import kiya hai
+import ScrollToTop from "./ScrollToTop";
 
 // --- NGO PAGES IMPORTS ---
 import Header from "./components/Header";
@@ -8,7 +8,9 @@ import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ProgramsPage from "./pages/ProgramsPage";
+import ProgramDetailsPage from "./pages/ProgramDetailsPage";
 import ProjectsPage from "./pages/ProjectsPage";
+import ProjectDetailsPage from "./pages/ProjectDetailsPage"; // 👇 Naya Project Details page yahan import kiya hai
 import GalleryPage from "./pages/GalleryPage";
 import ContactPage from "./pages/ContactPage";
 import DonatePage from "./pages/DonatePage"; 
@@ -50,7 +52,14 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/programs" element={<ProgramsPage />} />
+                    
+                    {/* Program Details Route */}
+                    <Route path="/programs/:id" element={<ProgramDetailsPage />} />
+                    
                     <Route path="/projects" element={<ProjectsPage />} />
+                    
+                    {/* 👇 Ye rahi Project Details ki nayi dynamic route 👇 */}
+                    <Route path="/projects/:id" element={<ProjectDetailsPage />} />
                     
                     {/* Gallery Routes */}
                     <Route path="/press/news-gallery" element={<GalleryPage />} />

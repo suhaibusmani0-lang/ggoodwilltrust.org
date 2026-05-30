@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Loader2, ArrowRight, X } from 'lucide-react';
+import { Loader2, ArrowRight } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { Link } from 'react-router-dom'; // 👇 Link import kiya hai
 
 const ProjectsPage = () => {
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedProject, setSelectedProject] = useState(null); // Click kiye gaye project ki detail ke liye
 
     useEffect(() => {
         fetchProjects();
@@ -47,10 +47,11 @@ const ProjectsPage = () => {
                     /* Beautiful Grid of Cards */
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {projects.map((project) => (
-                            <div 
+                            /* 👇 Card ko clickable Link bana diya 👇 */
+                            <Link 
                                 key={project.id} 
-                                onClick={() => setSelectedProject(project)}
-                                className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group flex flex-col border border-gray-100"
+                                to={`/projects/${project.id}`}
+                                className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col border border-gray-100"
                             >
                                 {/* Thumbnail Image */}
                                 <div className="h-56 overflow-hidden relative bg-gray-100">
@@ -70,56 +71,15 @@ const ProjectsPage = () => {
                                 <div className="p-6 flex-1 flex flex-col">
                                     <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1">{project.title}</h3>
                                     <p className="text-gray-500 text-sm mb-4 line-clamp-3 flex-1">{project.description}</p>
-                                    <button className="text-green-500 font-semibold flex items-center gap-1 group-hover:gap-2 transition-all w-fit">
+                                    <span className="text-green-500 font-semibold flex items-center gap-1 group-hover:gap-2 transition-all w-fit mt-auto">
                                         Read More <ArrowRight className="w-4 h-4"/>
-                                    </button>
+                                    </span>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 )}
             </div>
-
-            {/* FULL DETAILS MODAL (Popup) */}
-            {selectedProject && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    {/* Click outside to close (Optional, humne background diya hai) */}
-                    <div className="absolute inset-0" onClick={() => setSelectedProject(null)}></div>
-                    
-                    <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative z-10 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-                        <button 
-                            onClick={() => setSelectedProject(null)} 
-                            className="absolute top-4 right-4 bg-gray-100 hover:bg-red-100 hover:text-red-600 p-2 rounded-full transition-colors z-20"
-                        >
-                            <X className="w-6 h-6" />
-                        </button>
-
-                        <div className="p-6 md:p-10">
-                            <h2 className="text-3xl font-bold text-gray-900 mb-6">{selectedProject.title}</h2>
-                            
-                            <p className="text-gray-600 whitespace-pre-wrap leading-relaxed mb-8 text-lg">
-                                {selectedProject.description}
-                            </p>
-
-                            {selectedProject.image_urls && selectedProject.image_urls.length > 0 && (
-                                <div>
-                                    <h3 className="text-xl font-bold text-gray-800 mb-4">Project Gallery</h3>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        {selectedProject.image_urls.map((img, idx) => (
-                                            <img 
-                                                key={idx} 
-                                                src={img} 
-                                                alt={`${selectedProject.title} ${idx + 1}`} 
-                                                className="w-full h-64 object-cover rounded-2xl border border-gray-200 shadow-sm"
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
