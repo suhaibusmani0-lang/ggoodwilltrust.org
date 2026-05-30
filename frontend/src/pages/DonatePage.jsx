@@ -31,7 +31,6 @@ const recentDonors = [
     { name: "Deepak Chawla", amount: 5000, purpose: "Education" },
 ];
 
-// Duplicate list for seamless infinite scroll
 const scrollingDonors = [...recentDonors, ...recentDonors];
 
 const DonatePage = () => {
@@ -132,108 +131,131 @@ const DonatePage = () => {
     };
 
     // =======================================================================
-    // 🟢 UI 1: PREMIUM SUCCESS RECEIPT SCREEN
+    // 🟢 UI 1: ULTRA PROFESSIONAL OFFICIAL RECEIPT
     // =======================================================================
     if (receiptData) {
         const finalPurpose = receiptData.purpose === 'Other' ? receiptData.customPurpose : receiptData.purpose;
 
         return (
-            <div className="min-h-screen bg-slate-100 print:bg-white text-slate-800 py-10 px-4 font-sans flex items-center justify-center">
-                <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="max-w-3xl w-full bg-white p-10 md:p-14 rounded-none md:rounded-3xl shadow-2xl print:shadow-none print:p-0 relative overflow-hidden border border-slate-200 print:border-none">
-                    
-                    <div className="absolute inset-0 opacity-[0.02] print:opacity-[0.04] pointer-events-none flex items-center justify-center">
-                        <Heart size={400} className="text-slate-900" />
-                    </div>
+            <div className="min-h-screen bg-slate-100 print:bg-white py-10 px-4 flex justify-center items-start font-sans">
+                <div className="max-w-4xl w-full">
 
-                    <div className="flex justify-between items-center mb-10 print:hidden border-b border-slate-100 pb-6 relative z-10">
-                        <div className="flex items-center gap-2 text-green-600 font-bold bg-green-50 px-4 py-2 rounded-lg">
-                            <CheckCircle size={20} /> Payment Secured
+                    {/* Action Buttons - Hidden in Print */}
+                    <div className="flex flex-col sm:flex-row justify-between items-center bg-white p-4 rounded-xl shadow-sm mb-6 print:hidden gap-4">
+                        <div className="flex items-center gap-2 text-green-600 font-bold bg-green-50 px-5 py-2.5 rounded-lg border border-green-100 w-full sm:w-auto justify-center">
+                            <CheckCircle size={20} /> Payment Successful
                         </div>
-                        <div className="flex flex-wrap gap-3">
-                            <button onClick={() => setReceiptData(null)} className="text-slate-500 hover:text-slate-800 font-semibold px-4 py-2 transition-colors flex items-center gap-2">
+                        <div className="flex gap-3 w-full sm:w-auto">
+                            <button onClick={() => setReceiptData(null)} className="flex-1 sm:flex-none justify-center text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-5 py-2.5 rounded-lg font-semibold transition-colors flex items-center gap-2">
                                 <ArrowLeft size={16}/> Back
                             </button>
-                            <button onClick={handlePrint} className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2 rounded-lg font-bold flex items-center gap-2 transition-all shadow-md">
-                                <Printer size={18} /> Print Official Receipt
+                            <button onClick={handlePrint} className="flex-1 sm:flex-none justify-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 transition-all shadow-md">
+                                <Printer size={18} /> Print / Save PDF
                             </button>
                         </div>
                     </div>
 
-                    <div className="relative z-10">
-                        <div className="flex flex-col md:flex-row justify-between items-start border-b-2 border-slate-800 pb-8 mb-8">
-                            <div>
-                                <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter">SPREAD SMILES</h1>
-                                <h2 className="text-lg md:text-xl font-bold text-slate-600 uppercase tracking-[0.2em] mt-1">FOUNDATION</h2>
-                                <div className="mt-4 text-sm text-slate-500 space-y-1">
-                                    <p className="flex items-center gap-1"><MapPin size={14}/> Shaheen Bagh, New Delhi 110025</p>
-                                    <p className="flex items-center gap-1"><Mail size={14}/> spreadsmilesfoundation8@gmail.com</p>
-                                    <p className="flex items-center gap-1"><Phone size={14}/> +91 7840008043</p>
-                                </div>
-                            </div>
-                            <div className="mt-6 md:mt-0 md:text-right">
-                                <h3 className="text-2xl md:text-3xl font-light text-slate-400 uppercase tracking-widest">RECEIPT</h3>
-                                <div className="mt-4 text-sm">
-                                    <p className="text-slate-500 mb-1">Receipt Number</p>
-                                    <p className="font-mono font-bold text-slate-900 text-base">#{receiptData.paymentId.toUpperCase()}</p>
-                                    <p className="text-slate-500 mt-3 mb-1">Date of Issue</p>
-                                    <p className="font-bold text-slate-900">{receiptData.date}</p>
-                                </div>
-                            </div>
+                    {/* THE RECEIPT PAPER */}
+                    <div className="bg-white p-8 md:p-12 shadow-2xl print:shadow-none print:p-2 border border-slate-200 relative overflow-hidden">
+                        
+                        {/* Background Watermark */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] print:opacity-[0.05] pointer-events-none z-0">
+                            <img src="/logo.png" alt="watermark" className="w-1/2 object-contain grayscale" onError={(e) => e.target.style.display='none'} />
                         </div>
 
-                        <div className="mb-10">
-                            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-200 pb-2">Donor Information</h4>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                <div className="col-span-2">
-                                    <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Received With Thanks From</p>
-                                    <p className="font-bold text-slate-900 text-lg capitalize">{receiptData.name}</p>
-                                </div>
-                                <div className="col-span-2 md:col-span-1">
-                                    <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">Email Address</p>
-                                    <p className="font-semibold text-slate-800">{receiptData.email}</p>
-                                </div>
-                                {receiptData.pan && (
-                                    <div className="col-span-2 md:col-span-1">
-                                        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">PAN Number</p>
-                                        <p className="font-mono font-bold text-slate-900 uppercase">{receiptData.pan}</p>
+                        <div className="relative z-10">
+                            {/* Header Row */}
+                            <div className="flex flex-col md:flex-row justify-between items-start border-b-2 border-slate-800 pb-6 mb-8 gap-4">
+                                <div className="flex items-center gap-4">
+                                    <img src="/logo.png" alt="Spread Smiles Logo" className="w-20 h-20 object-contain print:grayscale" onError={(e) => e.target.style.display='none'} />
+                                    <div>
+                                        <h1 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight uppercase">Spread Smiles Foundation</h1>
+                                        <p className="text-sm text-slate-600 mt-1">F 235/3, Shaheen Bagh, New Delhi 110025</p>
+                                        <p className="text-sm text-slate-600">Email: spreadsmilesfoundation8@gmail.com | Ph: +91 7840008043</p>
                                     </div>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="bg-slate-50 border border-slate-200 p-8 rounded-xl flex flex-col md:flex-row justify-between items-center mb-10 print:bg-transparent print:border-t-2 print:border-b-2 print:border-l-0 print:border-r-0 print:rounded-none">
-                            <div>
-                                <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Donation Amount</p>
-                                <p className="text-sm text-slate-600">Towards: <span className="font-semibold text-slate-800">{finalPurpose}</span></p>
-                            </div>
-                            <div className="mt-4 md:mt-0">
-                                <span className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">₹{parseFloat(receiptData.amount).toLocaleString('en-IN')}</span>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-between items-end mt-16 pt-8 border-t border-slate-200">
-                            <div className="w-1/2">
-                                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">Tax Exemption Info (80G)</h4>
-                                <ul className="text-xs text-slate-500 space-y-1">
-                                    <li><span className="font-semibold text-slate-700">Reg No:</span> 719</li>
-                                    <li><span className="font-semibold text-slate-700">PAN:</span> ABGTS6392E</li>
-                                    <li><span className="font-semibold text-slate-700">80G Approval:</span> ABGTS6392EF20231</li>
-                                </ul>
-                                <p className="text-[10px] text-slate-400 mt-4 leading-tight max-w-xs">
-                                    Donations are eligible for deduction under section 80G of the Income Tax Act, 1961. Please preserve this receipt for tax filing.
-                                </p>
-                            </div>
-                            
-                            <div className="text-center w-48">
-                                <div className="border-b-2 border-slate-800 mb-3 h-12 flex items-end justify-center pb-1">
-                                    <span className="text-slate-300 italic font-serif text-sm">Digitally Verified</span>
                                 </div>
-                                <p className="text-xs font-bold text-slate-900 uppercase tracking-wider">Authorized Signatory</p>
-                                <p className="text-[10px] text-slate-500 mt-1">Spread Smiles Foundation</p>
+                                <div className="text-left md:text-right w-full md:w-auto border-t md:border-t-0 pt-4 md:pt-0 border-slate-200">
+                                    <h2 className="text-3xl font-light tracking-widest text-slate-400 uppercase">Receipt</h2>
+                                    <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider bg-slate-100 inline-block px-2 py-1 rounded">Original for Donor</p>
+                                </div>
+                            </div>
+
+                            {/* Meta Data Row */}
+                            <div className="grid grid-cols-2 gap-4 mb-8">
+                                <div>
+                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Receipt No.</p>
+                                    <p className="font-mono font-bold text-slate-900 text-lg">#{receiptData.paymentId.toUpperCase()}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Date of Issue</p>
+                                    <p className="font-bold text-slate-900 text-lg">{receiptData.date}</p>
+                                </div>
+                            </div>
+
+                            {/* Donor Content Box */}
+                            <div className="border border-slate-200 rounded-lg p-6 mb-8 bg-slate-50/50 print:bg-white print:border-slate-300">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
+                                    <div className="col-span-1 md:col-span-2">
+                                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Received With Thanks From</p>
+                                        <p className="font-bold text-xl text-slate-900 capitalize border-b border-slate-200 pb-2">{receiptData.name}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Email Address</p>
+                                        <p className="font-semibold text-slate-800">{receiptData.email}</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">PAN Number</p>
+                                        <p className="font-mono font-bold text-slate-800 uppercase">{receiptData.pan || 'Not Provided'}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Amount & Purpose Highlight */}
+                            <div className="flex flex-col md:flex-row justify-between items-center bg-slate-800 text-white p-6 rounded-lg mb-10 print:bg-transparent print:text-black print:border-2 print:border-slate-800 print:rounded-lg">
+                                <div className="w-full md:w-auto text-center md:text-left mb-4 md:mb-0">
+                                    <p className="text-xs font-bold text-slate-400 print:text-slate-500 uppercase tracking-wider mb-1">Donation Towards</p>
+                                    <p className="font-bold text-lg">{finalPurpose}</p>
+                                </div>
+                                <div className="w-full md:w-auto text-center md:text-right">
+                                    <p className="text-xs font-bold text-slate-400 print:text-slate-500 uppercase tracking-wider mb-1">Amount Received</p>
+                                    <p className="text-4xl md:text-5xl font-black tracking-tight">₹{parseFloat(receiptData.amount).toLocaleString('en-IN')}</p>
+                                </div>
+                            </div>
+
+                            {/* Footer Row: 80G & Signatory */}
+                            <div className="flex flex-col md:flex-row justify-between items-end pt-8 border-t-2 border-slate-200 gap-8">
+                                <div className="w-full md:w-2/3">
+                                    <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3">Tax Exemption Details (80G)</h4>
+                                    <div className="grid grid-cols-2 gap-3 text-sm text-slate-700 bg-slate-50 p-4 rounded-lg print:bg-white print:border print:border-slate-300">
+                                        <p><span className="font-semibold text-slate-900">Reg No:</span> 719</p>
+                                        <p><span className="font-semibold text-slate-900">PAN:</span> ABGTS6392E</p>
+                                        <p className="col-span-2"><span className="font-semibold text-slate-900">80G Approval:</span> ABGTS6392EF20231</p>
+                                    </div>
+                                    <p className="text-[11px] text-slate-500 mt-4 italic leading-relaxed">
+                                        * Donations are eligible for tax deduction under section 80G of the Income Tax Act, 1961.<br/>
+                                        * This is a computer-generated receipt and requires a physical signature only if printed for manual distribution.
+                                    </p>
+                                </div>
+
+                                <div className="w-full md:w-1/3 flex justify-center md:justify-end pt-6 md:pt-0">
+                                    <div className="text-center w-48">
+                                        <div className="h-16 mb-2 flex items-center justify-center relative">
+                                            {/* Digital Stamp Placeholder */}
+                                            <div className="absolute inset-0 flex items-center justify-center opacity-20 print:opacity-40">
+                                                <img src="/logo.png" alt="Stamp" className="w-16 h-16 grayscale" onError={(e) => e.target.style.display='none'} />
+                                            </div>
+                                            <span className="relative z-10 text-slate-400 italic font-serif text-sm">Digitally Verified</span>
+                                        </div>
+                                        <div className="border-t border-slate-800 pt-2">
+                                            <p className="text-sm font-bold text-slate-900 uppercase tracking-wider">Authorized Signatory</p>
+                                            <p className="text-xs text-slate-500 mt-1">Spread Smiles Foundation</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </motion.div>
+                </div>
             </div>
         );
     }
@@ -244,7 +266,6 @@ const DonatePage = () => {
     return (
         <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#0a0f1c] to-[#0a0f1c] text-white py-16 px-4 font-sans overflow-hidden">
             
-            {/* Injecting CSS for Marquee Animation */}
             <style>
                 {`
                 @keyframes marquee {
@@ -263,8 +284,6 @@ const DonatePage = () => {
             </style>
 
             <div className="max-w-7xl mx-auto">
-                
-                {/* Header Section */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-6">
                         <Sparkles size={16} /> Transform Lives Today
@@ -277,7 +296,6 @@ const DonatePage = () => {
                     </p>
                 </motion.div>
 
-                {/* 🟢 RECENT DONORS TICKER */}
                 <div className="relative w-full overflow-hidden bg-white/5 border-y border-white/10 py-4 mb-16 backdrop-blur-md">
                     <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[#0a0f1c] to-transparent z-10"></div>
                     <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-[#0a0f1c] to-transparent z-10"></div>
@@ -293,8 +311,6 @@ const DonatePage = () => {
                 </div>
 
                 <div className="grid lg:grid-cols-12 gap-12 max-w-6xl mx-auto">
-                    
-                    {/* Donation Form */}
                     <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="lg:col-span-7 bg-white/5 backdrop-blur-xl p-8 md:p-12 rounded-[2rem] border border-white/10 relative shadow-2xl">
                         {isProcessing && (
                             <div className="absolute inset-0 bg-[#0a0f1c]/80 backdrop-blur-md z-20 flex flex-col items-center justify-center rounded-[2rem]">
@@ -315,7 +331,6 @@ const DonatePage = () => {
                                 </div>
                             </div>
 
-                            {/* Dropdown for Purpose */}
                             <div className="relative group">
                                 <Target className="absolute left-0 top-3 text-slate-500 group-focus-within:text-blue-400 transition" />
                                 <select 
@@ -330,7 +345,6 @@ const DonatePage = () => {
                                 </select>
                             </div>
 
-                            {/* Conditional Custom Purpose Field */}
                             <AnimatePresence>
                                 {donor.purpose === 'Other' && (
                                     <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}>
@@ -371,7 +385,6 @@ const DonatePage = () => {
                         </form>
                     </motion.div>
 
-                    {/* Right: NGO Credentials */}
                     <motion.div initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="lg:col-span-5 space-y-6">
                         <div className="bg-white/5 p-8 rounded-3xl border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm">
                             <h3 className="text-xl font-bold mb-6 flex items-center gap-3 text-blue-300">
