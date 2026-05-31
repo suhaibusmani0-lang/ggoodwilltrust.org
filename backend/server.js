@@ -7,7 +7,13 @@ const nodemailer = require('nodemailer');
 const mongoose = require('mongoose');
 
 const app = express();
-app.use(cors());
+
+// 🔒 CORS setup updated for security
+app.use(cors({
+    origin: ["https://spreadsmilesfoundation.com", "https://www.spreadsmilesfoundation.com", "http://localhost:5173"], 
+    methods: ["POST", "GET"],
+    credentials: true
+}));
 app.use(express.json());
 
 // --- DEBUG: CHECK ENVIRONMENT VARIABLES ---
@@ -101,7 +107,7 @@ app.post('/api/verify-payment', async (req, res) => {
             from: process.env.EMAIL_USER,
             to: userDetails.email,
             subject: '80G Donation Receipt - Spread Smiles Foundation',
-            html: `<p>Thank you ${userDetails.name} for your donation of ₹${userDetails.amount}.</p>` // Simplified for space
+            html: `<p>Thank you ${userDetails.name} for your donation of ₹${userDetails.amount}.</p>` 
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
@@ -122,6 +128,64 @@ app.get('/api/donations', async (req, res) => {
         res.json(donations);
     } catch (error) {
         res.status(500).json({ message: "Failed to fetch records" });
+    }
+});
+
+// ==========================================
+// 7. API: Contact Us Form
+// ==========================================
+app.post('/api/contact', async (req, res) => {
+    try {
+        const { name, email, phone, subject, message } = req.body;
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER, 
+            subject: `New Contact Form Query: ${subject}`,
+            html: `
+                <h3>New Message from Contact Form</h3>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Phone:</strong> ${phone}</p>
+                <p><strong>Subject:</strong> ${subject}</p>
+                <p><strong>Message:</strong> <br/> ${message}</p>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ message: "Contact message sent successfully!" });
+    } catch (error) {
+        console.error("Contact Form Error:", error);
+        res.status(500).json({ message: "Failed to send message." });
+    }
+});
+
+// ==========================================
+// 8. API: Volunteer Registration Form
+// ==========================================
+app.post('/api/volunteer', async (req, res) => {
+    try {
+        const { name, email, phone, city, message } = req.body;
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER,
+            subject: `New Volunteer Registration: ${name}`,
+            html: `
+                <h3>New Volunteer Registration</h3>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Phone:</strong> ${phone}</p>
+                <p><strong>City:</strong> ${city}</p>
+                <p><strong>Availability/Message:</strong> <br/> ${message}</p>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+        res.status(200).json({ message: "Volunteer registration sent successfully!" });
+    } catch (error) {
+        console.error("Volunteer Form Error:", error);
+        res.status(500).json({ message: "Failed to submit registration." });
     }
 });
 
