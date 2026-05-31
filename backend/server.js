@@ -53,13 +53,19 @@ if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
     console.warn("⚠️ Razorpay Keys Missing! Payments will not work.");
 }
 
-// 3. Email Setup
+// 3. Email Setup (IPv4 Forced to fix ENETUNREACH error)
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
+    tls: {
+        rejectUnauthorized: false
+    },
+    family: 4 // Yeh line specifically IPv4 force karti hai
 });
 
 // 4. API: Order Create Karna
