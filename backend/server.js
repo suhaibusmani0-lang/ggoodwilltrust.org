@@ -3,8 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
 const mongoose = require('mongoose');
+// Nodemailer hata diya gaya hai, ab hum direct API fetch use karenge
 
 const app = express();
 
@@ -23,6 +23,7 @@ console.log("MONGO_URI:", process.env.MONGO_URI ? "✅ Found" : "❌ MISSING");
 console.log("RAZORPAY_KEY_ID:", process.env.RAZORPAY_KEY_ID ? "✅ Found" : "❌ MISSING");
 console.log("RAZORPAY_KEY_SECRET:", process.env.RAZORPAY_KEY_SECRET ? "✅ Found" : "❌ MISSING");
 console.log("EMAIL_USER:", process.env.EMAIL_USER ? "✅ Found" : "❌ MISSING");
+console.log("BREVO_API_KEY:", process.env.BREVO_API_KEY ? "✅ Found" : "❌ MISSING");
 console.log("-----------------------------------");
 
 // 1. Database Connection (MongoDB)
@@ -41,7 +42,7 @@ const donationSchema = new mongoose.Schema({
 });
 const Donation = mongoose.model('Donation', donationSchema);
 
-// 2. Razorpay Setup (Safe Initialization)
+// 2. Razorpay Setup
 let razorpay;
 if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
     razorpay = new Razorpay({
@@ -53,19 +54,35 @@ if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
     console.warn("⚠️ Razorpay Keys Missing! Payments will not work.");
 }
 
-// 3. Email Setup (Port 587 - STARTTLS for Cloud Servers to fix ETIMEDOUT)
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // Port 587 ke liye isko false rakhna zaroori hai
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-    tls: {
-        rejectUnauthorized: false
+// 3. Email Helper Function (Using Brevo REST API instead of SMTP)
+const sendEmailViaBrevo = async (toEmail, subject, htmlContent) => {
+    try {
+        const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'api-key': process.env.BREVO_API_KEY,
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                sender: { name: "Spread Smiles Foundation", email: process.env.EMAIL_USER },
+                to: [{ email: toEmail }],
+                subject: subject,
+                htmlContent: htmlContent
+            })
+        });
+
+        if (!response.ok) {
+            const errInfo = await response.text();
+            console.error("Brevo API Error:", errInfo);
+            throw new Error("Failed to send via Brevo");
+        }
+        console.log("✅ Email sent successfully via Brevo");
+    } catch (error) {
+        console.error("Email sending function failed:", error);
+        throw error;
     }
-});
+};
 
 // 4. API: Order Create Karna
 app.post('/api/create-order', async (req, res) => {
@@ -108,17 +125,11 @@ app.post('/api/verify-payment', async (req, res) => {
         await newDonation.save();
 
         // Send Email
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: userDetails.email,
-            subject: '80G Donation Receipt - Spread Smiles Foundation',
-            html: `<p>Thank you ${userDetails.name} for your donation of ₹${userDetails.amount}.</p>` 
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) console.log("Email Failed:", error);
-            else console.log("Email Sent to Donor");
-        });
+        const htmlBody = `<p>Thank you ${userDetails.name} for your donation of ₹${userDetails.amount}.</p>`;
+        
+        // Background mein email bhejenge taaki response delay na ho
+        sendEmailViaBrevo(userDetails.email, '80G Donation Receipt - Spread Smiles Foundation', htmlBody)
+            .catch(err => console.log("Payment email failed silently", err));
 
         res.status(200).json({ message: "Payment verified and record saved successfully" });
     } else {
@@ -142,22 +153,17 @@ app.get('/api/donations', async (req, res) => {
 app.post('/api/contact', async (req, res) => {
     try {
         const { name, email, phone, subject, message } = req.body;
+        
+        const htmlBody = `
+            <h3>New Message from Contact Form</h3>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone:</strong> ${phone}</p>
+            <p><strong>Subject:</strong> ${subject}</p>
+            <p><strong>Message:</strong> <br/> ${message}</p>
+        `;
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: process.env.EMAIL_USER, 
-            subject: `New Contact Form Query: ${subject}`,
-            html: `
-                <h3>New Message from Contact Form</h3>
-                <p><strong>Name:</strong> ${name}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Phone:</strong> ${phone}</p>
-                <p><strong>Subject:</strong> ${subject}</p>
-                <p><strong>Message:</strong> <br/> ${message}</p>
-            `
-        };
-
-        await transporter.sendMail(mailOptions);
+        await sendEmailViaBrevo(process.env.EMAIL_USER, `New Contact Form Query: ${subject}`, htmlBody);
         res.status(200).json({ message: "Contact message sent successfully!" });
     } catch (error) {
         console.error("Contact Form Error:", error);
@@ -172,21 +178,16 @@ app.post('/api/volunteer', async (req, res) => {
     try {
         const { name, email, phone, city, message } = req.body;
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: process.env.EMAIL_USER,
-            subject: `New Volunteer Registration: ${name}`,
-            html: `
-                <h3>New Volunteer Registration</h3>
-                <p><strong>Name:</strong> ${name}</p>
-                <p><strong>Email:</strong> ${email}</p>
-                <p><strong>Phone:</strong> ${phone}</p>
-                <p><strong>City:</strong> ${city}</p>
-                <p><strong>Availability/Message:</strong> <br/> ${message}</p>
-            `
-        };
+        const htmlBody = `
+            <h3>New Volunteer Registration</h3>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone:</strong> ${phone}</p>
+            <p><strong>City:</strong> ${city}</p>
+            <p><strong>Availability/Message:</strong> <br/> ${message}</p>
+        `;
 
-        await transporter.sendMail(mailOptions);
+        await sendEmailViaBrevo(process.env.EMAIL_USER, `New Volunteer Registration: ${name}`, htmlBody);
         res.status(200).json({ message: "Volunteer registration sent successfully!" });
     } catch (error) {
         console.error("Volunteer Form Error:", error);
