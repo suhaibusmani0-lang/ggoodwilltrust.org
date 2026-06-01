@@ -4,38 +4,83 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
-        <meta name="description" content="A product of zarnetic.sh" />
+        
+        <!-- 🚀 1. ADVANCED SEO META TAGS -->
+        <title>G Goodwill Trust | Empowering Lives in New Delhi</title>
+        <meta name="description" content="G Goodwill Trust is a registered non-profit organisation in New Delhi dedicated to education, healthcare, and community empowerment. Join us to make a real difference." />
+        <meta name="keywords" content="NGO in Delhi, G Goodwill Trust, charity in New Delhi, donate to NGO, education for underprivileged, volunteer in Delhi, social work India, non-profit organisation" />
+        <meta name="author" content="G Goodwill Trust" />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        
+        <!-- 🚀 2. CANONICAL LINK (Prevents duplicate content issues) -->
+        <link rel="canonical" href="https://www.ggoodwilltrust.org/" />
+
+        <!-- 🚀 3. OPEN GRAPH (For beautiful WhatsApp, Facebook & LinkedIn Link Sharing) -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.ggoodwilltrust.org/" />
+        <meta property="og:title" content="G Goodwill Trust | Hope Starts Here" />
+        <meta property="og:description" content="Bridging the gap between privilege and disadvantage. Support our mission to uplift communities in New Delhi." />
+        <meta property="og:image" content="https://www.ggoodwilltrust.org/logo.png" />
+        <meta property="og:site_name" content="G Goodwill Trust" />
+
+        <!-- 🚀 4. TWITTER CARDS -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:url" content="https://www.ggoodwilltrust.org/" />
+        <meta name="twitter:title" content="G Goodwill Trust | NGO in New Delhi" />
+        <meta name="twitter:description" content="Dedicated to education, empowerment, and compassion. Join our mission today." />
+        <meta name="twitter:image" content="https://www.ggoodwilltrust.org/logo.png" />
+
+        <!-- 🚀 5. PRECONNECTS (For faster loading speed) -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
         
+        <!-- RAZORPAY SCRIPT -->
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         
-        <title>G Goodwill Trust</title>
         <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
         
-        <!-- 🔴 ADDED CSS: SUPER STRONG HIDE GOOGLE TRANSLATE BANNER -->
+        <!-- 🔴 HIDE GOOGLE TRANSLATE BANNER CSS -->
         <style>
-            /* Hide the default Google Translate widget & banner completely */
             #google_translate_element { display: none !important; }
             .goog-te-banner-frame.skiptranslate, 
             iframe.goog-te-banner-frame { display: none !important; visibility: hidden !important; height: 0px !important; }
-            
-            /* Original text ka ajeeb sa popup hatane ke liye */
             .goog-tooltip, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
             .goog-tooltip:hover { display: none !important; }
             .goog-text-highlight { background-color: transparent !important; border: none !important; box-shadow: none !important; }
-            
-            /* Page ko neeche khiskne se rokne ke liye */
             html { height: auto !important; }
             body { top: 0px !important; position: static !important; min-height: 100vh !important; }
         </style>
+
+        <!-- 🚀 6. NGO SCHEMA MARKUP (Next-Level Google Recognition) -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "NGO",
+          "name": "G Goodwill Trust",
+          "url": "https://www.ggoodwilltrust.org",
+          "logo": "https://www.ggoodwilltrust.org/logo.png",
+          "description": "A non-profit organisation dedicated to education, empowerment, and compassion in New Delhi.",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "New Delhi",
+            "postalCode": "110025",
+            "addressCountry": "IN"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+91-7982804385",
+            "contactType": "customer support",
+            "email": "globalgoodwill4@gmail.com"
+          }
+        }
+        </script>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
 
-        <!-- 🔴 ADDED SCRIPT: Google Translate Engine -->
+        <!-- Google Translate Engine -->
         <div id="google_translate_element"></div>
         <script type="text/javascript">
             function googleTranslateElementInit() {
@@ -48,7 +93,7 @@
         </script>
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
         
-        <!-- 🔴 ADDED SCRIPT: Force Body Top to 0 (Hack to prevent page jump) -->
+        <!-- Force Body Top to 0 -->
         <script>
             setInterval(function(){ 
                 document.body.style.top = '0px'; 
