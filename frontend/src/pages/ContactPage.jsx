@@ -23,7 +23,7 @@ const ContactPage = () => {
         setVolStatus('submitting');
         try {
             // 👇 YAHAN URL UPDATE KIYA HAI
-            const response = await fetch('http://localhost:5000/api/volunteer', {
+            const response = await fetch('https://ggoodwilltrust-org.onrender.com/api/volunteer', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(volunteerData)
@@ -40,7 +40,7 @@ const ContactPage = () => {
         setContactStatus('submitting');
         try {
             // 👇 YAHAN URL UPDATE KIYA HAI
-            const response = await fetch('http://localhost:5000/api/contact', {
+            const response = await fetch('https://ggoodwilltrust-org.onrender.com/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(contactData)

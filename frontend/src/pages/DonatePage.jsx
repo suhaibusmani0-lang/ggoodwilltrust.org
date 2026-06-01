@@ -53,7 +53,7 @@ const DonatePage = () => {
 
         try {
             // 1. Backend se Order ID create karo
-            const res = await fetch('http://localhost:5000/api/create-order', {
+            const res = await fetch('https://ggoodwilltrust-org.onrender.com/api/create-order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount: donor.amount })
