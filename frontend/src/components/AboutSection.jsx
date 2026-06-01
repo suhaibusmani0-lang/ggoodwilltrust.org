@@ -56,13 +56,13 @@ const AboutPage = () => {
             <section className="pt-20 pb-16 px-4 bg-gradient-to-b from-blue-50/50 to-white text-center">
                 <div className="max-w-4xl mx-auto">
                     <span className="inline-block bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase mb-6">
-                        Spread Smiles Foundation
+                        G GOODWILL TRUST
                     </span>
                     <h1 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
                         About <span className="text-blue-500">Spread Smiles</span> <span className="text-green-500">Foundation</span>
                     </h1>
                     <p className="text-gray-500 text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">
-                        Founded with a mission to bring hope and happiness to underprivileged communities, Spread Smiles Foundation focuses on education, healthcare, and social upliftment. Our dedicated team works tirelessly to ensure that every individual gets the opportunity to live with dignity and a smile.
+                        Founded with a mission to bring hope and happiness to underprivileged communities, G GOODWILL TRUST focuses on education, healthcare, and social upliftment. Our dedicated team works tirelessly to ensure that every individual gets the opportunity to live with dignity and a smile.
                     </p>
                 </div>
             </section>
