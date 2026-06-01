@@ -1,30 +1,77 @@
+/* ====================================================
+   🔴 SUPER STRONG HIDE GOOGLE TRANSLATE BANNER 🔴
+==================================================== */
+
+/* Iframe aur Banner ko completely nuke karne ke liye */
+.goog-te-banner-frame.skiptranslate, 
+iframe.goog-te-banner-frame {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0px !important;
+}
+
+/* Page ko neeche khiskne se rokne ke liye (HTML + Body dono par) */
 html {
-  scroll-behavior: smooth;
-}
-/* Custom styles for spread smiles */
-.App {
-  min-height: 100vh;
+    height: auto !important;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+body {
+    top: 0px !important; 
+    position: static !important;
+    min-height: 100vh !important;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
+/* Original text ka ajeeb sa popup hatane ke liye */
+#goog-gt-tt, 
+.goog-te-balloon-frame {
+    display: none !important;
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
+.goog-text-highlight {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}/* ==========================================================
+   🚀 ULTIMATE GOOGLE TRANSLATE BANNER KILLER 🚀
+========================================================== */
+
+/* Google ki har ek sambhav iframe aur class ko hide karna */
+iframe.goog-te-banner-frame,
+iframe.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+.skiptranslate > iframe,
+.VIpgJd-Zvi9od-aZ2wEe-wOHMyf,
+.VIpgJd-Zvi9od-aZ2wEe-wOHMyf-ti6hGc {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    border: none !important;
+    z-index: -999999 !important;
+    position: absolute !important;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 5px;
+/* Body aur HTML ko neeche khiskne se 100% rokna */
+html, body {
+    top: 0px !important;
+    margin-top: 0px !important;
+    position: static !important; /* static is important here */
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+/* Hover karne par aane wala popup hatana */
+.goog-tooltip, 
+#goog-gt-tt, 
+.goog-te-balloon-frame {
+    display: none !important;
+}
+
+/* Translated text ka yellow background hatana */
+font font {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+.goog-text-highlight {
+    background-color: transparent !important;
+    box-shadow: none !important;
 }

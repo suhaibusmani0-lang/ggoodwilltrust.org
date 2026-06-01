@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FileText, Eye, Download, Calendar, Loader2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { PDFDocument, rgb, degrees } from 'pdf-lib';
+import { PDFDocument, rgb, degrees, StandardFonts } from 'pdf-lib'; 
 import { saveAs } from 'file-saver';
 import { toast } from 'sonner';
 
@@ -9,7 +9,7 @@ const DocumentsPage = () => {
     const [documents, setDocuments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('All');
-    const [downloadingId, setDownloadingId] = useState(null); // Track karega kaunsa doc download ho raha hai
+    const [downloadingId, setDownloadingId] = useState(null); 
 
     const categories = ['All', 'Reports', 'Certificates', 'Policies'];
 
@@ -29,41 +29,70 @@ const DocumentsPage = () => {
         }
     };
 
-    // 🛡️ WATERMARK & DOWNLOAD LOGIC 🛡️
+    // 🛡️ SECURE LEGAL WATERMARK & DOWNLOAD LOGIC 🛡️
     const handleWatermarkDownload = async (fileUrl, title, id) => {
         try {
             setDownloadingId(id);
-            toast.info(`Preparing secure download for ${title}...`);
+            toast.info(`Applying security watermark to ${title}...`);
 
             // 1. Asli PDF ko fetch karna
             const existingPdfBytes = await fetch(fileUrl).then(res => res.arrayBuffer());
 
             // 2. PDF ko edit karne ke liye kholna
             const pdfDoc = await PDFDocument.load(existingPdfBytes);
+            
+            // Bold Font Embed Kiya strict look ke liye
+            const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+            
             const pages = pdfDoc.getPages();
 
-            // 3. Har page par Watermark lagana
+            // 3. Har page par Watermark lagana (3 Layers)
             pages.forEach((page) => {
                 const { width, height } = page.getSize();
-                page.drawText('SPREAD SMILES FOUNDATION\nNOT FOR UNAUTHORIZED USE', {
-                    x: width / 4,
-                    y: height / 2,
-                    size: 35,
-                    color: rgb(0.8, 0.1, 0.1), // Laal (Red) rang
-                    opacity: 0.3, // Halka transparent taaki text padhne mein aaye
-                    rotate: degrees(-45), // Tedha (Diagonal) likhne ke liye
+                
+                // LAYER 1: Main Trust Name
+                page.drawText('G GOODWILL TRUST', {
+                    x: width / 2 - 260, 
+                    y: height / 2 - 40,
+                    size: 55,
+                    font: boldFont,
+                    color: rgb(0.12, 0.5, 0.88), // Brand Blue
+                    opacity: 0.15, 
+                    rotate: degrees(45), 
+                });
+
+                // LAYER 2: Strict Legal Warning
+                page.drawText('STRICTLY NOT FOR UNAUTHORIZED MISUSE', {
+                    x: width / 2 - 280, 
+                    y: height / 2 - 80,
+                    size: 22,
+                    font: boldFont,
+                    color: rgb(0.85, 0.15, 0.15), // Alert Red Color
+                    opacity: 0.22,
+                    rotate: degrees(45),
+                });
+                
+                // LAYER 3: Source Tracker
+                page.drawText('Property of ggoodwilltrust.org', {
+                    x: width / 2 - 150, 
+                    y: height / 2 - 110,
+                    size: 15,
+                    font: boldFont,
+                    color: rgb(0.4, 0.4, 0.4), // Sophisticated Grey
+                    opacity: 0.25,
+                    rotate: degrees(45),
                 });
             });
 
             // 4. Nayi PDF banakar user ko dena
             const pdfBytes = await pdfDoc.save();
             const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-            saveAs(blob, `${title}_SpreadSmiles.pdf`);
+            saveAs(blob, `${title}_Secured_G_Goodwill_Trust.pdf`); // Download file name me bhi 'Secured' add kar diya
             
-            toast.success("Downloaded Successfully!");
+            toast.success("Document Secured & Downloaded!");
         } catch (error) {
             console.error("Download Error:", error);
-            toast.error("Failed to download document securely.");
+            toast.error("Failed to secure and download document.");
         } finally {
             setDownloadingId(null);
         }
@@ -134,7 +163,7 @@ const DocumentsPage = () => {
                                 {/* Buttons */}
                                 <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 border-t border-gray-100">
                                     <a 
-                                        href={doc.fileUrl} 
+                                        href={doc.fileUrl || doc.file_url}
                                         target="_blank" 
                                         rel="noopener noreferrer"
                                         className="w-full sm:flex-1 flex items-center justify-center gap-2 bg-[#2081e2] hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold transition-colors"
@@ -143,11 +172,11 @@ const DocumentsPage = () => {
                                     </a>
                                     
                                     <button 
-                                        onClick={() => handleWatermarkDownload(doc.file_url, doc.title, doc.id)}
+                                        onClick={() => handleWatermarkDownload(doc.fileUrl || doc.file_url, doc.title, doc.id)}
                                         disabled={downloadingId === doc.id}
-                                        className="w-full sm:w-auto flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 px-6 py-2.5 border border-red-200 rounded-xl font-semibold transition-colors disabled:opacity-50"
+                                        className="w-full sm:w-auto flex items-center justify-center gap-2 bg-slate-50 hover:bg-slate-100 text-slate-700 px-6 py-2.5 border border-slate-200 rounded-xl font-semibold transition-colors disabled:opacity-50"
                                     >
-                                        {downloadingId === doc.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                                        {downloadingId === doc.id ? <Loader2 className="w-4 h-4 animate-spin text-[#2081e2]" /> : <Download className="w-4 h-4 text-[#2081e2]" />}
                                         <span className="hidden sm:inline">Secure Download</span>
                                     </button>
                                 </div>

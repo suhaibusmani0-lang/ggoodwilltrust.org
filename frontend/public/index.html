@@ -8,12 +8,54 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
-        <title>Spread Smiles Foundation</title>
+        
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        
+        <title>G Goodwill Trust</title>
         <script>window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);</script>
+        
+        <!-- 🔴 ADDED CSS: SUPER STRONG HIDE GOOGLE TRANSLATE BANNER -->
+        <style>
+            /* Hide the default Google Translate widget & banner completely */
+            #google_translate_element { display: none !important; }
+            .goog-te-banner-frame.skiptranslate, 
+            iframe.goog-te-banner-frame { display: none !important; visibility: hidden !important; height: 0px !important; }
+            
+            /* Original text ka ajeeb sa popup hatane ke liye */
+            .goog-tooltip, #goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+            .goog-tooltip:hover { display: none !important; }
+            .goog-text-highlight { background-color: transparent !important; border: none !important; box-shadow: none !important; }
+            
+            /* Page ko neeche khiskne se rokne ke liye */
+            html { height: auto !important; }
+            body { top: 0px !important; position: static !important; min-height: 100vh !important; }
+        </style>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
+
+        <!-- 🔴 ADDED SCRIPT: Google Translate Engine -->
+        <div id="google_translate_element"></div>
+        <script type="text/javascript">
+            function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'en',
+                    includedLanguages: 'en,hi,ar',
+                    autoDisplay: false
+                }, 'google_translate_element');
+            }
+        </script>
+        <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        
+        <!-- 🔴 ADDED SCRIPT: Force Body Top to 0 (Hack to prevent page jump) -->
+        <script>
+            setInterval(function(){ 
+                document.body.style.top = '0px'; 
+            }, 1000);
+        </script>
+
+        <!-- Posthog Script -->
         <script>
             !(function (t, e) {
                 var o, n, p, r;
@@ -78,7 +120,7 @@
             })(document, window.posthog || []);
             posthog.init("phc_xAvL2Iq4tFmANRE7kzbKwaSqp1HJjN7x48s3vr0CMjs", {
                 api_host: "https://us.i.posthog.com",
-                person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well,
+                person_profiles: "identified_only",
                 session_recording: {
                     recordCrossOriginIframes: true,
                     capturePerformance: false,
