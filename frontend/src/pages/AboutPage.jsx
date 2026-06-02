@@ -130,7 +130,7 @@ const AboutPage = () => {
                         </div>
                         <div>
                             <h3 className="font-black text-slate-900 text-lg mb-1">Established</h3>
-                            <p className="text-slate-500 text-sm font-medium">April 20, 2023</p>
+                            <p className="text-slate-500 text-sm font-medium">Sep 30, 2024</p>
                         </div>
                     </motion.div>
 
