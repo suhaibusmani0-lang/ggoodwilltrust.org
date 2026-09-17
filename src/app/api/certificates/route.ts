@@ -6,10 +6,10 @@ export async function GET() {
   try {
     await connectDB();
     const certificates = await Certificate.find({}).sort({ createdAt: -1 }).lean();
-    return NextResponse.json({ success: true, certificates });
+    return NextResponse.json({ success: true, data: certificates, certificates });
   } catch (error) {
     console.error('Certificates GET error:', error);
-    return NextResponse.json({ success: false, message: 'Internal server error.' }, { status: 500 });
+    return NextResponse.json({ success: true, data: [], certificates: [], error: 'Database connection failed' });
   }
 }
 

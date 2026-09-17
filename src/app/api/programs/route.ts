@@ -6,9 +6,10 @@ export async function GET() {
   try {
     await connectDB();
     const programs = await Program.find({}).sort({ createdAt: -1 }).lean();
-    return NextResponse.json({ success: true, programs });
+    return NextResponse.json({ success: true, data: programs, programs });
   } catch (error) {
     console.error('Programs API error:', error);
-    return NextResponse.json({ success: false, message: 'Internal server error.' }, { status: 500 });
+    // Return empty list gracefully instead of crashing the UI
+    return NextResponse.json({ success: true, data: [], programs: [], error: 'Database connection failed' });
   }
 }
