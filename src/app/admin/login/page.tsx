@@ -27,7 +27,7 @@ export default function AdminLogin() {
         router.push('/admin');
       } else {
         const data = await res.json();
-        setError(data.error || 'Invalid credentials. Please try again.');
+        setError(data.message || data.error || 'Invalid credentials. Please try again.');
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
