@@ -19,7 +19,6 @@ import {
   Sparkles,
   Database,
   X,
-  AlertCircle
   AlertCircle,
   Upload,
   ImageIcon
@@ -678,14 +677,6 @@ export default function AdminDashboard() {
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-slate-700 uppercase mb-1 block">Image URL / Path</label>
-                <input
-                  type="text"
-                  placeholder="/assets/hompage1.jpg or https://..."
-                  value={newProgram.image_url}
-                  onChange={e => setNewProgram({ ...newProgram, image_url: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-blue-500"
-                />
                 <label className="text-xs font-bold text-slate-700 uppercase mb-1 block">Program Image</label>
                 <div className="space-y-3">
                   {/* Upload file box */}
