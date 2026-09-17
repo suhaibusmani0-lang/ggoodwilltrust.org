@@ -10,16 +10,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Email and password are required.' }, { status: 400 });
     }
 
-    const adminEmail = process.env.ADMIN_EMAIL || '';
+    const adminEmail = process.env.ADMIN_EMAIL || 'globalgoodwill4@gmail.com';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'Suhaib786';
     const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH || '';
 
-    if (email.toLowerCase() !== adminEmail.toLowerCase()) {
-      return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 });
+    if (email.trim().toLowerCase() !== adminEmail.trim().toLowerCase()) {
+      return NextResponse.json({ success: false, message: 'Invalid email address' }, { status: 401 });
     }
 
-    const isMatch = await bcrypt.compare(password, adminPasswordHash);
+    let isMatch = password === adminPassword;
+    if (!isMatch && adminPasswordHash) {
+      isMatch = await bcrypt.compare(password, adminPasswordHash);
+    }
+
     if (!isMatch) {
-      return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 401 });
+      return NextResponse.json({ success: false, message: 'Invalid password' }, { status: 401 });
     }
 
     const token = Date.now().toString(36) + Math.random().toString(36);
