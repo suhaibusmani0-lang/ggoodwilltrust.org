@@ -56,119 +56,125 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-16 px-4 sm:px-6 lg:px-8 text-slate-900">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+    <div className="min-h-screen bg-[#09090b] text-[#f4f4f5] pt-32 pb-32 px-6 sm:px-8 lg:px-12">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
         
-        {/* Left Column */}
+        {/* Left Column: Contact Information & Volunteer Registration */}
         <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="space-y-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="lg:col-span-5 space-y-10"
         >
           <div>
-            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">
-              Let's Connect & <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Create Impact</span>
+            <span className="text-[#d4af37] text-xs font-medium tracking-[0.2em] uppercase mb-3 inline-block">
+              Communication Secretariat
+            </span>
+            <h1 className="text-4xl sm:text-5xl font-serif font-normal tracking-normal text-white mb-4 leading-tight">
+              Connect With Our{' '}
+              <span className="italic text-[#d4af37] font-serif">
+                Trustees.
+              </span>
             </h1>
-            <p className="text-lg text-slate-600 leading-relaxed max-w-lg">
-              Whether you need support, wish to volunteer, or want to partner with G Goodwill Trust, we are just a message away.
+            <p className="text-sm sm:text-base text-[#a1a1aa] font-light leading-relaxed">
+              Whether you wish to sponsor a relief camp, enroll as a volunteer, or seek institutional support — our secretariat is at your service.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-start gap-4">
-              <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
-                <MapPin className="w-6 h-6" />
+          <div className="space-y-4">
+            <div className="bg-[#121214] p-6 rounded-2xl border border-[#27272a] flex items-start gap-4">
+              <div className="w-10 h-10 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-center text-[#d4af37] shrink-0">
+                <MapPin className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-semibold text-slate-900 mb-1">Head Office</h3>
-                <p className="text-sm text-slate-600">G-48 Shaheen Bagh, Okhla, New Delhi-110025</p>
+                <h3 className="font-serif text-base text-white mb-1">Headquarters</h3>
+                <p className="text-xs text-[#a1a1aa] font-light leading-relaxed">G-48 Shaheen Bagh, Okhla, New Delhi - 110025, India</p>
               </div>
             </div>
             
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-start gap-4">
-              <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
-                <Mail className="w-6 h-6" />
+            <div className="bg-[#121214] p-6 rounded-2xl border border-[#27272a] flex items-start gap-4">
+              <div className="w-10 h-10 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-center text-[#d4af37] shrink-0">
+                <Mail className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-semibold text-slate-900 mb-1">Email</h3>
-                <p className="text-sm text-slate-600">globalgoodwill4@gmail.com</p>
+                <h3 className="font-serif text-base text-white mb-1">Official Inquiry</h3>
+                <a href="mailto:globalgoodwill4@gmail.com" className="text-xs text-[#a1a1aa] hover:text-[#d4af37] transition-colors">
+                  globalgoodwill4@gmail.com
+                </a>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-start gap-4 sm:col-span-2 lg:col-span-1">
-              <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
-                <Phone className="w-6 h-6" />
+            <div className="bg-[#121214] p-6 rounded-2xl border border-[#27272a] flex items-start gap-4">
+              <div className="w-10 h-10 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-center text-[#d4af37] shrink-0">
+                <Phone className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="font-semibold text-slate-900 mb-1">Phone</h3>
-                <p className="text-sm text-slate-600">+91 7982804385</p>
+                <h3 className="font-serif text-base text-white mb-1">Direct Helpline</h3>
+                <a href="tel:+917982804385" className="text-xs text-[#a1a1aa] hover:text-[#d4af37] transition-colors">
+                  +91 79828 04385
+                </a>
               </div>
             </div>
           </div>
 
-          {/* Volunteer Registration */}
-          <div className="bg-white rounded-3xl p-8 shadow-md border border-slate-100">
+          {/* Volunteer Application Form */}
+          <div className="bg-[#121214] rounded-2xl p-8 border border-[#27272a] shadow-xl">
             {isVolSuccess ? (
               <div className="text-center py-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-6">
-                  <CheckCircle2 className="w-8 h-8 text-green-600" />
-                </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-2">Welcome Aboard!</h3>
-                <p className="text-slate-600 mb-8">Your volunteer request has been received. We are excited to have you.</p>
+                <CheckCircle2 className="w-12 h-12 text-[#d4af37] mx-auto mb-4" />
+                <h3 className="text-xl font-serif text-white mb-2">Application Acknowledged</h3>
+                <p className="text-xs text-[#a1a1aa] font-light mb-6">Our volunteer management board will connect with you regarding upcoming camps.</p>
                 <button
                   onClick={() => setIsVolSuccess(false)}
-                  className="px-6 py-3 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors"
+                  className="px-6 py-2.5 bg-[#18181b] text-white rounded-xl text-xs uppercase tracking-wider font-semibold hover:bg-[#202024] border border-[#27272a]"
                 >
-                  Register another volunteer
+                  Register Another
                 </button>
               </div>
             ) : (
               <>
-                <div className="mb-6 flex items-center gap-3">
-                  <div className="p-2 bg-orange-100 text-orange-600 rounded-lg">
-                    <Heart className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-slate-900">Join the Movement</h2>
-                    <p className="text-sm text-slate-500 mt-1">Become a volunteer and help us spread smiles.</p>
-                  </div>
+                <div className="mb-6">
+                  <span className="text-[#d4af37] text-[10px] tracking-[0.2em] font-medium uppercase block mb-1">
+                    Grassroots Force
+                  </span>
+                  <h2 className="text-xl font-serif text-white">Join as a Volunteer</h2>
+                  <p className="text-xs text-[#71717a] mt-1 font-light">Contribute your time to food drives and health camps.</p>
                 </div>
 
                 <form onSubmit={handleVolSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-slate-700">Full Name</label>
-                      <input required type="text" value={volData.name} onChange={e => setVolData({...volData, name: e.target.value})} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all" />
+                    <div>
+                      <label className="text-xs text-[#a1a1aa] mb-1.5 block">Full Name</label>
+                      <input required type="text" value={volData.name} onChange={e => setVolData({...volData, name: e.target.value})} className="w-full px-4 py-3 bg-[#18181b] border border-[#27272a] rounded-xl text-xs text-white focus:border-[#d4af37] focus:outline-none transition-colors" />
                     </div>
-                    <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-slate-700">Email Address</label>
-                      <input required type="email" value={volData.email} onChange={e => setVolData({...volData, email: e.target.value})} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all" />
+                    <div>
+                      <label className="text-xs text-[#a1a1aa] mb-1.5 block">Email</label>
+                      <input required type="email" value={volData.email} onChange={e => setVolData({...volData, email: e.target.value})} className="w-full px-4 py-3 bg-[#18181b] border border-[#27272a] rounded-xl text-xs text-white focus:border-[#d4af37] focus:outline-none transition-colors" />
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-slate-700">Phone Number</label>
-                      <input required type="tel" value={volData.phone} onChange={e => setVolData({...volData, phone: e.target.value})} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all" />
+                    <div>
+                      <label className="text-xs text-[#a1a1aa] mb-1.5 block">Phone Number</label>
+                      <input required type="tel" value={volData.phone} onChange={e => setVolData({...volData, phone: e.target.value})} className="w-full px-4 py-3 bg-[#18181b] border border-[#27272a] rounded-xl text-xs text-white focus:border-[#d4af37] focus:outline-none transition-colors" />
                     </div>
-                    <div className="space-y-1.5">
-                      <label className="text-sm font-medium text-slate-700">City</label>
-                      <input required type="text" value={volData.city} onChange={e => setVolData({...volData, city: e.target.value})} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all" />
+                    <div>
+                      <label className="text-xs text-[#a1a1aa] mb-1.5 block">City</label>
+                      <input required type="text" value={volData.city} onChange={e => setVolData({...volData, city: e.target.value})} className="w-full px-4 py-3 bg-[#18181b] border border-[#27272a] rounded-xl text-xs text-white focus:border-[#d4af37] focus:outline-none transition-colors" />
                     </div>
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-sm font-medium text-slate-700">Why do you want to join us?</label>
-                    <textarea required rows={3} value={volData.reason} onChange={e => setVolData({...volData, reason: e.target.value})} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all resize-none"></textarea>
+                  <div>
+                    <label className="text-xs text-[#a1a1aa] mb-1.5 block">Statement of Purpose</label>
+                    <textarea required rows={3} value={volData.reason} onChange={e => setVolData({...volData, reason: e.target.value})} className="w-full px-4 py-3 bg-[#18181b] border border-[#27272a] rounded-xl text-xs text-white focus:border-[#d4af37] focus:outline-none transition-colors resize-none"></textarea>
                   </div>
                   
-                  {volError && <p className="text-red-500 text-sm">{volError}</p>}
+                  {volError && <p className="text-red-400 text-xs">{volError}</p>}
                   
                   <button
                     disabled={isVolLoading}
                     type="submit"
-                    className="w-full py-4 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+                    className="w-full py-3.5 bg-[#18181b] hover:bg-[#202024] border border-[#27272a] hover:border-[#d4af37] text-white rounded-xl text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center gap-2"
                   >
-                    {isVolLoading ? <><Loader2 className="w-5 h-5 animate-spin" /> Registering...</> : 'Submit Application'}
+                    {isVolLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</> : 'Submit Application'}
                   </button>
                 </form>
               </>
@@ -176,80 +182,86 @@ export default function ContactPage() {
           </div>
         </motion.div>
 
-        {/* Right Column */}
+        {/* Right Column: Direct Message Secretariat Form */}
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="lg:col-span-7"
         >
-          <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 h-full flex flex-col">
+          <div className="bg-[#121214] rounded-3xl p-8 sm:p-12 border border-[#27272a] shadow-2xl h-full flex flex-col justify-between">
             {isContactSuccess ? (
-              <div className="text-center py-16 flex-1 flex flex-col items-center justify-center">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-6">
-                  <CheckCircle2 className="w-10 h-10 text-green-600" />
+              <div className="text-center py-20 flex-1 flex flex-col items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-[#18181b] border border-[#27272a] flex items-center justify-center text-[#d4af37] mb-6">
+                  <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="text-3xl font-bold text-slate-900 mb-4">Message Sent Successfully!</h3>
-                <p className="text-lg text-slate-600 mb-10 max-w-md mx-auto">
-                  Thank you for reaching out to G Goodwill Trust. Our dedicated team will get back to you shortly.
+                <h3 className="text-2xl font-serif text-white mb-3">Message Received</h3>
+                <p className="text-sm text-[#a1a1aa] font-light mb-8 max-w-sm">
+                  Your communication has been securely logged. The trustees will respond shortly.
                 </p>
                 <button
                   onClick={() => setIsContactSuccess(false)}
-                  className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-xl font-semibold hover:opacity-90 transition-opacity"
+                  className="px-8 py-3.5 bg-[#d4af37] text-black rounded-full text-xs font-semibold tracking-wider uppercase hover:bg-[#e5c07b] transition-colors"
                 >
-                  Send Another Message
+                  Send Another Inquiry
                 </button>
               </div>
             ) : (
               <>
                 <div className="mb-10">
-                  <h2 className="text-3xl font-bold text-slate-900 mb-3">How can we help?</h2>
-                  <p className="text-slate-500 text-lg">Fill out the form below and we will be in touch as soon as possible.</p>
+                  <span className="text-[#d4af37] text-xs font-medium tracking-[0.2em] uppercase mb-2 block">
+                    Confidential Transmission
+                  </span>
+                  <h2 className="text-3xl font-serif text-white mb-2">Send Official Inquiry</h2>
+                  <p className="text-[#a1a1aa] text-sm font-light">Direct communication channel to the executive trustees.</p>
                 </div>
 
-                <form onSubmit={handleContactSubmit} className="space-y-6 flex-1 flex flex-col">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700">Full Name</label>
-                      <input required type="text" value={contactData.name} onChange={e => setContactData({...contactData, name: e.target.value})} className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all" />
+                <form onSubmit={handleContactSubmit} className="space-y-6 flex-1 flex flex-col justify-between">
+                  <div className="space-y-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div>
+                        <label className="text-xs text-[#a1a1aa] mb-2 block font-medium">Full Name</label>
+                        <input required type="text" value={contactData.name} onChange={e => setContactData({...contactData, name: e.target.value})} className="w-full px-4 py-3.5 bg-[#18181b] border border-[#27272a] rounded-xl text-sm text-white focus:border-[#d4af37] focus:outline-none transition-colors" />
+                      </div>
+                      <div>
+                        <label className="text-xs text-[#a1a1aa] mb-2 block font-medium">Email Address</label>
+                        <input required type="email" value={contactData.email} onChange={e => setContactData({...contactData, email: e.target.value})} className="w-full px-4 py-3.5 bg-[#18181b] border border-[#27272a] rounded-xl text-sm text-white focus:border-[#d4af37] focus:outline-none transition-colors" />
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700">Email Address</label>
-                      <input required type="email" value={contactData.email} onChange={e => setContactData({...contactData, email: e.target.value})} className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div>
+                        <label className="text-xs text-[#a1a1aa] mb-2 block font-medium">Phone</label>
+                        <input required type="tel" value={contactData.phone} onChange={e => setContactData({...contactData, phone: e.target.value})} className="w-full px-4 py-3.5 bg-[#18181b] border border-[#27272a] rounded-xl text-sm text-white focus:border-[#d4af37] focus:outline-none transition-colors" />
+                      </div>
+                      <div>
+                        <label className="text-xs text-[#a1a1aa] mb-2 block font-medium">Subject</label>
+                        <input required type="text" value={contactData.subject} onChange={e => setContactData({...contactData, subject: e.target.value})} className="w-full px-4 py-3.5 bg-[#18181b] border border-[#27272a] rounded-xl text-sm text-white focus:border-[#d4af37] focus:outline-none transition-colors" />
+                      </div>
                     </div>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700">Phone Number</label>
-                      <input required type="tel" value={contactData.phone} onChange={e => setContactData({...contactData, phone: e.target.value})} className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all" />
+                    
+                    <div>
+                      <label className="text-xs text-[#a1a1aa] mb-2 block font-medium">Message Body</label>
+                      <textarea required rows={5} value={contactData.message} onChange={e => setContactData({...contactData, message: e.target.value})} className="w-full px-4 py-3.5 bg-[#18181b] border border-[#27272a] rounded-xl text-sm text-white focus:border-[#d4af37] focus:outline-none transition-colors resize-none"></textarea>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700">Subject</label>
-                      <input required type="text" value={contactData.subject} onChange={e => setContactData({...contactData, subject: e.target.value})} className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all" />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2 flex-1">
-                    <label className="text-sm font-medium text-slate-700">Message</label>
-                    <textarea required rows={6} value={contactData.message} onChange={e => setContactData({...contactData, message: e.target.value})} className="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all resize-none"></textarea>
+
+                    {contactError && <p className="text-red-400 text-xs">{contactError}</p>}
                   </div>
 
-                  {contactError && <p className="text-red-500 text-sm">{contactError}</p>}
-
-                  <div className="pt-2">
+                  <div className="pt-6">
                     <button
                       disabled={isContactLoading}
                       type="submit"
-                      className="w-full py-4 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-xl font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-70 shadow-lg shadow-orange-500/20"
+                      className="w-full py-4 bg-[#d4af37] hover:bg-[#e5c07b] text-black rounded-full font-semibold text-xs tracking-wider uppercase transition-colors flex items-center justify-center gap-2 shadow-[0_4px_24px_rgba(212,175,55,0.25)]"
                     >
                       {isContactLoading ? (
-                        <><Loader2 className="w-5 h-5 animate-spin" /> Sending...</>
+                        <><Loader2 className="w-4 h-4 animate-spin" /> Transmitting...</>
                       ) : (
-                        <>Send Message <Send className="w-5 h-5 ml-1" /></>
+                        <>Transmit Message <Send className="w-3.5 h-3.5 ml-1" /></>
                       )}
                     </button>
-                    <div className="mt-4 flex items-center justify-center gap-2 text-sm text-slate-500">
-                      <ShieldCheck className="w-4 h-4 text-green-500" />
-                      <span>Your information is safe and securely encrypted.</span>
+                    <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-[#71717a]">
+                      <ShieldCheck className="w-3.5 h-3.5 text-[#d4af37]" />
+                      <span>Encrypted direct communication to G Goodwill Trust.</span>
                     </div>
                   </div>
                 </form>
