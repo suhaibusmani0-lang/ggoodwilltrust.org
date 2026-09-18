@@ -22,10 +22,8 @@ export default function Navbar() {
 
       // Auto hide when scrolling down, show when scrolling up
       if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-        // Scrolling down & passed threshold
         setVisible(false);
       } else {
-        // Scrolling up or top of page
         setVisible(true);
       }
 
@@ -65,31 +63,23 @@ export default function Navbar() {
         }`}
       >
         <nav 
-          className={`w-full max-w-7xl rounded-full px-6 h-[70px] flex items-center justify-between transition-all duration-500 ${
+          className={`w-full max-w-7xl rounded-full px-6 h-[72px] flex items-center justify-between transition-all duration-500 ${
             scrolled 
-              ? 'bg-[#09090b]/90 backdrop-blur-xl border border-[#27272a] shadow-[0_12px_40px_rgba(0,0,0,0.6)]' 
-              : 'bg-[#09090b]/60 backdrop-blur-md border border-[#27272a]/50 shadow-none'
+              ? 'bg-white/95 backdrop-blur-xl border border-slate-200 shadow-[0_8px_30px_rgba(0,0,0,0.08)]' 
+              : 'bg-white/80 backdrop-blur-md border border-slate-200/80 shadow-xs'
           }`}
         >
-          {/* Logo with clean dark-mode typography pairing */}
+          {/* Logo with clean typography */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-9 h-9 rounded-full bg-[#18181b] border border-[#27272a] p-1 flex items-center justify-center shrink-0 group-hover:border-[#d4af37]/40 transition-colors">
+            <div className="h-10 w-auto flex items-center">
               <Image 
-                src="/logo-icon.png" 
-                alt="G Goodwill Trust Emblem" 
-                width={36} 
-                height={36} 
-                className="object-contain w-full h-full" 
+                src="/logo-full-transparent.png" 
+                alt="G Goodwill Trust" 
+                width={190} 
+                height={40} 
+                className="object-contain h-10 w-auto" 
                 priority 
               />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="font-serif text-[15px] sm:text-base font-normal tracking-wider text-[#fafafa] group-hover:text-white transition-colors">
-                G GOODWILL TRUST
-              </span>
-              <span className="text-[9px] tracking-[0.2em] font-medium uppercase text-[#d4af37] mt-0.5">
-                Non-Profit Org
-              </span>
             </div>
           </Link>
 
@@ -100,10 +90,10 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 className={
-                  'text-xs tracking-wider uppercase font-medium transition-all duration-300 px-4 py-2 rounded-full whitespace-nowrap ' +
+                  'text-xs tracking-wider uppercase font-semibold transition-all duration-200 px-4 py-2 rounded-full whitespace-nowrap ' +
                   (pathname === link.href
-                    ? 'bg-[#18181b] text-[#d4af37] border border-[#27272a]'
-                    : 'text-[#a1a1aa] hover:text-white hover:bg-[#18181b]/50')
+                    ? 'bg-slate-100 text-slate-900 border border-slate-300/80 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70')
                 }
               >
                 {link.name}
@@ -113,13 +103,13 @@ export default function Navbar() {
 
           {/* Right side CTA & Translate */}
           <div className="hidden xl:flex items-center gap-4">
-            <div className="flex items-center gap-1.5 text-[#71717a] cursor-pointer hover:text-white transition-colors">
-              <Globe className="w-3.5 h-3.5 text-[#d4af37]" />
-              <div id="google_translate_element" className="scale-[0.82] origin-left brightness-90" />
+            <div className="flex items-center gap-1.5 text-slate-600 cursor-pointer hover:text-slate-900 transition-colors">
+              <Globe className="w-3.5 h-3.5 text-[#b45309]" />
+              <div id="google_translate_element" className="scale-[0.82] origin-left" />
             </div>
 
             <Link href="/donate">
-              <button className="relative group bg-[#d4af37] hover:bg-[#e5c07b] text-black rounded-full px-6 py-2.5 text-xs font-semibold tracking-wider uppercase shadow-[0_2px_16px_rgba(212,175,55,0.25)] hover:shadow-[0_4px_24px_rgba(212,175,55,0.4)] transition-all duration-300 hover:scale-[1.02] flex items-center gap-2">
+              <button className="relative group bg-[#d4af37] hover:bg-[#c59b27] text-black rounded-full px-6 py-2.5 text-xs font-bold tracking-wider uppercase shadow-[0_2px_14px_rgba(212,175,55,0.35)] hover:shadow-[0_4px_20px_rgba(212,175,55,0.5)] transition-all duration-300 hover:scale-[1.02] flex items-center gap-2">
                 Donate <Heart className="w-3.5 h-3.5 fill-black" />
               </button>
             </Link>
@@ -127,7 +117,7 @@ export default function Navbar() {
 
           {/* Mobile toggle button */}
           <button
-            className="xl:hidden p-2.5 text-slate-300 hover:bg-white/10 rounded-full transition-colors border border-white/10"
+            className="xl:hidden p-2.5 text-slate-700 hover:bg-slate-100 rounded-full transition-colors border border-slate-200"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle mobile menu"
             aria-expanded={mobileOpen}
@@ -139,7 +129,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-[#09090b]/98 backdrop-blur-2xl pt-24 px-6 pb-8 overflow-y-auto xl:hidden animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="fixed inset-0 z-40 bg-white/98 backdrop-blur-2xl pt-24 px-6 pb-8 overflow-y-auto xl:hidden animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="flex flex-col gap-2 max-w-md mx-auto">
             {navLinks.map((link) => (
               <Link
@@ -147,19 +137,19 @@ export default function Navbar() {
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
                 className={
-                  'text-base font-medium py-3.5 px-5 rounded-2xl transition-all ' +
+                  'text-base font-semibold py-3.5 px-5 rounded-2xl transition-all ' +
                   (pathname === link.href
-                    ? 'bg-[#18181b] text-[#d4af37] border border-[#27272a]'
-                    : 'text-slate-300 hover:bg-white/5 hover:text-white')
+                    ? 'bg-slate-100 text-slate-900 border border-slate-300'
+                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900')
                 }
               >
                 {link.name}
               </Link>
             ))}
 
-            <div className="border-t border-[#27272a] mt-6 pt-6">
-              <div className="flex items-center gap-2 px-5 py-2 text-slate-400">
-                <Globe className="w-4 h-4 text-[#d4af37]" />
+            <div className="border-t border-slate-200 mt-6 pt-6">
+              <div className="flex items-center gap-2 px-5 py-2 text-slate-600">
+                <Globe className="w-4 h-4 text-[#b45309]" />
                 <div id="google_translate_element_mobile" />
               </div>
             </div>

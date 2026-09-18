@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Heart, Mail, Phone, MapPin, Globe, Lock, ChevronRight } from 'lucide-react';
+import { Heart, Mail, Phone, MapPin, Lock } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Footer() {
@@ -40,28 +40,23 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="print:hidden relative bg-[#09090b] text-[#a1a1aa] overflow-hidden border-t border-[#27272a] pt-24 pb-12">
+    <footer className="print:hidden relative bg-[#f8fafc] text-slate-600 overflow-hidden border-t border-slate-200 pt-20 pb-12">
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-8">
         {/* Main Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-16">
           {/* Column 1: Brand */}
           <div className="lg:col-span-4 flex flex-col">
-            <Link href="/" className="flex items-center gap-3 mb-6 group w-fit">
-              <div className="w-12 h-12 rounded-full bg-[#121214] p-1.5 border border-[#27272a] transition-all duration-500 flex items-center justify-center group-hover:border-[#d4af37]/40">
-                <Image src="/logo-icon.png" alt="G Goodwill Trust Emblem" width={48} height={48} className="object-contain w-full h-full" />
-              </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-[10px] tracking-[0.2em] font-medium uppercase text-[#d4af37] mb-1">
-                  Non-Profit Organisation
-                </span>
-                <div className="flex items-start">
-                  <h3 className="font-serif text-lg text-white font-normal tracking-wide">G GOODWILL TRUST</h3>
-                  <span className="text-[10px] text-[#71717a] ml-1">&reg;</span>
-                </div>
-              </div>
+            <Link href="/" className="mb-6 block w-fit">
+              <Image 
+                src="/logo-full-transparent.png" 
+                alt="G Goodwill Trust" 
+                width={200} 
+                height={48} 
+                className="h-11 w-auto object-contain"
+              />
             </Link>
 
-            <p className="text-xs text-[#71717a] font-light leading-relaxed mb-6 max-w-sm">
+            <p className="text-xs text-slate-600 font-light leading-relaxed mb-6 max-w-sm">
               Registered under the Indian Trusts Act &bull; Section 80G Tax Exempted &bull; Dedicated to humanitarian relief, education, and health dignity.
             </p>
 
@@ -74,7 +69,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="w-9 h-9 rounded-xl bg-[#121214] border border-[#27272a] text-[#a1a1aa] hover:text-[#d4af37] hover:border-[#d4af37]/40 transition-colors flex items-center justify-center"
+                  className="w-9 h-9 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-[#b45309] hover:border-[#d4af37]/60 transition-colors flex items-center justify-center shadow-xs"
                 >
                   {social.svg}
                 </a>
@@ -84,11 +79,11 @@ export default function Footer() {
 
           {/* Column 2: Navigation Links */}
           <div className="lg:col-span-2">
-            <h4 className="text-[11px] font-semibold tracking-[0.2em] text-[#d4af37] uppercase mb-6">Explore</h4>
+            <h4 className="text-[11px] font-semibold tracking-[0.2em] text-[#b45309] uppercase mb-6">Explore</h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-xs text-[#a1a1aa] hover:text-white transition-colors">
+                  <Link href={link.href} className="text-xs text-slate-600 hover:text-black transition-colors font-medium">
                     {link.name}
                   </Link>
                 </li>
@@ -98,11 +93,11 @@ export default function Footer() {
 
           {/* Column 3: Mandate Links */}
           <div className="lg:col-span-2">
-            <h4 className="text-[11px] font-semibold tracking-[0.2em] text-[#d4af37] uppercase mb-6">Engagement</h4>
+            <h4 className="text-[11px] font-semibold tracking-[0.2em] text-[#b45309] uppercase mb-6">Engagement</h4>
             <ul className="space-y-3">
               {supportLinks.map((link) => (
                 <li key={link.name}>
-                  <Link href={link.href} className="text-xs text-[#a1a1aa] hover:text-white transition-colors">
+                  <Link href={link.href} className="text-xs text-slate-600 hover:text-black transition-colors font-medium">
                     {link.name}
                   </Link>
                 </li>
@@ -112,37 +107,37 @@ export default function Footer() {
 
           {/* Column 4: Contact Information */}
           <div className="lg:col-span-4">
-            <h4 className="text-[11px] font-semibold tracking-[0.2em] text-[#d4af37] uppercase mb-6">Secretariat</h4>
-            <ul className="space-y-3.5 text-xs text-[#a1a1aa] font-light">
+            <h4 className="text-[11px] font-semibold tracking-[0.2em] text-[#b45309] uppercase mb-6">Secretariat</h4>
+            <ul className="space-y-3.5 text-xs text-slate-600 font-light">
               <li className="flex items-start gap-3">
-                <MapPin size={15} className="text-[#d4af37] shrink-0 mt-0.5" />
+                <MapPin size={15} className="text-[#b45309] shrink-0 mt-0.5" />
                 <span>G-48 Shaheen Bagh, Okhla, New Delhi - 110025, India</span>
               </li>
               <li className="flex items-center gap-3">
-                <Phone size={15} className="text-[#d4af37] shrink-0" />
-                <a href="tel:+917982804385" className="hover:text-white transition-colors">+91 79828 04385</a>
+                <Phone size={15} className="text-[#b45309] shrink-0" />
+                <a href="tel:+917982804385" className="hover:text-black transition-colors font-medium">+91 79828 04385</a>
               </li>
               <li className="flex items-center gap-3">
-                <Mail size={15} className="text-[#d4af37] shrink-0" />
-                <a href="mailto:globalgoodwill4@gmail.com" className="hover:text-white transition-colors">globalgoodwill4@gmail.com</a>
+                <Mail size={15} className="text-[#b45309] shrink-0" />
+                <a href="mailto:globalgoodwill4@gmail.com" className="hover:text-black transition-colors font-medium">globalgoodwill4@gmail.com</a>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 relative flex flex-col md:flex-row justify-between items-center text-[11px] text-[#71717a] gap-4 border-t border-[#27272a]">
+        <div className="pt-8 relative flex flex-col md:flex-row justify-between items-center text-[11px] text-slate-500 gap-4 border-t border-slate-200">
           <p className="flex items-center gap-1.5">
             &copy; {new Date().getFullYear()} G Goodwill Trust. All rights reserved. Registered Non-Profit Foundation.
           </p>
           <div className="flex items-center gap-6">
-            <Link href="/about" className="hover:text-[#a1a1aa] transition-colors">
+            <Link href="/about" className="hover:text-black transition-colors">
               Trust Mandate
             </Link>
-            <Link href="/documents" className="hover:text-[#a1a1aa] transition-colors">
+            <Link href="/documents" className="hover:text-black transition-colors">
               80G Exemption
             </Link>
-            <Link href="/admin/login" className="flex items-center gap-1.5 hover:text-white transition-colors">
+            <Link href="/admin/login" className="flex items-center gap-1.5 hover:text-black transition-colors">
               <Lock size={11} />
               Portal
             </Link>

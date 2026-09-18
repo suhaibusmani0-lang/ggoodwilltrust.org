@@ -94,7 +94,7 @@ const approachList = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#09090b] text-[#f4f4f5] pt-12 pb-20">
+    <div className="min-h-screen bg-white text-slate-900 pt-12 pb-20">
       {/* 1. HERO SECTION */}
       <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-16 lg:mb-20">
         <div className="max-w-4xl mx-auto text-center">
@@ -102,19 +102,19 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#121214] border border-[#27272a] text-[#d4af37] text-xs font-medium tracking-widest uppercase mb-8"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 border border-amber-200 text-[#b45309] text-xs font-semibold tracking-widest uppercase mb-8 shadow-2xs"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#d4af37]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#b45309]" />
             Foundational Charter
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal tracking-tight mb-8 text-[#fafafa] leading-[1.08]"
+            className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal tracking-tight mb-8 text-slate-900 leading-[1.08]"
           >
             Rooted in Empathy.{' '}
-            <span className="italic text-[#d4af37] font-serif">
+            <span className="italic text-[#b45309] font-serif">
               Driven by Dignity.
             </span>
           </motion.h1>
@@ -122,7 +122,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-base sm:text-lg lg:text-xl text-[#a1a1aa] font-light leading-relaxed max-w-2xl mx-auto"
+            className="text-base sm:text-lg lg:text-xl text-slate-600 font-light leading-relaxed max-w-2xl mx-auto"
           >
             Founded with an enduring commitment to humanity, G Goodwill Trust focuses on education, healthcare dignity, and compassionate relief. We work tirelessly to bridge the gap between privilege and vulnerability.
           </motion.p>
@@ -140,13 +140,13 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="bg-[#121214] p-8 rounded-2xl border border-[#27272a] flex flex-col items-center text-center shadow-xl hover:border-[#3f3f46] transition-colors"
+                className="bg-white p-8 rounded-2xl border border-slate-200 flex flex-col items-center text-center shadow-xs hover:border-[#b45309]/40 hover:shadow-md transition-all"
               >
-                <div className="w-12 h-12 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-center text-[#d4af37] mb-5">
+                <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-[#b45309] mb-5">
                   <stat.icon className="w-5 h-5" />
                 </div>
-                <div className="text-[#71717a] text-xs uppercase tracking-widest font-medium mb-1.5">{stat.label}</div>
-                <div className="text-xl sm:text-2xl font-serif font-normal text-white">{stat.value}</div>
+                <div className="text-slate-500 text-xs uppercase tracking-widest font-semibold mb-1.5">{stat.label}</div>
+                <div className="text-xl sm:text-2xl font-serif font-normal text-slate-900">{stat.value}</div>
               </motion.div>
             ))}
           </div>
@@ -163,13 +163,13 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-[#121214] p-10 sm:p-12 rounded-3xl border border-[#27272a] relative overflow-hidden group hover:border-[#d4af37]/40 transition-colors duration-500 shadow-2xl"
+              className="bg-white p-10 sm:p-12 rounded-3xl border border-slate-200 relative overflow-hidden group hover:border-[#b45309]/50 transition-all duration-300 shadow-xs hover:shadow-lg"
             >
-              <div className="w-12 h-12 bg-[#18181b] border border-[#27272a] rounded-xl flex items-center justify-center mb-8 text-[#d4af37]">
+              <div className="w-12 h-12 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-center mb-8 text-[#b45309]">
                 <Target className="w-5 h-5" />
               </div>
-              <h2 className="text-2xl sm:text-3xl font-serif font-normal text-white mb-4">Our Institutional Mission</h2>
-              <p className="text-[#a1a1aa] text-base leading-relaxed font-light">
+              <h2 className="text-2xl sm:text-3xl font-serif font-normal text-slate-900 mb-4">Our Institutional Mission</h2>
+              <p className="text-slate-600 text-base leading-relaxed font-light">
                 To serve humanity by providing foundational education, verified clinical care, and emergency sustenance to vulnerable families. We strive to empower communities with the tools and self-reliance required to live with lasting dignity.
               </p>
             </motion.div>
@@ -180,13 +180,13 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="bg-[#121214] p-10 sm:p-12 rounded-3xl border border-[#27272a] relative overflow-hidden group hover:border-[#d4af37]/40 transition-colors duration-500 shadow-2xl"
+              className="bg-white p-10 sm:p-12 rounded-3xl border border-slate-200 relative overflow-hidden group hover:border-[#b45309]/50 transition-all duration-300 shadow-xs hover:shadow-lg"
             >
-              <div className="w-12 h-12 bg-[#18181b] border border-[#27272a] rounded-xl flex items-center justify-center mb-8 text-[#d4af37]">
+              <div className="w-12 h-12 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-center mb-8 text-[#b45309]">
                 <Eye className="w-5 h-5" />
               </div>
-              <h2 className="text-2xl sm:text-3xl font-serif font-normal text-white mb-4">Our Enduring Vision</h2>
-              <p className="text-[#a1a1aa] text-base leading-relaxed font-light">
+              <h2 className="text-2xl sm:text-3xl font-serif font-normal text-slate-900 mb-4">Our Enduring Vision</h2>
+              <p className="text-slate-600 text-base leading-relaxed font-light">
                 To build a compassionate, resilient society where systemic inequalities are actively dismantled. A world where every individual, regardless of socioeconomic background, has equitable access to quality education, healthcare, and human rights.
               </p>
             </motion.div>
@@ -198,36 +198,36 @@ export default function AboutPage() {
       <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-16 lg:mb-20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-[#d4af37] font-medium text-xs tracking-[0.2em] uppercase mb-3 inline-block">Methodology</span>
-            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-white">How We Operate On Ground</h2>
+            <span className="text-[#b45309] font-semibold text-xs tracking-[0.2em] uppercase mb-3 inline-block">Methodology</span>
+            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900">How We Operate On Ground</h2>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <div className="bg-[#121214] p-10 rounded-3xl border border-[#27272a]">
-              <h3 className="text-xl font-serif font-normal text-white mb-6">Action Areas</h3>
+            <div className="bg-white p-10 rounded-3xl border border-slate-200 shadow-xs">
+              <h3 className="text-xl font-serif font-normal text-slate-900 mb-6">Action Areas</h3>
               <ul className="space-y-4">
                 {approachList.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3.5">
-                    <CheckCircle2 className="w-5 h-5 text-[#d4af37] shrink-0 mt-0.5" />
-                    <span className="text-[#d4d4d8] text-sm font-light leading-relaxed">{item}</span>
+                    <CheckCircle2 className="w-5 h-5 text-[#b45309] shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm font-light leading-relaxed">{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="flex flex-col justify-between bg-[#121214] p-10 rounded-3xl border border-[#27272a]">
+            <div className="flex flex-col justify-between bg-white p-10 rounded-3xl border border-slate-200 shadow-xs">
               <div>
-                <span className="text-[#d4af37] text-xs uppercase tracking-widest font-medium mb-2 block">Headquarters</span>
-                <h3 className="text-2xl font-serif font-normal text-white mb-4">Shaheen Bagh Relief Center</h3>
-                <p className="text-[#a1a1aa] text-sm leading-relaxed font-light mb-8">
+                <span className="text-[#b45309] text-xs uppercase tracking-widest font-semibold mb-2 block">Headquarters</span>
+                <h3 className="text-2xl font-serif font-normal text-slate-900 mb-4">Shaheen Bagh Relief Center</h3>
+                <p className="text-slate-600 text-sm leading-relaxed font-light mb-8">
                   Currently active across New Delhi, we strategically deploy resources to areas with the greatest concentration of vulnerable families.
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-[#18181b] border border-[#27272a]">
-                <p className="text-xs text-[#71717a] uppercase tracking-wider mb-1">Official Address</p>
-                <p className="text-sm font-medium text-white">G-48 Shaheen Bagh, Okhla, New Delhi - 110025</p>
-                <p className="text-xs text-[#a1a1aa] mt-1">Delhi NCR, India</p>
+              <div className="p-6 rounded-2xl bg-[#f8fafc] border border-slate-200">
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Official Address</p>
+                <p className="text-sm font-semibold text-slate-900">G-48 Shaheen Bagh, Okhla, New Delhi - 110025</p>
+                <p className="text-xs text-slate-600 mt-1">Delhi NCR, India</p>
               </div>
             </div>
           </div>
@@ -238,9 +238,9 @@ export default function AboutPage() {
       <section className="container mx-auto px-6 sm:px-8 lg:px-12">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-20">
-            <span className="text-[#d4af37] font-medium text-xs tracking-[0.2em] uppercase mb-3 inline-block">Leadership</span>
-            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-white mb-4">Board of Trustees</h2>
-            <p className="text-[#a1a1aa] text-sm sm:text-base font-light">
+            <span className="text-[#b45309] font-semibold text-xs tracking-[0.2em] uppercase mb-3 inline-block">Leadership</span>
+            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900 mb-4">Board of Trustees</h2>
+            <p className="text-slate-600 text-sm sm:text-base font-light">
               Our dedicated executive team ensuring transparent governance and compassionate ground execution.
             </p>
           </div>
@@ -253,17 +253,17 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.08 }}
-                className="bg-[#121214] p-7 rounded-2xl border border-[#27272a] hover:border-[#d4af37]/50 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between shadow-lg"
+                className="bg-white p-7 rounded-2xl border border-slate-200 hover:border-[#b45309]/50 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between shadow-xs hover:shadow-md"
               >
                 <div>
-                  <div className="w-14 h-14 rounded-xl bg-[#18181b] border border-[#27272a] flex items-center justify-center font-serif text-xl font-normal text-[#d4af37] mb-5">
+                  <div className="w-14 h-14 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center font-serif text-xl font-normal text-[#b45309] mb-5">
                     {member.initial}
                   </div>
-                  <span className="text-[10px] tracking-[0.2em] font-medium uppercase text-[#d4af37] mb-2 block">
+                  <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#b45309] mb-2 block">
                     {member.role}
                   </span>
-                  <h3 className="text-lg font-serif font-normal text-white mb-3">{member.name}</h3>
-                  <p className="text-[#a1a1aa] text-xs leading-relaxed font-light mb-6">
+                  <h3 className="text-lg font-serif font-normal text-slate-900 mb-3">{member.name}</h3>
+                  <p className="text-slate-600 text-xs leading-relaxed font-light mb-6">
                     {member.desc}
                   </p>
                 </div>

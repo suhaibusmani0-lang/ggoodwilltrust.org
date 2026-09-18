@@ -44,24 +44,24 @@ export default function DocumentsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#09090b] text-[#fafafa] pt-12 pb-20 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-white text-slate-900 pt-12 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Editorial Hero */}
         <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#d4af37]/30 bg-[#d4af37]/5 text-[#d4af37] text-xs font-semibold tracking-widest uppercase mb-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-[#b45309] text-xs font-semibold tracking-widest uppercase mb-6 shadow-2xs">
             <Shield className="w-3.5 h-3.5" /> Institutional Transparency
           </div>
-          <h1 className="font-serif text-5xl md:text-7xl font-light tracking-tight text-[#fafafa] mb-6 leading-tight">
-            Official <span className="italic font-serif text-[#d4af37]">Documents</span>
+          <h1 className="font-serif text-5xl md:text-7xl font-normal tracking-tight text-slate-900 mb-6 leading-tight">
+            Official <span className="italic font-serif text-[#b45309]">Documents</span>
           </h1>
-          <p className="text-base md:text-lg text-[#a1a1aa] font-sans max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-slate-600 font-light max-w-2xl mx-auto leading-relaxed">
             Direct access to our regulatory filings, financial audits, registered trust deeds, and official compliance charters.
           </p>
         </motion.div>
 
         {/* Filter Pills */}
         <div className="flex items-center justify-center gap-2 mb-16 flex-wrap">
-          <div className="bg-[#121214] p-1.5 rounded-full border border-[#27272a] inline-flex gap-1">
+          <div className="bg-slate-50 p-1.5 rounded-full border border-slate-200 inline-flex gap-1 shadow-2xs">
             {categories.map((cat) => (
               <button
                 key={cat}
@@ -69,8 +69,8 @@ export default function DocumentsPage() {
                 className={
                   'px-6 py-2 rounded-full text-xs uppercase tracking-widest font-semibold transition-all ' +
                   (activeTab === cat
-                    ? 'bg-[#d4af37] text-black shadow-lg shadow-[#d4af37]/20 font-bold'
-                    : 'text-[#a1a1aa] hover:text-[#fafafa]')
+                    ? 'bg-[#d4af37] text-black shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100')
                 }
               >
                 {cat}
@@ -82,14 +82,14 @@ export default function DocumentsPage() {
         {/* Content Area */}
         {loading ? (
           <div className="flex flex-col justify-center items-center py-28">
-            <Loader2 className="w-8 h-8 text-[#d4af37] animate-spin mb-4" />
-            <p className="text-xs uppercase tracking-widest text-[#71717a]">Loading Registry Records...</p>
+            <Loader2 className="w-8 h-8 text-[#b45309] animate-spin mb-4" />
+            <p className="text-xs uppercase tracking-widest text-slate-500 font-medium">Loading Registry Records...</p>
           </div>
         ) : filteredDocs.length === 0 ? (
-          <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center py-24 bg-[#121214] border border-[#27272a] rounded-3xl p-8">
-            <FileText className="w-12 h-12 text-[#52525b] mx-auto mb-4" />
-            <h3 className="font-serif text-2xl font-light text-[#fafafa] mb-2">No Documents In This Category</h3>
-            <p className="text-sm text-[#71717a]">
+          <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center py-24 bg-[#f8fafc] border border-slate-200 rounded-3xl p-8">
+            <FileText className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+            <h3 className="font-serif text-2xl font-normal text-slate-900 mb-2">No Documents In This Category</h3>
+            <p className="text-sm text-slate-500">
               There are currently no filings published under &quot;{activeTab}&quot;.
             </p>
           </motion.div>
@@ -105,44 +105,44 @@ export default function DocumentsPage() {
                   hidden: { opacity: 0, y: 24 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.08 } }
                 }}
-                className="bg-[#121214] border border-[#27272a] hover:border-[#d4af37]/40 rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col justify-between p-7 relative shadow-xl"
+                className="bg-white border border-slate-200 hover:border-[#b45309]/50 rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col justify-between p-7 relative shadow-xs hover:shadow-md"
               >
                 <div className="space-y-4">
                   <div className="flex items-start justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-[#18181b] border border-[#27272a] text-[#d4af37] flex items-center justify-center shrink-0 group-hover:border-[#d4af37]/40 transition-colors">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-[#b45309] flex items-center justify-center shrink-0 group-hover:border-[#b45309]/60 transition-colors">
                       <FileText className="w-6 h-6" />
                     </div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#d4af37] bg-[#d4af37]/10 border border-[#d4af37]/20 px-3 py-1 rounded-full">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#b45309] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full font-semibold">
                       {doc.category || 'Official'}
                     </span>
                   </div>
 
                   <div>
-                    <h3 className="font-serif text-xl font-light text-[#fafafa] mb-1 group-hover:text-[#d4af37] transition-colors line-clamp-1">
+                    <h3 className="font-serif text-xl font-normal text-slate-900 mb-1 group-hover:text-[#b45309] transition-colors line-clamp-1">
                       {doc.title}
                     </h3>
-                    <p className="text-[11px] font-mono text-[#71717a]">{formatDate(doc.created_at)}</p>
+                    <p className="text-[11px] font-mono text-slate-500">{formatDate(doc.created_at)}</p>
                   </div>
 
-                  <p className="text-xs text-[#a1a1aa] leading-relaxed line-clamp-3">
+                  <p className="text-xs text-slate-600 leading-relaxed line-clamp-3 font-light">
                     {doc.description || 'Verified official document published by G Goodwill Trust executive board.'}
                   </p>
                 </div>
 
                 {doc.file_url && (
-                  <div className="flex gap-3 pt-6 mt-6 border-t border-[#27272a]">
+                  <div className="flex gap-3 pt-6 mt-6 border-t border-slate-200">
                     <a
                       href={doc.file_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#18181b] border border-[#27272a] text-xs font-semibold text-[#fafafa] hover:border-[#d4af37]/40 transition-all uppercase tracking-wider"
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-slate-100 border border-slate-300 text-xs font-semibold text-slate-900 hover:bg-slate-200 transition-all uppercase tracking-wider"
                     >
-                      <Eye className="w-3.5 h-3.5 text-[#d4af37]" /> View
+                      <Eye className="w-3.5 h-3.5 text-[#b45309]" /> View
                     </a>
                     <a
                       href={doc.file_url}
                       download
-                      className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#d4af37] text-xs font-bold text-black hover:bg-[#e5c07b] transition-all uppercase tracking-wider shadow-lg shadow-[#d4af37]/15"
+                      className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#d4af37] text-xs font-bold text-black hover:bg-[#c59b27] transition-all uppercase tracking-wider shadow-xs"
                     >
                       <Download className="w-3.5 h-3.5" /> Download
                     </a>
