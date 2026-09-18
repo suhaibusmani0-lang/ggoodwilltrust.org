@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { motion, useInView, type Variants } from 'framer-motion'
 import {
   Heart,
-  BookOpen,
   HeartPulse,
   ArrowRight,
   Star,
@@ -17,7 +16,13 @@ import {
   GraduationCap,
   HandHeart,
   Shield,
-  Quote
+  Quote,
+  CheckCircle2,
+  Calendar,
+  Sparkle,
+  Award,
+  Globe,
+  ArrowUpRight
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -27,12 +32,12 @@ import Image from 'next/image'
    ═══════════════════════════════════════════ */
 
 const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 35 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } }
 }
 
 const fadeInScale: Variants = {
-  hidden: { opacity: 0, scale: 0.9 },
+  hidden: { opacity: 0, scale: 0.92 },
   visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: 'easeOut' } }
 }
 
@@ -44,26 +49,36 @@ const staggerContainer: Variants = {
   }
 }
 
-const slideInLeft: Variants = {
-  hidden: { opacity: 0, x: -60 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: 'easeOut' } }
-}
-
-const slideInRight: Variants = {
-  hidden: { opacity: 0, x: 60 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.7, ease: 'easeOut' } }
-}
-
 /* ═══════════════════════════════════════════
    HERO IMAGES
    ═══════════════════════════════════════════ */
 
 const heroImages = [
-  '/assets/hompage1.jpg',
-  '/assets/hompage2.jpg',
-  '/assets/hompage3.jpg',
-  '/assets/hompage4.jpg',
-  '/assets/hompage5.jpg',
+  {
+    src: '/assets/hompage1.jpg',
+    tag: 'Education Drives',
+    headline: 'Igniting young minds with education & dreams'
+  },
+  {
+    src: '/assets/hompage2.jpg',
+    tag: 'Health & Medical',
+    headline: 'Healthcare reaching the most vulnerable corners'
+  },
+  {
+    src: '/assets/hompage3.jpg',
+    tag: 'Community Relief',
+    headline: 'Warmth, food & compassion in times of crisis'
+  },
+  {
+    src: '/assets/hompage4.jpg',
+    tag: 'Women Empowerment',
+    headline: 'Building self-reliance and vocational dignity'
+  },
+  {
+    src: '/assets/hompage5.jpg',
+    tag: 'Grassroots Smiles',
+    headline: 'Spreading joy and brotherhood across New Delhi'
+  }
 ]
 
 /* ═══════════════════════════════════════════
@@ -78,8 +93,8 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
   useEffect(() => {
     if (!isInView) return
     let start = 0
-    const duration = 2000
-    const step = Math.ceil(target / (duration / 16))
+    const duration = 2200
+    const step = Math.max(1, Math.ceil(target / (duration / 16)))
     const timer = setInterval(() => {
       start += step
       if (start >= target) {
@@ -93,7 +108,7 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
   }, [isInView, target])
 
   return (
-    <div ref={ref} className="text-4xl md:text-6xl font-black text-white tabular-nums">
+    <div ref={ref} className="text-4xl md:text-5xl lg:text-6xl font-black text-white tabular-nums tracking-tight">
       {count.toLocaleString('en-IN')}{suffix}
     </div>
   )
@@ -105,6 +120,7 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
 
 export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [isAutoPlay, setIsAutoPlay] = useState(true)
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % heroImages.length)
@@ -115,552 +131,531 @@ export default function HomePage() {
   }, [])
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, 6000)
+    if (!isAutoPlay) return
+    const timer = setInterval(nextSlide, 6500)
     return () => clearInterval(timer)
-  }, [nextSlide])
+  }, [nextSlide, isAutoPlay])
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 overflow-hidden -mt-20">
+    <div className="min-h-screen bg-slate-950 text-slate-100 overflow-hidden -mt-20 selection:bg-blue-600 selection:text-white">
 
       {/* ═══════════════════════════════════════
-          1. CINEMATIC HERO SECTION
+          1. NEXT-LEVEL CINEMATIC HERO SECTION
           ═══════════════════════════════════════ */}
-      <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen pt-28 pb-16 lg:pt-36 lg:pb-24 flex items-center justify-center overflow-hidden">
         
-        {/* Background Video */}
-        <div className="absolute inset-0 z-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster="/assets/hompage1.jpg"
-            className="w-full h-full object-cover"
-          >
-            <source
-              src="https://videos.pexels.com/video-files/3209211/3209211-uhd_2560_1440_25fps.mp4"
-              type="video/mp4"
-            />
-          </video>
-          {/* Dark gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
+        {/* Background Mesh Gradients & Cyber Auroras */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+          {/* Animated dynamic gradient orbs */}
+          <div className="absolute -top-32 left-1/4 w-[600px] h-[600px] rounded-full bg-blue-600/20 blur-[140px] animate-aurora" />
+          <div className="absolute top-1/3 -right-32 w-[550px] h-[550px] rounded-full bg-cyan-500/15 blur-[150px] animate-aurora" style={{ animationDelay: '-6s' }} />
+          <div className="absolute -bottom-40 left-10 w-[500px] h-[500px] rounded-full bg-indigo-600/20 blur-[130px] animate-aurora" style={{ animationDelay: '-12s' }} />
+          
+          {/* Grid overlay texture */}
+          <div 
+            className="absolute inset-0 opacity-[0.12]" 
+            style={{
+              backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px)',
+              backgroundSize: '32px 32px'
+            }}
+          />
         </div>
 
-        {/* Floating Aurora Blobs */}
-        <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
-          <div className="absolute top-[10%] left-[5%] w-[500px] h-[500px] rounded-full bg-blue-500/15 blur-[120px] animate-aurora" />
-          <div className="absolute bottom-[10%] right-[5%] w-[600px] h-[600px] rounded-full bg-cyan-400/10 blur-[150px] animate-aurora" style={{ animationDelay: '-5s' }} />
-          <div className="absolute top-[50%] left-[50%] w-[400px] h-[400px] rounded-full bg-purple-500/10 blur-[100px] animate-aurora" style={{ animationDelay: '-10s' }} />
-        </div>
-
-        {/* Image Carousel (behind text, subtle) */}
-        <div className="absolute inset-0 z-[0] opacity-30">
-          {heroImages.map((src, idx) => (
-            <div
-              key={src}
-              className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
-                idx === currentSlide ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <Image
-                src={src}
-                alt={`G Goodwill Trust community work ${idx + 1}`}
-                fill
-                className="object-cover animate-ken-burns"
-                priority={idx === 0}
-                sizes="100vw"
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Hero Content */}
-        <div className="relative z-10 container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            
+            {/* Left Column: Typography & CTAs */}
             <motion.div
               initial="hidden"
               animate="visible"
               variants={staggerContainer}
+              className="lg:col-span-7 max-w-2xl"
             >
-              {/* Badge */}
-              <motion.div variants={fadeInUp} className="mb-8">
-                <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full glass text-white/90 text-sm font-semibold tracking-wide">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
-                  </span>
-                  Transforming Lives Since 2020 — New Delhi, India
+              {/* Trust Badge */}
+              <motion.div variants={fadeInUp} className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass border border-white/10 text-white/90 text-xs sm:text-sm font-semibold mb-6 shadow-inner">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
                 </span>
+                <span>Govt. 80G Certified Non-Profit &bull; Shaheen Bagh, New Delhi</span>
               </motion.div>
 
-              {/* Main Headline */}
+              {/* Main Grand Title */}
               <motion.h1
                 variants={fadeInUp}
-                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight mb-8 leading-[0.9]"
+                className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 text-white"
               >
-                <span className="text-white">Empower Lives.</span>
+                Humanity First.{' '}
                 <br />
-                <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent animate-gradient">
-                  Inspire Change.
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-300">
+                  Real Grassroots Impact.
                 </span>
               </motion.h1>
 
               {/* Subtitle */}
               <motion.p
                 variants={fadeInUp}
-                className="text-lg md:text-xl text-white/70 mb-10 max-w-2xl mx-auto leading-relaxed font-medium"
+                className="text-base sm:text-lg lg:text-xl text-slate-300 font-normal leading-relaxed mb-8 max-w-xl"
               >
-                Bridging the gap between privilege and disadvantage. Join G Goodwill Trust
-                to create sustainable, long-term impact in education, healthcare, and empowerment.
+                G Goodwill Trust bridges the gap between privilege and disadvantage. From daily ration drives and free dental checkups to child education scholarships — every rupee delivers verifiable hope.
               </motion.p>
 
-              {/* CTA Buttons */}
-              <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              {/* Action Buttons */}
+              <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-4 mb-10">
                 <Link
                   href="/donate"
-                  className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white rounded-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-500/30"
+                  className="relative group inline-flex items-center gap-3 px-8 py-4 text-base sm:text-lg font-bold text-white rounded-full overflow-hidden shadow-2xl shadow-orange-500/25 transition-all duration-300 hover:-translate-y-1"
                 >
-                  <span className="absolute inset-0 bg-gradient-to-r from-blue-600 to-cyan-500 transition-all duration-300 group-hover:from-blue-500 group-hover:to-cyan-400" />
-                  <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-blue-500 via-cyan-400 to-blue-500 animate-gradient" />
+                  <span className="absolute inset-0 bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 transition-all duration-300 group-hover:scale-105" />
                   <span className="relative flex items-center gap-2">
-                    Donate Now <Heart className="w-5 h-5 fill-current" />
+                    Donate Now <Heart className="w-5 h-5 fill-white text-white animate-pulse" />
                   </span>
                 </Link>
+
                 <Link
                   href="/about"
-                  className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold glass text-white rounded-full hover:bg-white/15 transition-all duration-300 hover:-translate-y-1"
+                  className="inline-flex items-center gap-2 px-8 py-4 text-base sm:text-lg font-semibold text-slate-200 glass border border-white/10 rounded-full hover:bg-white/10 hover:text-white transition-all duration-300 hover:-translate-y-0.5"
                 >
-                  Our Mission <ArrowRight className="w-5 h-5 ml-2" />
+                  Our Mission <ArrowRight className="w-4 h-4" />
                 </Link>
               </motion.div>
 
-              {/* Trust Badges */}
+              {/* Verified Trust Stats Pills */}
               <motion.div
                 variants={fadeInUp}
-                className="mt-12 flex flex-wrap items-center justify-center gap-6 text-white/50 text-sm"
+                className="grid grid-cols-3 gap-3 sm:gap-4 pt-6 border-t border-white/10"
               >
-                <span className="flex items-center gap-2">
-                  <Shield className="w-4 h-4" /> 80G Tax Exempt
-                </span>
-                <span className="w-1 h-1 rounded-full bg-white/30" />
-                <span className="flex items-center gap-2">
-                  <Shield className="w-4 h-4" /> Govt. Registered NGO
-                </span>
-                <span className="w-1 h-1 rounded-full bg-white/30" />
-                <span className="flex items-center gap-2">
-                  <Shield className="w-4 h-4" /> 100% Transparent
-                </span>
+                <div className="flex flex-col">
+                  <span className="text-2xl sm:text-3xl font-black text-white">100%</span>
+                  <span className="text-xs text-slate-400 font-medium mt-0.5">Verified Direct Aid</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-2xl sm:text-3xl font-black text-cyan-400">80G</span>
+                  <span className="text-xs text-slate-400 font-medium mt-0.5">Tax Exemption</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-2xl sm:text-3xl font-black text-amber-400">4.9★</span>
+                  <span className="text-xs text-slate-400 font-medium mt-0.5">Google Rating</span>
+                </div>
               </motion.div>
             </motion.div>
+
+            {/* Right Column: High-Tech Glass Image Showcase & Ken-Burns Carousel */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, ease: 'easeOut' }}
+              className="lg:col-span-5 relative"
+              onMouseEnter={() => setIsAutoPlay(false)}
+              onMouseLeave={() => setIsAutoPlay(true)}
+            >
+              {/* Outer Glowing Holographic Ring */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 rounded-[2.5rem] blur-xl opacity-30 group-hover:opacity-60 transition duration-700 pointer-events-none" />
+
+              <div className="relative rounded-[2.2rem] overflow-hidden glass border border-white/20 p-2 shadow-2xl shadow-black/80">
+                {/* Carousel Container */}
+                <div className="relative h-[380px] sm:h-[460px] w-full rounded-[1.8rem] overflow-hidden bg-slate-900">
+                  {heroImages.map((item, idx) => (
+                    <div
+                      key={item.src}
+                      className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+                        idx === currentSlide
+                          ? 'opacity-100 scale-100 z-10'
+                          : 'opacity-0 scale-105 z-0 pointer-events-none'
+                      }`}
+                    >
+                      <Image
+                        src={item.src}
+                        alt={item.headline}
+                        fill
+                        priority={idx === 0}
+                        className="object-cover"
+                        sizes="(max-width: 1024px) 100vw, 45vw"
+                      />
+                      {/* Gradient bottom overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                      
+                      {/* Slide Information */}
+                      <div className="absolute bottom-6 left-6 right-6 z-20">
+                        <span className="inline-block px-3 py-1 rounded-full bg-blue-600/80 backdrop-blur-md text-white text-[11px] font-bold tracking-wider uppercase mb-2">
+                          {item.tag}
+                        </span>
+                        <p className="text-white font-bold text-lg sm:text-xl drop-shadow-md leading-snug">
+                          {item.headline}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Manual Arrow Controls */}
+                  <button
+                    onClick={prevSlide}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full glass border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-lg"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={nextSlide}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full glass border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-lg"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Bottom slide thumbnail progress bar */}
+                <div className="flex items-center justify-between px-4 py-3 bg-white/[0.03]">
+                  <div className="flex items-center gap-2">
+                    {heroImages.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentSlide(idx)}
+                        className={`h-2 rounded-full transition-all duration-500 ${
+                          idx === currentSlide
+                            ? 'w-8 bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)]'
+                            : 'w-2 bg-white/20 hover:bg-white/40'
+                        }`}
+                        aria-label={`Slide ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-[11px] font-mono text-slate-400">
+                    0{currentSlide + 1} / 0{heroImages.length}
+                  </span>
+                </div>
+              </div>
+
+              {/* Floating Floating Live Badge */}
+              <div className="absolute -bottom-5 -left-4 sm:-left-6 glass border border-white/20 rounded-2xl p-3.5 sm:p-4 shadow-2xl flex items-center gap-3 backdrop-blur-xl z-30 animate-float">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-green-400 flex items-center justify-center text-white font-bold shadow-md">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-white text-xs font-bold">Daily Ration & Camp</div>
+                  <div className="text-slate-400 text-[10px]">Active in Okhla, New Delhi</div>
+                </div>
+              </div>
+            </motion.div>
+
           </div>
         </div>
 
-        {/* Carousel Nav Dots */}
-        <div className="absolute bottom-28 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3">
-          <button onClick={prevSlide} className="w-9 h-9 glass rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all" aria-label="Previous">
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          {heroImages.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentSlide(idx)}
-              className={`h-2 rounded-full transition-all duration-500 ${
-                idx === currentSlide ? 'bg-white w-10' : 'bg-white/30 w-2 hover:bg-white/50'
-              }`}
-              aria-label={`Slide ${idx + 1}`}
-            />
-          ))}
-          <button onClick={nextSlide} className="w-9 h-9 glass rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all" aria-label="Next">
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/40 text-xs font-medium">
-          <span>Scroll to Explore</span>
-          <ChevronDown className="w-5 h-5 animate-scroll-bounce" />
+        {/* Scroll down indicator */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-300 transition-colors pointer-events-none">
+          <span className="text-[11px] font-medium tracking-widest uppercase">Explore Impact</span>
+          <ChevronDown className="w-4 h-4 animate-bounce text-slate-400" />
         </div>
       </section>
 
       {/* ═══════════════════════════════════════
-          2. IMPACT STATS — ANIMATED COUNTERS
+          2. IMPACT STATS — HIGH CONTRAST STATS
           ═══════════════════════════════════════ */}
-      <section className="relative py-20 md:py-28 overflow-hidden">
-        {/* Animated gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 animate-gradient" />
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-[20%] w-[300px] h-[300px] rounded-full bg-cyan-400 blur-[100px] animate-float" />
-          <div className="absolute bottom-0 right-[20%] w-[400px] h-[400px] rounded-full bg-blue-300 blur-[120px] animate-float-slow" />
-        </div>
+      <section className="relative py-20 bg-gradient-to-b from-slate-950 via-blue-950/40 to-slate-950 border-y border-white/5">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="text-cyan-400 font-bold text-xs tracking-widest uppercase mb-2 inline-block">
+              Verifiable Milestones
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+              Every Number Represents a Living Smile
+            </h2>
+          </div>
 
-        <div className="relative z-10 container mx-auto px-4">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            variants={staggerContainer}
-            className="text-center mb-12"
-          >
-            <motion.p variants={fadeInUp} className="text-blue-200 font-semibold tracking-widest text-sm uppercase mb-3">
-              Our Impact in Numbers
-            </motion.p>
-            <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-bold text-white">
-              Real Change, Real Lives
-            </motion.h2>
-          </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            variants={staggerContainer}
-            className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto"
-          >
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {[
-              { label: 'Families Fed', value: 2000, suffix: '+', icon: HandHeart, color: 'from-orange-400 to-amber-400' },
-              { label: 'Rakhis Tied', value: 5100, suffix: '+', icon: Heart, color: 'from-pink-400 to-rose-400' },
-              { label: 'Awareness Created', value: 1100, suffix: '+', icon: Users, color: 'from-cyan-400 to-blue-400' },
-              { label: 'Health Checks', value: 1000, suffix: '+', icon: HeartPulse, color: 'from-emerald-400 to-green-400' }
+              { label: 'Families Provided Food Kits', value: 2000, suffix: '+', icon: HandHeart, color: 'from-orange-500 to-amber-500' },
+              { label: 'Rakhis Tied for Harmony', value: 5100, suffix: '+', icon: Heart, color: 'from-rose-500 to-pink-500' },
+              { label: 'Citizens Reached via Drives', value: 1100, suffix: '+', icon: Users, color: 'from-cyan-500 to-blue-500' },
+              { label: 'Free Health Consultations', value: 1000, suffix: '+', icon: HeartPulse, color: 'from-emerald-500 to-teal-500' }
             ].map((stat, idx) => (
               <motion.div
                 key={idx}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
                 variants={fadeInScale}
                 className="relative group"
               >
-                <div className="glass rounded-3xl p-6 md:p-8 text-center hover:bg-white/15 transition-all duration-500 group-hover:scale-105">
-                  {/* Icon */}
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
+                <div className="h-full rounded-3xl glass border border-white/10 p-6 sm:p-8 text-center hover:border-cyan-400/40 transition-all duration-500 hover:-translate-y-1">
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     <stat.icon className="w-7 h-7 text-white" />
                   </div>
-                  {/* Counter */}
                   <AnimatedCounter target={stat.value} suffix={stat.suffix} />
-                  {/* Label */}
-                  <div className="text-blue-100 font-medium text-sm mt-2 tracking-wide">{stat.label}</div>
+                  <div className="text-slate-300 text-xs sm:text-sm font-medium mt-2 leading-snug">
+                    {stat.label}
+                  </div>
                 </div>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════
-          3. OUR INTERVENTIONS — 3D TILT CARDS
+          3. OUR INTERVENTIONS — MODERN 3D CARDS
           ═══════════════════════════════════════ */}
-      <section className="py-24 md:py-32 relative">
-        {/* Decorative bg */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-50 rounded-full blur-[100px] opacity-50 pointer-events-none" />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={staggerContainer}
-              className="max-w-2xl"
+      <section className="py-28 relative">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6 max-w-6xl mx-auto">
+            <div>
+              <span className="text-blue-400 font-bold tracking-widest text-xs uppercase mb-2 inline-block">
+                Core Pillars
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-black text-white">
+                Our Ongoing Interventions
+              </h2>
+              <p className="text-slate-400 text-base sm:text-lg mt-3 max-w-xl">
+                Deep-rooted programs engineered for continuous, sustainable grassroots transformation.
+              </p>
+            </div>
+            <Link
+              href="/programs"
+              className="inline-flex items-center gap-2 text-cyan-400 font-bold hover:text-cyan-300 transition-colors group"
             >
-              <motion.p variants={fadeInUp} className="text-blue-600 font-bold tracking-widest text-sm uppercase mb-3">
-                What We Do
-              </motion.p>
-              <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-black mb-4">
-                Our{' '}
-                <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-                  Interventions
-                </span>
-              </motion.h2>
-              <motion.p variants={fadeInUp} className="text-slate-500 text-lg">
-                Structured programs creating real, measurable change on the ground.
-              </motion.p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <Link href="/programs" className="inline-flex items-center gap-2 text-blue-600 font-bold hover:text-blue-700 transition-colors bg-blue-50 hover:bg-blue-100 px-6 py-3 rounded-full">
-                View All Programs <ChevronRight className="w-5 h-5" />
-              </Link>
-            </motion.div>
+              Explore All Projects <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            </Link>
           </div>
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="grid md:grid-cols-3 gap-8"
-          >
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
               {
-                title: 'Education Initiatives',
-                desc: 'Providing merit-based scholarships, school supplies, and vocational training to empower the next generation with knowledge and opportunity.',
+                title: 'Education & Scholarships',
+                desc: 'Supporting underprivileged children with tuition fees, notebooks, bags, and vocational guidance to prevent school dropouts.',
                 icon: GraduationCap,
-                gradient: 'from-blue-500 to-cyan-500',
-                bg: 'bg-blue-50',
-                shadow: 'shadow-blue-500/10'
+                gradient: 'from-blue-500 to-indigo-600',
+                badge: 'Youth Future'
               },
               {
-                title: 'Community Health Camps',
-                desc: 'Bringing vital healthcare to grassroots levels through free medical check-ups, vaccinations, dental camps, and health awareness drives.',
+                title: 'Free Health & Dental Camps',
+                desc: 'Regular grassroots clinics offering checkups, medicines, dental hygiene kits, and emergency surgical consultation guidance.',
                 icon: HeartPulse,
-                gradient: 'from-rose-500 to-pink-500',
-                bg: 'bg-rose-50',
-                shadow: 'shadow-rose-500/10'
+                gradient: 'from-rose-500 to-red-600',
+                badge: 'Grassroots Care'
               },
               {
-                title: 'Poverty Alleviation',
-                desc: 'Delivering immediate relief through monthly ration kits, clothing drives, and long-term livelihood support for vulnerable families.',
+                title: 'Ration & Poverty Relief',
+                desc: 'Direct food security packages distributed to widows, daily wagers, and impoverished families facing sudden crisis.',
                 icon: HandHeart,
-                gradient: 'from-amber-500 to-orange-500',
-                bg: 'bg-amber-50',
-                shadow: 'shadow-amber-500/10'
+                gradient: 'from-amber-500 to-orange-600',
+                badge: 'Direct Aid'
               }
             ].map((program, idx) => (
               <motion.div
                 key={idx}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
                 variants={fadeInUp}
-                className={`tilt-card bg-white rounded-3xl p-8 md:p-10 border border-slate-100 relative overflow-hidden group ${program.shadow} shadow-xl`}
+                className="tilt-card rounded-3xl glass border border-white/10 p-8 sm:p-10 relative overflow-hidden group hover:border-white/30 transition-all duration-500 flex flex-col justify-between"
               >
-                {/* Hover gradient reveal */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${program.gradient} opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500`} />
-                
-                {/* Icon */}
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${program.gradient} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
-                  <program.icon className="w-8 h-8 text-white" />
+                <div>
+                  <div className="flex justify-between items-center mb-6">
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${program.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                      <program.icon className="w-7 h-7 text-white" />
+                    </div>
+                    <span className="px-3 py-1 rounded-full text-[11px] font-bold text-slate-300 bg-white/5 border border-white/10">
+                      {program.badge}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
+                    {program.title}
+                  </h3>
+                  <p className="text-slate-300 text-sm leading-relaxed mb-8">
+                    {program.desc}
+                  </p>
                 </div>
 
-                <h3 className="text-2xl font-bold mb-3 text-slate-900">{program.title}</h3>
-                <p className="text-slate-500 mb-8 leading-relaxed">{program.desc}</p>
-
-                <Link href="/programs" className="inline-flex items-center text-slate-900 font-bold group-hover:text-blue-600 transition-colors">
-                  Learn More
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <Link
+                  href="/programs"
+                  className="inline-flex items-center text-sm font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors"
+                >
+                  View Details <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════
-          4. COMMUNITY REVIEWS — INFINITE MARQUEE
+          4. COMMUNITY REVIEWS — INFINITE AUTO-MARQUEE
           ═══════════════════════════════════════ */}
-      <section className="py-24 md:py-32 bg-gradient-to-b from-slate-50 to-slate-100 relative overflow-hidden">
-        {/* Decorative */}
-        <div className="absolute top-20 left-10 text-blue-100 pointer-events-none opacity-30">
-          <Quote className="w-40 h-40" />
+      <section className="py-24 bg-slate-900/60 border-y border-white/5 relative overflow-hidden">
+        <div className="container mx-auto px-4 mb-14 text-center">
+          <span className="text-amber-400 font-bold text-xs tracking-widest uppercase mb-2 inline-block">
+            Voice of the People
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-black text-white mb-4">
+            Trusted by the Community
+          </h2>
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass border border-white/10">
+            <span className="text-2xl font-black text-white">4.9</span>
+            <div className="flex text-amber-400">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <Star key={s} className="w-4 h-4 fill-current" />
+              ))}
+            </div>
+            <span className="text-slate-400 text-xs font-medium border-l border-white/10 pl-3">
+              Verified Public Reviews
+            </span>
+          </div>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="mb-16 flex flex-col items-center text-center"
-          >
-            <motion.p variants={fadeInUp} className="text-blue-600 font-bold tracking-widest text-sm uppercase mb-3">
-              Testimonials
-            </motion.p>
-            <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-black mb-4">
-              Community{' '}
-              <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Trust</span>
-            </motion.h2>
-            <motion.div variants={fadeInUp} className="flex items-center gap-3 glass-light px-6 py-3 rounded-full shadow-sm mt-4">
-              <span className="text-3xl font-black text-slate-900">4.9</span>
-              <div className="flex text-amber-400">
-                {[1, 2, 3, 4, 5].map(s => <Star key={s} className="w-5 h-5 fill-current" />)}
-              </div>
-              <span className="text-slate-500 font-medium text-sm ml-2">31 Google Reviews</span>
-            </motion.div>
-          </motion.div>
+        {/* Marquee Row */}
+        <div className="relative w-full overflow-hidden">
+          {/* Edge blur fade */}
+          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
 
-          {/* Infinite Marquee */}
-          <div className="relative">
-            {/* Fade edges */}
-            <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-slate-100 to-transparent z-10 pointer-events-none" />
-
-            <div className="overflow-hidden">
-              <div className="flex animate-marquee hover:[animation-play-state:paused] w-max">
-                {/* Duplicate for seamless loop */}
-                {[...Array(2)].map((_, setIdx) => (
-                  <div key={setIdx} className="flex gap-6 pr-6">
-                    {[
-                      { name: 'Mohd Minhaj Alam', review: 'Amazing NGO doing real, impactful work on the ground in Shaheen Bagh. Their dedication to the community is truly inspiring and heartwarming.', time: '2 weeks ago', rating: 5 },
-                      { name: 'Dr. Bushra Shams', review: 'Very transparent and dedicated team. Their education programs are genuinely changing lives. I have seen the impact firsthand in the community.', time: '1 month ago', rating: 5 },
-                      { name: 'Suhaib Abbasi', review: 'Proud to see the impact of G Goodwill Trust. A highly motivated team working selflessly for humanity and making a real difference.', time: '2 months ago', rating: 5 },
-                      { name: 'Farid Baig', review: 'Commendable relief drives during tough times. True dedication towards society and underprivileged communities. Highly recommended for donations.', time: '3 months ago', rating: 5 },
-                      { name: 'Zainab Khan', review: 'The health camp organized by G Goodwill Trust was amazing. Free dental checkup and medicines distributed. Great initiative for the community.', time: '1 month ago', rating: 5 },
-                      { name: 'Ahmed Raza', review: 'Witnessed their Ramadan food distribution drive. Every family in the neighborhood received quality ration kits. Truly professional and caring.', time: '3 weeks ago', rating: 5 }
-                    ].map((review, idx) => (
-                      <div
-                        key={`${setIdx}-${idx}`}
-                        className="w-[380px] flex-shrink-0 bg-white rounded-3xl p-7 shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-                      >
-                        {/* Header */}
-                        <div className="flex items-center mb-5">
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-500/20 mr-4">
-                            {review.name.charAt(0)}
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-slate-900">{review.name}</h4>
-                            <p className="text-xs text-slate-400">{review.time}</p>
-                          </div>
-                        </div>
-                        {/* Stars */}
-                        <div className="flex text-amber-400 mb-4">
-                          {Array.from({ length: review.rating }, (_, i) => (
-                            <Star key={i} className="w-4 h-4 fill-current" />
-                          ))}
-                        </div>
-                        {/* Review text */}
-                        <p className="text-slate-600 text-sm leading-relaxed">&quot;{review.review}&quot;</p>
+          <div className="flex animate-marquee hover:[animation-play-state:paused] w-max py-2">
+            {[...Array(2)].map((_, setIdx) => (
+              <div key={setIdx} className="flex gap-6 pr-6">
+                {[
+                  { name: 'Mohd Minhaj Alam', review: 'Amazing NGO doing real, impactful work on the ground in Shaheen Bagh. Truly inspiring commitment.', time: '2 weeks ago' },
+                  { name: 'Dr. Bushra Shams', review: 'Very transparent and dedicated team. Their educational relief camps genuinely transform needy children.', time: '1 month ago' },
+                  { name: 'Suhaib Abbasi', review: 'Proud to see the grassroots footprint of G Goodwill Trust. Professional, genuine, and selfless.', time: '2 months ago' },
+                  { name: 'Farid Baig', review: 'Commendable ration relief drives. You can see your donation reaching right into the hands of widows and daily wagers.', time: '3 months ago' },
+                  { name: 'Zainab Khan', review: 'Attended their free health camp in Okhla. Free doctors, diagnostics and medicine for all without bias.', time: '1 month ago' }
+                ].map((review, idx) => (
+                  <div
+                    key={`${setIdx}-${idx}`}
+                    className="w-[340px] sm:w-[400px] flex-shrink-0 glass border border-white/10 rounded-3xl p-6 sm:p-7 shadow-xl hover:border-cyan-400/30 transition-all duration-300"
+                  >
+                    <div className="flex items-center gap-3.5 mb-4">
+                      <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white font-bold text-base shadow-md">
+                        {review.name.charAt(0)}
                       </div>
-                    ))}
+                      <div>
+                        <h4 className="font-bold text-white text-sm sm:text-base">{review.name}</h4>
+                        <p className="text-slate-400 text-xs">{review.time}</p>
+                      </div>
+                    </div>
+                    <div className="flex text-amber-400 mb-3">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star key={star} className="w-4 h-4 fill-current" />
+                      ))}
+                    </div>
+                    <p className="text-slate-300 text-sm leading-relaxed italic">
+                      &quot;{review.review}&quot;
+                    </p>
                   </div>
                 ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          5. UPCOMING EVENTS & CAMPS
+          ═══════════════════════════════════════ */}
+      <section className="py-28">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="text-blue-400 font-bold tracking-widest text-xs uppercase mb-2 inline-block">
+              Get Involved
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black text-white">
+              Upcoming Drives & Camps
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              { day: '20', month: 'JUN', type: 'Education', title: 'Educational Supply Drive', loc: 'Okhla, New Delhi', gradient: 'from-blue-600 to-cyan-500' },
+              { day: '05', month: 'JUL', type: 'Assistance', title: 'Aadhaar & Document Help', loc: 'Shaheen Bagh Center', gradient: 'from-emerald-600 to-green-500' },
+              { day: '18', month: 'JUL', type: 'Healthcare', title: 'Free Medical Consultation', loc: 'Local Community Clinic', gradient: 'from-rose-600 to-pink-500' }
+            ].map((event, idx) => (
+              <motion.div
+                key={idx}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeInUp}
+                className="rounded-3xl glass border border-white/10 overflow-hidden shadow-2xl hover:border-white/30 transition-all duration-300 flex flex-col justify-between"
+              >
+                <div className={`bg-gradient-to-r ${event.gradient} p-5 flex items-center justify-between`}>
+                  <div className="text-white">
+                    <span className="text-3xl font-black">{event.day}</span>
+                    <span className="text-xs font-bold uppercase ml-2 tracking-wider opacity-90">{event.month} 2025</span>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-black/20 backdrop-blur-md text-white text-[11px] font-bold">
+                    {event.type}
+                  </span>
+                </div>
+
+                <div className="p-6 sm:p-7">
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-4">
+                    {event.title}
+                  </h3>
+                  <div className="flex items-center text-slate-400 text-xs sm:text-sm">
+                    <MapPin className="w-4 h-4 mr-2 text-cyan-400" />
+                    {event.loc}
+                  </div>
+                </div>
+
+                <div className="px-6 pb-6">
+                  <Link
+                    href="/contact"
+                    className="w-full inline-flex items-center justify-center py-2.5 rounded-xl glass hover:bg-white/10 text-xs font-bold text-white transition-colors"
+                  >
+                    Volunteer for Camp
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          6. GRAND CTA — MEMBERSHIP & MEMBERS
+          ═══════════════════════════════════════ */}
+      <section className="py-20 pb-32">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative rounded-[3rem] overflow-hidden glass border border-white/15 p-8 sm:p-14 lg:p-20 text-center max-w-5xl mx-auto shadow-2xl shadow-blue-500/10">
+            
+            {/* Background glowing flare */}
+            <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-blue-500/20 blur-[120px] pointer-events-none" />
+
+            <div className="relative z-10 max-w-3xl mx-auto">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-bold uppercase tracking-wider mb-6">
+                <Sparkles className="w-4 h-4" /> Become a Pillar of Hope
+              </div>
+
+              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight mb-6 leading-tight">
+                Empower a Family with Just{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">
+                  ₹1100 / Year
+                </span>
+              </h2>
+
+              <p className="text-slate-300 text-base sm:text-lg mb-10 leading-relaxed max-w-2xl mx-auto">
+                Join our Annual Membership program. Your direct pledge provides uninterrupted ration, educational support, and basic healthcare security to households in dire need.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link
+                  href="/donate"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-9 py-4 rounded-full text-base font-bold text-white bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 hover:scale-105 shadow-xl shadow-orange-500/30 transition-all duration-300"
+                >
+                  Become a Member <Heart className="w-5 h-5 fill-white" />
+                </Link>
+
+                <Link
+                  href="/contact"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-9 py-4 rounded-full text-base font-semibold text-slate-200 glass hover:bg-white/10 transition-all duration-300"
+                >
+                  Join as Volunteer <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════
-          5. UPCOMING EVENTS — PREMIUM CARDS
-          ═══════════════════════════════════════ */}
-      <section className="py-24 md:py-32">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="mb-16"
-          >
-            <motion.p variants={fadeInUp} className="text-blue-600 font-bold tracking-widest text-sm uppercase mb-3">
-              Stay Updated
-            </motion.p>
-            <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-black">
-              Upcoming{' '}
-              <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Events</span>
-            </motion.h2>
-          </motion.div>
-
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={staggerContainer}
-            className="grid md:grid-cols-3 gap-8"
-          >
-            {[
-              { day: '20', month: 'JUN', type: 'Education', title: 'Educational Supply Drive', loc: 'Okhla, New Delhi', gradient: 'from-blue-500 to-cyan-500' },
-              { day: '05', month: 'JUL', type: 'Assistance', title: 'Aadhaar & Document Camp', loc: 'Shaheen Bagh Center', gradient: 'from-emerald-500 to-green-500' },
-              { day: '18', month: 'JUL', type: 'Healthcare', title: 'Free Dental Checkup Camp', loc: 'Local Community Clinic', gradient: 'from-rose-500 to-pink-500' }
-            ].map((event, idx) => (
-              <motion.div
-                key={idx}
-                variants={fadeInUp}
-                className="tilt-card bg-white rounded-3xl overflow-hidden shadow-lg shadow-slate-200/50 border border-slate-100 group"
-              >
-                {/* Date Badge */}
-                <div className={`bg-gradient-to-r ${event.gradient} p-5 flex items-center justify-between`}>
-                  <div className="text-white">
-                    <span className="block text-4xl font-black leading-none">{event.day}</span>
-                    <span className="block text-sm font-bold opacity-80 mt-1">{event.month} 2025</span>
-                  </div>
-                  <span className="px-4 py-1.5 rounded-full bg-white/20 text-white text-xs font-bold backdrop-blur-sm">
-                    {event.type}
-                  </span>
-                </div>
-
-                <div className="p-7">
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-blue-600 transition-colors">{event.title}</h3>
-                  <div className="flex items-center text-slate-400 text-sm">
-                    <MapPin className="w-4 h-4 mr-2 text-slate-300" />
-                    {event.loc}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════
-          6. DRAMATIC CTA SECTION
-          ═══════════════════════════════════════ */}
-      <section className="py-24 md:py-32">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="relative rounded-[3rem] overflow-hidden"
-          >
-            {/* Animated gradient BG */}
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 animate-gradient" />
-            
-            {/* Decorative elements */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full border border-blue-500/20 animate-float-slow" />
-              <div className="absolute -bottom-10 -left-10 w-60 h-60 rounded-full border border-cyan-500/20 animate-float" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-blue-500/5 blur-[100px]" />
-              <div className="absolute top-10 left-10 w-4 h-4 rounded-full bg-blue-400/30 animate-float" />
-              <div className="absolute bottom-20 right-20 w-3 h-3 rounded-full bg-cyan-400/30 animate-float-slow" />
-              <div className="absolute top-20 right-[30%] w-2 h-2 rounded-full bg-purple-400/40 animate-float" style={{ animationDelay: '-2s' }} />
-            </div>
-
-            <div className="relative z-10 p-10 md:p-20 text-center">
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={staggerContainer}
-              >
-                <motion.div variants={fadeInUp} className="mb-6">
-                  <Sparkles className="w-10 h-10 text-amber-400 mx-auto mb-4" />
-                </motion.div>
-                <motion.h2
-                  variants={fadeInUp}
-                  className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight"
-                >
-                  Make an Impact{' '}
-                  <span className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-                    Today.
-                  </span>
-                </motion.h2>
-                <motion.p
-                  variants={fadeInUp}
-                  className="text-slate-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed"
-                >
-                  Your contribution directly funds our grassroots initiatives in New Delhi.
-                  Become an annual member for ₹1100 and help us sustain our operations throughout the year.
-                </motion.p>
-                <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row justify-center gap-4">
-                  <Link
-                    href="/donate"
-                    className="group relative inline-flex items-center justify-center px-10 py-4 text-lg font-bold text-white rounded-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-orange-500/30 animate-pulse-glow"
-                  >
-                    <span className="absolute inset-0 bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-300 group-hover:from-orange-400 group-hover:to-amber-400" />
-                    <span className="relative flex items-center gap-2">
-                      Become a Member <Heart className="w-5 h-5 fill-current" />
-                    </span>
-                  </Link>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center justify-center px-10 py-4 text-lg font-bold glass text-slate-300 hover:text-white rounded-full hover:bg-white/10 transition-all duration-300 hover:-translate-y-1"
-                  >
-                    Join as Volunteer <ArrowRight className="w-5 h-5 ml-2" />
-                  </Link>
-                </motion.div>
-              </motion.div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
     </div>
   )
 }
