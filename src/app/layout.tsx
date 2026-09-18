@@ -1,12 +1,24 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Cormorant_Garamond, Plus_Jakarta_Sans } from 'next/font/google';
 import Script from 'next/script';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SmoothScrollProvider from '@/components/SmoothScrollProvider';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' });
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-serif',
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-sans',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://ggoodwilltrust.org'),
@@ -37,8 +49,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-scroll-behavior="smooth">
-      <body className={inter.className + ' bg-slate-950 text-slate-100 flex flex-col min-h-screen antialiased relative selection:bg-cyan-500 selection:text-black'}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${cormorant.variable} ${jakarta.variable}`}>
+      <body className={`${jakarta.className} bg-[#09090b] text-[#f4f4f5] flex flex-col min-h-screen antialiased relative selection:bg-[#d4af37] selection:text-black tracking-[-0.01em]`}>
         {/* Subtle static noise/grain overlay for organic texture */}
         <div 
           className="fixed inset-0 pointer-events-none z-50 opacity-[0.035] mix-blend-overlay"

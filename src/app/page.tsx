@@ -18,8 +18,7 @@ import {
   Shield,
   Quote,
   CheckCircle2,
-  ArrowUpRight,
-  Lock
+  ArrowUpRight
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -29,20 +28,20 @@ import Image from 'next/image'
    ═══════════════════════════════════════════ */
 
 const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 35 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } }
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
 }
 
 const fadeInScale: Variants = {
-  hidden: { opacity: 0, scale: 0.92 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: 'easeOut' } }
+  hidden: { opacity: 0, scale: 0.94 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
 }
 
 const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.12, delayChildren: 0.1 }
+    transition: { staggerChildren: 0.12, delayChildren: 0.08 }
   }
 }
 
@@ -53,33 +52,33 @@ const staggerContainer: Variants = {
 const heroImages = [
   {
     src: '/assets/hompage1.jpg',
-    tag: 'Education Drives',
-    headline: 'Igniting young minds with education & dreams'
+    tag: 'Chapter 01 &bull; Education',
+    headline: 'Nurturing young minds with dignity, books & dreams'
   },
   {
     src: '/assets/hompage2.jpg',
-    tag: 'Health & Medical',
-    headline: 'Healthcare reaching the most vulnerable corners'
+    tag: 'Chapter 02 &bull; Healthcare',
+    headline: 'Bringing vital medical expertise to underserved communities'
   },
   {
     src: '/assets/hompage3.jpg',
-    tag: 'Community Relief',
-    headline: 'Warmth, food & compassion in times of crisis'
+    tag: 'Chapter 03 &bull; Sustenance',
+    headline: 'Direct food security & emergency humanitarian aid'
   },
   {
     src: '/assets/hompage4.jpg',
-    tag: 'Women Empowerment',
-    headline: 'Building self-reliance and vocational dignity'
+    tag: 'Chapter 04 &bull; Empowerment',
+    headline: 'Vocational avenues fostering financial independence'
   },
   {
     src: '/assets/hompage5.jpg',
-    tag: 'Grassroots Smiles',
-    headline: 'Spreading joy and brotherhood across New Delhi'
+    tag: 'Chapter 05 &bull; Brotherhood',
+    headline: 'Spreading harmony and grassroots care across New Delhi'
   }
 ]
 
 /* ═══════════════════════════════════════════
-   ANIMATED COUNTER COMPONENT (useInView)
+   ANIMATED COUNTER (useInView)
    ═══════════════════════════════════════════ */
 
 function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
@@ -90,7 +89,7 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
   useEffect(() => {
     if (!isInView) return
     let start = 0
-    const duration = 2200
+    const duration = 2400
     const step = Math.max(1, Math.ceil(target / (duration / 16)))
     const timer = setInterval(() => {
       start += step
@@ -105,35 +104,35 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
   }, [isInView, target])
 
   return (
-    <div ref={ref} className="text-4xl md:text-5xl lg:text-6xl font-black text-white tabular-nums tracking-tight">
+    <div ref={ref} className="text-4xl sm:text-5xl lg:text-6xl font-light font-serif text-[#f4f4f5] tabular-nums tracking-normal">
       {count.toLocaleString('en-IN')}{suffix}
     </div>
   )
 }
 
 /* ═══════════════════════════════════════════
-   3D TILT CARD COMPONENT
+   3D TILT BENTO CARD (LUXURY ARCHITECTURE)
    ═══════════════════════════════════════════ */
 
 interface TiltCardProps {
   title: string
   desc: string
   icon: React.ElementType
-  gradient: string
   badge: string
+  number: string
 }
 
-function InteractiveTiltCard({ title, desc, icon: Icon, gradient, badge }: TiltCardProps) {
+function LuxuryBentoCard({ title, desc, icon: Icon, badge, number }: TiltCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
 
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
-  const mouseXSpring = useSpring(x, { stiffness: 200, damping: 20 })
-  const mouseYSpring = useSpring(y, { stiffness: 200, damping: 20 })
+  const mouseXSpring = useSpring(x, { stiffness: 180, damping: 25 })
+  const mouseYSpring = useSpring(y, { stiffness: 180, damping: 25 })
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['10deg', '-10deg'])
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-10deg', '10deg'])
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['7deg', '-7deg'])
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-7deg', '7deg'])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return
@@ -163,37 +162,42 @@ function InteractiveTiltCard({ title, desc, icon: Icon, gradient, badge }: TiltC
         rotateY,
         transformStyle: 'preserve-3d',
       }}
-      className="relative rounded-3xl p-8 sm:p-10 glass border border-white/10 group cursor-pointer transition-colors duration-500 hover:border-cyan-400/40 flex flex-col justify-between"
+      className="relative rounded-2xl p-8 sm:p-10 bg-[#121214] border border-[#27272a] group cursor-pointer transition-all duration-700 hover:border-[#d4af37]/60 flex flex-col justify-between overflow-hidden shadow-2xl"
     >
-      {/* Dynamic glow behind card */}
+      {/* Subtle gold ambient glow on hover */}
       <div 
-        className={`absolute -inset-1 rounded-3xl bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-30 blur-2xl transition duration-500 pointer-events-none`}
+        className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-[#d4af37]/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
       />
 
-      <div style={{ transform: 'translateZ(30px)' }}>
-        <div className="flex justify-between items-center mb-6">
-          <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-            <Icon className="w-7 h-7 text-white" />
+      <div style={{ transform: 'translateZ(25px)' }}>
+        <div className="flex justify-between items-center mb-8">
+          <div className="w-12 h-12 rounded-xl bg-[#1c1c1f] border border-[#27272a] flex items-center justify-center text-[#d4af37] group-hover:border-[#d4af37]/40 transition-colors duration-500">
+            <Icon className="w-5 h-5" />
           </div>
-          <span className="px-3 py-1 rounded-full text-[11px] font-bold text-slate-300 bg-white/5 border border-white/10">
-            {badge}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] tracking-[0.2em] font-medium uppercase text-[#a1a1aa] px-3 py-1 rounded-full bg-[#18181b] border border-[#27272a]">
+              {badge}
+            </span>
+            <span className="font-serif text-lg text-[#52525b] font-light">
+              {number}
+            </span>
+          </div>
         </div>
 
-        <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
+        <h3 className="text-xl sm:text-2xl font-serif font-normal text-[#f4f4f5] tracking-wide mb-3 group-hover:text-white transition-colors">
           {title}
         </h3>
-        <p className="text-slate-300 text-sm leading-relaxed mb-8">
+        <p className="text-[#a1a1aa] text-sm leading-relaxed font-light mb-8">
           {desc}
         </p>
       </div>
 
-      <div style={{ transform: 'translateZ(20px)' }}>
+      <div style={{ transform: 'translateZ(15px)' }}>
         <Link
           href="/programs"
-          className="inline-flex items-center text-sm font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors"
+          className="inline-flex items-center text-xs font-semibold tracking-wider uppercase text-[#d4af37] hover:text-[#fef08a] transition-colors"
         >
-          View Details <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+          View Detailed Mandate <ChevronRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1.5 transition-transform" />
         </Link>
       </div>
     </motion.div>
@@ -201,28 +205,25 @@ function InteractiveTiltCard({ title, desc, icon: Icon, gradient, badge }: TiltC
 }
 
 /* ═══════════════════════════════════════════
-   MAGNETIC GLOWING CTA BUTTON
+   LUXURY GOLD BUTTON
    ═══════════════════════════════════════════ */
 
-function GlowingDonateButton() {
+function LuxuryDonateButton() {
   return (
     <Link
       href="/donate"
-      className="relative group inline-flex items-center gap-3 px-9 py-4 text-base sm:text-lg font-bold text-white rounded-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_35px_rgba(249,115,22,0.6)]"
+      className="relative group inline-flex items-center gap-3 px-9 py-4 text-sm font-semibold tracking-wider uppercase text-black rounded-full overflow-hidden transition-all duration-300 hover:scale-[1.02] shadow-[0_4px_24px_rgba(212,175,55,0.25)] hover:shadow-[0_6px_32px_rgba(212,175,55,0.45)]"
     >
-      {/* Animated Conic Border Glow */}
-      <span className="absolute -inset-[2px] rounded-full bg-gradient-to-r from-orange-500 via-amber-400 to-red-500 animate-gradient blur-sm opacity-90 group-hover:opacity-100 transition duration-300" />
-      <span className="absolute inset-[1px] rounded-full bg-gradient-to-r from-orange-600 via-red-600 to-amber-600" />
-      
-      <span className="relative flex items-center gap-2 tracking-wide">
-        Donate Now <Heart className="w-5 h-5 fill-white text-white animate-pulse" />
+      <span className="absolute inset-0 bg-gradient-to-r from-[#e5c07b] via-[#d4af37] to-[#c59b27] transition-all duration-300 group-hover:brightness-110" />
+      <span className="relative flex items-center gap-2">
+        Make a Contribution <Heart className="w-4 h-4 fill-black text-black" />
       </span>
     </Link>
   )
 }
 
 /* ═══════════════════════════════════════════
-   HOME PAGE
+   HOME PAGE (LUXURY EDITORIAL STANDARDS)
    ═══════════════════════════════════════════ */
 
 export default function HomePage() {
@@ -239,38 +240,37 @@ export default function HomePage() {
 
   useEffect(() => {
     if (!isAutoPlay) return
-    const timer = setInterval(nextSlide, 6500)
+    const timer = setInterval(nextSlide, 7000)
     return () => clearInterval(timer)
   }, [nextSlide, isAutoPlay])
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 overflow-hidden -mt-20 selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-[#09090b] text-[#f4f4f5] overflow-hidden -mt-20 selection:bg-[#d4af37] selection:text-black">
 
       {/* ═══════════════════════════════════════
-          1. MODERN HERO SECTION (AURORA MESH BG)
+          1. EDITORIAL HERO SECTION
           ═══════════════════════════════════════ */}
-      <section className="relative min-h-screen pt-28 pb-16 lg:pt-36 lg:pb-24 flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen pt-32 pb-20 lg:pt-40 lg:pb-28 flex items-center justify-center overflow-hidden border-b border-[#27272a]/40">
         
-        {/* Subtle Animated Mesh Gradient & Cyber Aurora Background */}
+        {/* Deep Atmospheric Lighting */}
         <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-          <div className="absolute -top-32 left-1/4 w-[650px] h-[650px] rounded-full bg-blue-600/25 blur-[150px] animate-aurora" />
-          <div className="absolute top-1/3 -right-32 w-[600px] h-[600px] rounded-full bg-cyan-500/20 blur-[160px] animate-aurora" style={{ animationDelay: '-6s' }} />
-          <div className="absolute -bottom-40 left-10 w-[550px] h-[550px] rounded-full bg-indigo-600/25 blur-[140px] animate-aurora" style={{ animationDelay: '-12s' }} />
+          <div className="absolute -top-40 left-1/3 w-[700px] h-[700px] rounded-full bg-[#1e293b]/25 blur-[160px]" />
+          <div className="absolute top-1/2 -right-40 w-[600px] h-[600px] rounded-full bg-[#d4af37]/5 blur-[180px]" />
           
-          {/* Subtle geometric dot grid pattern */}
+          {/* Refined fine line overlay */}
           <div 
-            className="absolute inset-0 opacity-[0.15]" 
+            className="absolute inset-0 opacity-[0.05]" 
             style={{
-              backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px)',
-              backgroundSize: '32px 32px'
+              backgroundImage: 'linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)',
+              backgroundSize: '80px 80px'
             }}
           />
         </div>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="container mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
+          <div className="grid lg:grid-cols-12 gap-16 lg:gap-12 items-center">
             
-            {/* Left Column: Bold High-Contrast Typography & Glowing CTA */}
+            {/* Left Column: Refined Typography & Grand Editorial Presence */}
             <motion.div
               initial="hidden"
               animate="visible"
@@ -278,88 +278,82 @@ export default function HomePage() {
               className="lg:col-span-7 max-w-2xl"
             >
               {/* Trust Badge */}
-              <motion.div variants={fadeInUp} className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass border border-white/10 text-white/90 text-xs sm:text-sm font-semibold mb-6 shadow-inner">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-                </span>
-                <span>Govt. 80G Certified Non-Profit &bull; Shaheen Bagh, New Delhi</span>
+              <motion.div variants={fadeInUp} className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[#121214] border border-[#27272a] text-[#a1a1aa] text-xs font-medium tracking-wide mb-8 shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-[#d4af37]" />
+                <span className="tracking-widest uppercase text-[11px]">80G Registered Trust &bull; New Delhi</span>
               </motion.div>
 
-              {/* Bold High-Contrast Headline */}
+              {/* Grand Editorial Headline */}
               <motion.h1
                 variants={fadeInUp}
-                className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 text-white"
+                className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal tracking-normal leading-[1.08] mb-8 text-[#fafafa]"
               >
-                Humanity First.{' '}
-                <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-300">
-                  Real Grassroots Impact.
+                Where Compassion Meets{' '}
+                <span className="italic text-[#d4af37] font-light font-serif">
+                  Dignity.
                 </span>
               </motion.h1>
 
               {/* Subtitle */}
               <motion.p
                 variants={fadeInUp}
-                className="text-base sm:text-lg lg:text-xl text-slate-300 font-normal leading-relaxed mb-8 max-w-xl"
+                className="text-base sm:text-lg text-[#a1a1aa] font-light leading-relaxed mb-10 max-w-xl"
               >
-                G Goodwill Trust bridges the gap between privilege and disadvantage. From daily ration drives and free medical consultations to child education scholarships — every rupee delivers verifiable hope.
+                G Goodwill Trust operates at the intersection of human empathy and structured grassroots execution. Providing food security, verified medical clinics, and educational scholarships across underprivileged households.
               </motion.p>
 
-              {/* Action Buttons: Glowing Donate Button */}
-              <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-5 mb-10">
-                <GlowingDonateButton />
+              {/* Action Buttons */}
+              <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-5 mb-14">
+                <LuxuryDonateButton />
 
                 <Link
                   href="/about"
-                  className="inline-flex items-center gap-2 px-8 py-4 text-base sm:text-lg font-semibold text-slate-200 glass border border-white/10 rounded-full hover:bg-white/10 hover:text-white transition-all duration-300 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 px-8 py-4 text-xs font-semibold tracking-wider uppercase text-[#d4d4d8] bg-[#121214] border border-[#27272a] rounded-full hover:border-[#52525b] hover:text-white transition-all duration-300"
                 >
-                  Our Mission <ArrowRight className="w-4 h-4" />
+                  Our Philosophy <ArrowRight className="w-3.5 h-3.5 text-[#a1a1aa]" />
                 </Link>
               </motion.div>
 
-              {/* Verified Trust Stats Pills */}
+              {/* Verified Statistics Border */}
               <motion.div
                 variants={fadeInUp}
-                className="grid grid-cols-3 gap-3 sm:gap-4 pt-6 border-t border-white/10"
+                className="grid grid-cols-3 gap-6 pt-8 border-t border-[#27272a]"
               >
                 <div className="flex flex-col">
-                  <span className="text-2xl sm:text-3xl font-black text-white">100%</span>
-                  <span className="text-xs text-slate-400 font-medium mt-0.5">Direct Aid Reached</span>
+                  <span className="text-2xl sm:text-3xl font-serif font-light text-[#f4f4f5]">100%</span>
+                  <span className="text-[11px] uppercase tracking-wider text-[#71717a] mt-1 font-medium">Direct Aid</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-2xl sm:text-3xl font-black text-cyan-400">80G</span>
-                  <span className="text-xs text-slate-400 font-medium mt-0.5">Tax Exemption</span>
+                  <span className="text-2xl sm:text-3xl font-serif font-light text-[#d4af37]">Section 80G</span>
+                  <span className="text-[11px] uppercase tracking-wider text-[#71717a] mt-1 font-medium">Tax Exemption</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-2xl sm:text-3xl font-black text-amber-400">4.9★</span>
-                  <span className="text-xs text-slate-400 font-medium mt-0.5">Google Rating</span>
+                  <span className="text-2xl sm:text-3xl font-serif font-light text-[#f4f4f5]">4.9 / 5.0</span>
+                  <span className="text-[11px] uppercase tracking-wider text-[#71717a] mt-1 font-medium">Public Trust</span>
                 </div>
               </motion.div>
             </motion.div>
 
-            {/* Right Column: Holographic Photo Showcase with Slide Descriptions */}
+            {/* Right Column: Editorial Photo Exhibition Frame */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.9, ease: 'easeOut' }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
               className="lg:col-span-5 relative"
               onMouseEnter={() => setIsAutoPlay(false)}
               onMouseLeave={() => setIsAutoPlay(true)}
             >
-              {/* Outer Glowing Holographic Ring */}
-              <div className="absolute -inset-2 bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500 rounded-[2.5rem] blur-xl opacity-30 group-hover:opacity-60 transition duration-700 pointer-events-none" />
-
-              <div className="relative rounded-[2.2rem] overflow-hidden glass border border-white/20 p-2 shadow-2xl shadow-black/80">
-                {/* Carousel Container */}
-                <div className="relative h-[380px] sm:h-[460px] w-full rounded-[1.8rem] overflow-hidden bg-slate-900">
+              {/* Outer Luxury Shadow Ring */}
+              <div className="relative rounded-2xl overflow-hidden bg-[#121214] border border-[#27272a] p-2 shadow-2xl">
+                {/* Image Frame */}
+                <div className="relative h-[390px] sm:h-[480px] w-full rounded-xl overflow-hidden bg-black">
                   {heroImages.map((item, idx) => (
                     <div
                       key={item.src}
-                      className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+                      className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
                         idx === currentSlide
-                          ? 'opacity-100 scale-100 z-10'
-                          : 'opacity-0 scale-105 z-0 pointer-events-none'
+                          ? 'opacity-100 z-10'
+                          : 'opacity-0 z-0 pointer-events-none'
                       }`}
                     >
                       <Image
@@ -367,71 +361,71 @@ export default function HomePage() {
                         alt={item.headline}
                         fill
                         priority={idx === 0}
-                        className="object-cover"
+                        className="object-cover brightness-95"
                         sizes="(max-width: 1024px) 100vw, 45vw"
                       />
-                      {/* Gradient bottom overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                      {/* Vignette Shadow */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/30 to-transparent" />
                       
-                      {/* Slide Information */}
+                      {/* Captions */}
                       <div className="absolute bottom-6 left-6 right-6 z-20">
-                        <span className="inline-block px-3 py-1 rounded-full bg-blue-600/80 backdrop-blur-md text-white text-[11px] font-bold tracking-wider uppercase mb-2">
+                        <span className="inline-block text-[#d4af37] text-[10px] tracking-[0.25em] font-semibold uppercase mb-2">
                           {item.tag}
                         </span>
-                        <p className="text-white font-bold text-lg sm:text-xl drop-shadow-md leading-snug">
-                          {item.headline}
+                        <p className="text-white font-serif text-lg sm:text-xl font-normal leading-snug">
+                          &ldquo;{item.headline}&rdquo;
                         </p>
                       </div>
                     </div>
                   ))}
 
-                  {/* Manual Arrow Controls */}
+                  {/* Curated Navigation Controls */}
                   <button
                     onClick={prevSlide}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full glass border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-lg"
-                    aria-label="Previous image"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-9 h-9 rounded-full bg-[#121214]/80 backdrop-blur-md border border-[#27272a] flex items-center justify-center text-white hover:border-[#d4af37] transition-colors"
+                    aria-label="Previous"
                   >
-                    <ChevronLeft className="w-5 h-5" />
+                    <ChevronLeft className="w-4 h-4" />
                   </button>
                   <button
                     onClick={nextSlide}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full glass border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-lg"
-                    aria-label="Next image"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-9 h-9 rounded-full bg-[#121214]/80 backdrop-blur-md border border-[#27272a] flex items-center justify-center text-white hover:border-[#d4af37] transition-colors"
+                    aria-label="Next"
                   >
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
 
-                {/* Bottom slide progress indicator */}
-                <div className="flex items-center justify-between px-4 py-3 bg-white/[0.03]">
+                {/* Progress Counter Bar */}
+                <div className="flex items-center justify-between px-5 py-3 bg-[#0c0c0e]">
                   <div className="flex items-center gap-2">
                     {heroImages.map((_, idx) => (
                       <button
                         key={idx}
                         onClick={() => setCurrentSlide(idx)}
-                        className={`h-2 rounded-full transition-all duration-500 ${
+                        className={`h-1 rounded-full transition-all duration-500 ${
                           idx === currentSlide
-                            ? 'w-8 bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)]'
-                            : 'w-2 bg-white/20 hover:bg-white/40'
+                            ? 'w-6 bg-[#d4af37]'
+                            : 'w-1.5 bg-[#27272a] hover:bg-[#3f3f46]'
                         }`}
                         aria-label={`Slide ${idx + 1}`}
                       />
                     ))}
                   </div>
-                  <span className="text-[11px] font-mono text-slate-400">
+                  <span className="text-[11px] font-mono text-[#71717a]">
                     0{currentSlide + 1} / 0{heroImages.length}
                   </span>
                 </div>
               </div>
 
-              {/* Floating Live Active Status Badge */}
-              <div className="absolute -bottom-5 -left-4 sm:-left-6 glass border border-white/20 rounded-2xl p-3.5 sm:p-4 shadow-2xl flex items-center gap-3 backdrop-blur-xl z-30 animate-float">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-green-400 flex items-center justify-center text-white font-bold shadow-md">
-                  <CheckCircle2 className="w-5 h-5" />
+              {/* Floating Verified Badge */}
+              <div className="absolute -bottom-5 -left-4 sm:-left-6 bg-[#121214]/90 backdrop-blur-xl border border-[#27272a] rounded-xl p-3.5 shadow-2xl flex items-center gap-3 z-30">
+                <div className="w-8 h-8 rounded-lg bg-[#18181b] border border-[#27272a] flex items-center justify-center text-[#d4af37]">
+                  <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-white text-xs font-bold">Daily Ration & Camp</div>
-                  <div className="text-slate-400 text-[10px]">Active in Okhla, New Delhi</div>
+                  <div className="text-[#f4f4f5] text-xs font-medium">Shaheen Bagh Relief Center</div>
+                  <div className="text-[#71717a] text-[10px]">Open for public assistance</div>
                 </div>
               </div>
             </motion.div>
@@ -439,33 +433,33 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Scroll down indicator */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-slate-500 hover:text-slate-300 transition-colors pointer-events-none">
-          <span className="text-[11px] font-medium tracking-widest uppercase">Explore Impact</span>
-          <ChevronDown className="w-4 h-4 animate-bounce text-slate-400" />
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-[#71717a] pointer-events-none">
+          <span className="text-[10px] tracking-[0.2em] font-medium uppercase">Scroll</span>
+          <ChevronDown className="w-3.5 h-3.5 animate-bounce text-[#71717a]" />
         </div>
       </section>
 
       {/* ═══════════════════════════════════════
-          2. LIVE IMPACT COUNTERS (useInView)
+          2. LIVE VERIFIABLE IMPACT COUNTERS
           ═══════════════════════════════════════ */}
-      <section className="relative py-20 bg-gradient-to-b from-slate-950 via-blue-950/40 to-slate-950 border-y border-white/5">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-cyan-400 font-bold text-xs tracking-widest uppercase mb-2 inline-block">
+      <section className="relative py-24 bg-[#0c0c0e] border-b border-[#27272a]/40">
+        <div className="container mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <span className="text-[#d4af37] font-medium text-xs tracking-[0.2em] uppercase mb-3 inline-block">
               Verifiable Milestones
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
-              Every Number Represents a Living Smile
+            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#f4f4f5] leading-tight">
+              Human Lives Touched & Sustained.
             </h2>
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {[
-              { label: 'Families Provided Food Kits', value: 2000, suffix: '+', icon: HandHeart, color: 'from-orange-500 to-amber-500' },
-              { label: 'Rakhis Tied for Harmony', value: 5100, suffix: '+', icon: Heart, color: 'from-rose-500 to-pink-500' },
-              { label: 'Citizens Reached via Drives', value: 1100, suffix: '+', icon: Users, color: 'from-cyan-500 to-blue-500' },
-              { label: 'Free Health Consultations', value: 1000, suffix: '+', icon: HeartPulse, color: 'from-emerald-500 to-teal-500' }
+              { label: 'Families Sustained with Rations', value: 2000, suffix: '+', icon: HandHeart },
+              { label: 'Rakhis Tied for Social Harmony', value: 5100, suffix: '+', icon: Heart },
+              { label: 'Beneficiaries Reached via Camps', value: 1100, suffix: '+', icon: Users },
+              { label: 'Free Clinical Consultations', value: 1000, suffix: '+', icon: HeartPulse }
             ].map((stat, idx) => (
               <motion.div
                 key={idx}
@@ -473,14 +467,14 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeInScale}
-                className="relative group"
+                className="relative"
               >
-                <div className="h-full rounded-3xl glass border border-white/10 p-6 sm:p-8 text-center hover:border-cyan-400/40 transition-all duration-500 hover:-translate-y-1">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    <stat.icon className="w-7 h-7 text-white" />
+                <div className="h-full rounded-2xl bg-[#121214] border border-[#27272a] p-7 text-center hover:border-[#3f3f46] transition-all duration-500">
+                  <div className="w-10 h-10 rounded-lg bg-[#18181b] border border-[#27272a] flex items-center justify-center mx-auto mb-5 text-[#d4af37]">
+                    <stat.icon className="w-5 h-5" />
                   </div>
                   <AnimatedCounter target={stat.value} suffix={stat.suffix} />
-                  <div className="text-slate-300 text-xs sm:text-sm font-medium mt-2 leading-snug">
+                  <div className="text-[#a1a1aa] text-xs font-light tracking-wide mt-3 leading-relaxed">
                     {stat.label}
                   </div>
                 </div>
@@ -491,73 +485,73 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          3. ASYMMETRICAL BENTO BOX GRID (INTERVENTIONS)
+          3. ASYMMETRICAL BENTO BOX (INTERVENTIONS)
           ═══════════════════════════════════════ */}
       <section className="py-28 relative">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-6 sm:px-8 lg:px-12">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6 max-w-6xl mx-auto">
             <div>
-              <span className="text-blue-400 font-bold tracking-widest text-xs uppercase mb-3 inline-flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-cyan-400" /> Strategic Architecture
+              <span className="text-[#d4af37] font-medium tracking-[0.2em] text-xs uppercase mb-3 inline-block">
+                Core Initiatives
               </span>
-              <h2 className="text-4xl sm:text-6xl font-black text-white tracking-tighter leading-none">
-                Core Interventions.
+              <h2 className="text-3xl sm:text-5xl font-serif font-normal text-white">
+                Our Core Interventions.
               </h2>
-              <p className="text-slate-400 text-base sm:text-lg mt-3 max-w-xl">
-                High-impact initiatives built with structured grassroots execution and verified accountability.
+              <p className="text-[#a1a1aa] text-base sm:text-lg mt-3 max-w-xl font-light">
+                Continuous on-ground programs engineered to foster educational growth, health resilience, and social justice.
               </p>
             </div>
             <Link
               href="/programs"
-              className="inline-flex items-center gap-2 text-cyan-400 font-bold hover:text-cyan-300 transition-colors group"
+              className="inline-flex items-center gap-2 text-[#d4af37] hover:text-[#fef08a] text-xs font-semibold uppercase tracking-wider transition-colors group"
             >
-              Explore All Projects <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              Explore All Projects <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </Link>
           </div>
 
           {/* Asymmetrical Bento Box Grid */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-6xl mx-auto" style={{ perspective: '1200px' }}>
-            {/* Bento 1: Large Featured Card (Span 7) */}
+            {/* Bento 1: Primary Education (Span 7) */}
             <div className="md:col-span-7">
-              <InteractiveTiltCard
+              <LuxuryBentoCard
                 title="Education & Lifelong Scholarships"
-                desc="Enabling first-generation school learners from slum clusters with continuous school tuition support, digital literacy labs, textbooks, and career guidance counseling to eliminate dropout rates."
+                desc="Empowering first-generation school learners from slum clusters with continuous school tuition grants, school bags, notebooks, and digital literacy labs to prevent school dropouts."
                 icon={GraduationCap}
-                gradient="from-blue-600 via-cyan-500 to-indigo-600"
-                badge="High Priority &bull; Youth Future"
+                badge="High Priority"
+                number="01"
               />
             </div>
 
-            {/* Bento 2: Secondary Card (Span 5) */}
+            {/* Bento 2: Healthcare (Span 5) */}
             <div className="md:col-span-5">
-              <InteractiveTiltCard
-                title="Grassroots Health & Dental Care"
-                desc="Regular diagnostic clinics with MBBS doctors, pediatricians, free medications, dental kits, and immediate hospital referrals for critical cases."
+              <LuxuryBentoCard
+                title="Community Health & Dental Clinics"
+                desc="Organizing free monthly clinics with certified doctors, diagnostic tests, pediatric medicine distributions, and dental consultations in Shaheen Bagh and Okhla."
                 icon={HeartPulse}
-                gradient="from-rose-500 via-pink-500 to-red-600"
-                badge="Monthly Camps"
+                badge="Monthly"
+                number="02"
               />
             </div>
 
-            {/* Bento 3: Third Card (Span 5) */}
+            {/* Bento 3: Sustenance (Span 5) */}
             <div className="md:col-span-5">
-              <InteractiveTiltCard
-                title="Ration & Emergency Poverty Relief"
-                desc="Direct monthly grain kits, nutritional nourishment for malnourished children, and immediate winter blanket drives for homeless households."
+              <LuxuryBentoCard
+                title="Direct Ration & Emergency Relief"
+                desc="Distributing essential food kits (flour, pulses, oil, spices) and winter blankets directly to widows, daily wagers, and families facing immediate distress."
                 icon={HandHeart}
-                gradient="from-amber-500 via-orange-500 to-red-500"
                 badge="Direct Aid"
+                number="03"
               />
             </div>
 
-            {/* Bento 4: Fourth Card - Community Trust Spotlight (Span 7) */}
+            {/* Bento 4: Citizen Rights & Legal (Span 7) */}
             <div className="md:col-span-7">
-              <InteractiveTiltCard
+              <LuxuryBentoCard
                 title="Legal Documentation & Citizen Rights"
-                desc="Specialized camps assisting widows, laborers, and underprivileged families in procuring essential Aadhaar, Ayushman Bharat health cards, and pension benefits."
+                desc="Helping impoverished families procure government welfare documents including Aadhaar, Ayushman Bharat health insurance cards, and pension support schemes."
                 icon={Shield}
-                gradient="from-emerald-500 via-teal-500 to-cyan-600"
-                badge="Empowerment & Advocacy"
+                badge="Advocacy"
+                number="04"
               />
             </div>
           </div>
@@ -565,24 +559,24 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          4. INFINITE MARQUEE REVIEWS
+          4. INFINITE MARQUEE REVIEWS (CURATED)
           ═══════════════════════════════════════ */}
-      <section className="py-24 bg-slate-900/60 border-y border-white/5 relative overflow-hidden">
-        <div className="container mx-auto px-4 mb-14 text-center">
-          <span className="text-amber-400 font-bold text-xs tracking-widest uppercase mb-2 inline-block">
-            Voice of the People
+      <section className="py-24 bg-[#0c0c0e] border-y border-[#27272a]/40 relative overflow-hidden">
+        <div className="container mx-auto px-6 mb-16 text-center">
+          <span className="text-[#d4af37] font-medium text-xs tracking-[0.2em] uppercase mb-3 inline-block">
+            Voice of the Community
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-white mb-4">
-            Trusted by the Community
+          <h2 className="text-3xl sm:text-5xl font-serif font-normal text-white mb-5">
+            Public Trust & Community Testimonials.
           </h2>
-          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass border border-white/10">
-            <span className="text-2xl font-black text-white">4.9</span>
-            <div className="flex text-amber-400">
+          <div className="inline-flex items-center gap-3.5 px-6 py-2 rounded-full bg-[#121214] border border-[#27272a] shadow-sm">
+            <span className="text-2xl font-serif font-normal text-white">4.9</span>
+            <div className="flex text-[#d4af37] gap-0.5">
               {[1, 2, 3, 4, 5].map((s) => (
                 <Star key={s} className="w-4 h-4 fill-current" />
               ))}
             </div>
-            <span className="text-slate-400 text-xs font-medium border-l border-white/10 pl-3">
+            <span className="text-[#71717a] text-xs border-l border-[#27272a] pl-3.5">
               Verified Public Reviews
             </span>
           </div>
@@ -590,9 +584,9 @@ export default function HomePage() {
 
         {/* Marquee Row */}
         <div className="relative w-full overflow-hidden">
-          {/* Edge blur fade */}
-          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-slate-950 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-slate-950 to-transparent z-10 pointer-events-none" />
+          {/* Edge fades */}
+          <div className="absolute left-0 top-0 bottom-0 w-28 bg-gradient-to-r from-[#0c0c0e] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-28 bg-gradient-to-l from-[#0c0c0e] to-transparent z-10 pointer-events-none" />
 
           <div className="flex animate-marquee hover:[animation-play-state:paused] w-max py-2">
             {[...Array(2)].map((_, setIdx) => (
@@ -606,25 +600,22 @@ export default function HomePage() {
                 ].map((review, idx) => (
                   <div
                     key={`${setIdx}-${idx}`}
-                    className="w-[340px] sm:w-[400px] flex-shrink-0 glass border border-white/10 rounded-3xl p-6 sm:p-7 shadow-xl hover:border-cyan-400/30 transition-all duration-300"
+                    className="w-[340px] sm:w-[390px] flex-shrink-0 bg-[#121214] border border-[#27272a] rounded-2xl p-6 sm:p-7 shadow-xl hover:border-[#3f3f46] transition-colors duration-300 flex flex-col justify-between"
                   >
-                    <div className="flex items-center gap-3.5 mb-4">
-                      <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center text-white font-bold text-base shadow-md">
-                        {review.name.charAt(0)}
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-white text-sm sm:text-base">{review.name}</h4>
-                        <p className="text-slate-400 text-xs">{review.time}</p>
-                      </div>
-                    </div>
-                    <div className="flex text-amber-400 mb-3">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="w-4 h-4 fill-current" />
-                      ))}
-                    </div>
-                    <p className="text-slate-300 text-sm leading-relaxed italic">
-                      &quot;{review.review}&quot;
+                    <p className="text-[#d4d4d8] text-sm leading-relaxed font-light italic mb-6">
+                      &ldquo;{review.review}&rdquo;
                     </p>
+                    <div className="flex items-center justify-between border-t border-[#27272a] pt-4">
+                      <div>
+                        <h4 className="font-serif font-normal text-white text-base">{review.name}</h4>
+                        <p className="text-[#71717a] text-xs">{review.time}</p>
+                      </div>
+                      <div className="flex text-[#d4af37]">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star key={star} className="w-3.5 h-3.5 fill-current" />
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -634,24 +625,24 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          5. UPCOMING EVENTS & CAMPS
+          5. UPCOMING EVENTS & DRIVES
           ═══════════════════════════════════════ */}
       <section className="py-28">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-6 sm:px-8 lg:px-12">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-blue-400 font-bold tracking-widest text-xs uppercase mb-2 inline-block">
-              Get Involved
+            <span className="text-[#d4af37] font-medium text-xs tracking-[0.2em] uppercase mb-3 inline-block">
+              Community Calendar
             </span>
-            <h2 className="text-3xl sm:text-5xl font-black text-white">
-              Upcoming Drives & Camps
+            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-white">
+              Upcoming Relief Drives & Camps
             </h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
-              { day: '20', month: 'JUN', type: 'Education', title: 'Educational Supply Drive', loc: 'Okhla, New Delhi', gradient: 'from-blue-600 to-cyan-500' },
-              { day: '05', month: 'JUL', type: 'Assistance', title: 'Aadhaar & Document Help', loc: 'Shaheen Bagh Center', gradient: 'from-emerald-600 to-green-500' },
-              { day: '18', month: 'JUL', type: 'Healthcare', title: 'Free Medical Consultation', loc: 'Local Community Clinic', gradient: 'from-rose-600 to-pink-500' }
+              { day: '20', month: 'JUN', type: 'Education', title: 'Educational Supply Drive', loc: 'Okhla, New Delhi' },
+              { day: '05', month: 'JUL', type: 'Assistance', title: 'Aadhaar & Citizen Rights Camp', loc: 'Shaheen Bagh Center' },
+              { day: '18', month: 'JUL', type: 'Healthcare', title: 'Free Medical & Dental Camp', loc: 'Local Community Clinic' }
             ].map((event, idx) => (
               <motion.div
                 key={idx}
@@ -659,32 +650,32 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeInUp}
-                className="rounded-3xl glass border border-white/10 overflow-hidden shadow-2xl hover:border-white/30 transition-all duration-300 flex flex-col justify-between"
+                className="rounded-2xl bg-[#121214] border border-[#27272a] overflow-hidden shadow-xl hover:border-[#3f3f46] transition-all duration-300 flex flex-col justify-between"
               >
-                <div className={`bg-gradient-to-r ${event.gradient} p-5 flex items-center justify-between`}>
-                  <div className="text-white">
-                    <span className="text-3xl font-black">{event.day}</span>
-                    <span className="text-xs font-bold uppercase ml-2 tracking-wider opacity-90">{event.month} 2025</span>
+                <div className="p-6 border-b border-[#27272a] flex items-center justify-between bg-[#151518]">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-serif font-light text-[#d4af37]">{event.day}</span>
+                    <span className="text-xs uppercase tracking-widest text-[#a1a1aa]">{event.month} 2025</span>
                   </div>
-                  <span className="px-3 py-1 rounded-full bg-black/20 backdrop-blur-md text-white text-[11px] font-bold">
+                  <span className="px-3 py-1 rounded-full bg-[#1c1c20] border border-[#27272a] text-[#a1a1aa] text-[10px] tracking-wider uppercase">
                     {event.type}
                   </span>
                 </div>
 
-                <div className="p-6 sm:p-7">
-                  <h3 className="text-lg sm:text-xl font-bold text-white mb-4">
+                <div className="p-7">
+                  <h3 className="text-lg font-serif font-normal text-white mb-3">
                     {event.title}
                   </h3>
-                  <div className="flex items-center text-slate-400 text-xs sm:text-sm">
-                    <MapPin className="w-4 h-4 mr-2 text-cyan-400" />
+                  <div className="flex items-center text-[#a1a1aa] text-xs font-light">
+                    <MapPin className="w-3.5 h-3.5 mr-2 text-[#d4af37]" />
                     {event.loc}
                   </div>
                 </div>
 
-                <div className="px-6 pb-6">
+                <div className="px-7 pb-7">
                   <Link
                     href="/contact"
-                    className="w-full inline-flex items-center justify-center py-2.5 rounded-xl glass hover:bg-white/10 text-xs font-bold text-white transition-colors"
+                    className="w-full inline-flex items-center justify-center py-3 rounded-xl bg-[#18181b] hover:bg-[#202024] text-xs font-semibold tracking-wider uppercase text-[#d4d4d8] hover:text-white transition-colors border border-[#27272a]"
                   >
                     Volunteer for Camp
                   </Link>
@@ -696,44 +687,39 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          6. GRAND CTA — MEMBERSHIP & SUPPORT
+          6. GRAND CTA — PATRONAGE & MEMBERSHIP
           ═══════════════════════════════════════ */}
       <section className="py-20 pb-32">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-[3rem] overflow-hidden glass border border-white/15 p-8 sm:p-14 lg:p-20 text-center max-w-5xl mx-auto shadow-2xl shadow-blue-500/10">
+        <div className="container mx-auto px-6 sm:px-8 lg:px-12">
+          <div className="relative rounded-3xl overflow-hidden bg-[#121214] border border-[#27272a] p-10 sm:p-16 lg:p-20 text-center max-w-5xl mx-auto shadow-2xl">
             
-            {/* Background glowing flare */}
-            <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full bg-blue-500/20 blur-[120px] pointer-events-none" />
+            {/* Ambient Gold Flare */}
+            <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-[#d4af37]/10 blur-[130px] pointer-events-none" />
 
             <div className="relative z-10 max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-bold uppercase tracking-wider mb-6">
-                <Sparkles className="w-4 h-4" /> Become a Pillar of Hope
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#18181b] border border-[#27272a] text-[#d4af37] text-xs font-medium tracking-widest uppercase mb-8">
+                <Sparkles className="w-3.5 h-3.5" /> Annual Patronage
               </div>
 
-              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight mb-6 leading-tight">
-                Empower a Family with Just{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">
+              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-white tracking-tight mb-6 leading-tight">
+                Empower a Household with Just{' '}
+                <span className="italic text-[#d4af37] font-serif">
                   ₹1100 / Year
                 </span>
               </h2>
 
-              <p className="text-slate-300 text-base sm:text-lg mb-10 leading-relaxed max-w-2xl mx-auto">
-                Join our Annual Membership program. Your direct pledge provides uninterrupted ration, educational support, and basic healthcare security to households in dire need.
+              <p className="text-[#a1a1aa] text-base sm:text-lg mb-12 leading-relaxed max-w-2xl mx-auto font-light">
+                Join our Annual Membership program. Your direct pledge ensures sustainable rations, school kits, and emergency medical security for vulnerable families throughout the calendar year.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link
-                  href="/donate"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-9 py-4 rounded-full text-base font-bold text-white bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 hover:scale-105 shadow-xl shadow-orange-500/30 transition-all duration-300"
-                >
-                  Become a Member <Heart className="w-5 h-5 fill-white" />
-                </Link>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
+                <LuxuryDonateButton />
 
                 <Link
                   href="/contact"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-9 py-4 rounded-full text-base font-semibold text-slate-200 glass hover:bg-white/10 transition-all duration-300"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-9 py-4 rounded-full text-xs font-semibold tracking-wider uppercase text-[#d4d4d8] bg-[#18181b] border border-[#27272a] hover:border-[#52525b] hover:text-white transition-all duration-300"
                 >
-                  Join as Volunteer <ArrowRight className="w-4 h-4" />
+                  Join as Volunteer <ArrowRight className="w-3.5 h-3.5 text-[#71717a]" />
                 </Link>
               </div>
             </div>

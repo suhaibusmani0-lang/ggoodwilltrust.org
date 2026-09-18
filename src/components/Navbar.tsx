@@ -65,10 +65,10 @@ export default function Navbar() {
         }`}
       >
         <nav 
-          className={`w-full max-w-7xl rounded-full px-6 h-[72px] flex items-center justify-between transition-all duration-300 ${
+          className={`w-full max-w-7xl rounded-full px-6 h-[70px] flex items-center justify-between transition-all duration-500 ${
             scrolled 
-              ? 'bg-slate-900/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]' 
-              : 'bg-slate-900/40 backdrop-blur-md border border-white/5 shadow-none'
+              ? 'bg-[#09090b]/90 backdrop-blur-xl border border-[#27272a] shadow-[0_12px_40px_rgba(0,0,0,0.6)]' 
+              : 'bg-[#09090b]/60 backdrop-blur-md border border-[#27272a]/50 shadow-none'
           }`}
         >
           {/* Logo */}
@@ -78,22 +78,22 @@ export default function Navbar() {
               alt="G Goodwill Trust Logo" 
               width={160} 
               height={50} 
-              className="object-contain h-11 w-auto brightness-110" 
+              className="object-contain h-10 w-auto brightness-110" 
               priority 
             />
           </Link>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden xl:flex items-center gap-1.5">
+          <div className="hidden xl:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
                 className={
-                  'text-[13px] font-semibold transition-all duration-200 px-4 py-2 rounded-full whitespace-nowrap ' +
+                  'text-xs tracking-wider uppercase font-medium transition-all duration-300 px-4 py-2 rounded-full whitespace-nowrap ' +
                   (pathname === link.href
-                    ? 'bg-white/10 text-cyan-400 shadow-inner'
-                    : 'text-slate-300 hover:text-white hover:bg-white/5')
+                    ? 'bg-[#18181b] text-[#d4af37] border border-[#27272a]'
+                    : 'text-[#a1a1aa] hover:text-white hover:bg-[#18181b]/50')
                 }
               >
                 {link.name}
@@ -103,14 +103,14 @@ export default function Navbar() {
 
           {/* Right side CTA & Translate */}
           <div className="hidden xl:flex items-center gap-4">
-            <div className="flex items-center gap-1.5 text-slate-400 cursor-pointer hover:text-white transition-colors">
-              <Globe className="w-4 h-4 text-cyan-400" />
-              <div id="google_translate_element" className="scale-[0.85] origin-left brightness-90" />
+            <div className="flex items-center gap-1.5 text-[#71717a] cursor-pointer hover:text-white transition-colors">
+              <Globe className="w-3.5 h-3.5 text-[#d4af37]" />
+              <div id="google_translate_element" className="scale-[0.82] origin-left brightness-90" />
             </div>
 
             <Link href="/donate">
-              <button className="relative group bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-full px-6 py-2.5 text-sm font-bold shadow-lg shadow-orange-500/25 transition-all duration-300 hover:shadow-orange-500/40 hover:-translate-y-0.5 flex items-center gap-2 border border-white/10">
-                Donate <Heart className="w-4 h-4 fill-white animate-pulse" />
+              <button className="relative group bg-[#d4af37] hover:bg-[#e5c07b] text-black rounded-full px-6 py-2.5 text-xs font-semibold tracking-wider uppercase shadow-[0_2px_16px_rgba(212,175,55,0.25)] hover:shadow-[0_4px_24px_rgba(212,175,55,0.4)] transition-all duration-300 hover:scale-[1.02] flex items-center gap-2">
+                Donate <Heart className="w-3.5 h-3.5 fill-black" />
               </button>
             </Link>
           </div>
