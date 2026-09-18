@@ -18,7 +18,8 @@ import {
   Shield,
   Quote,
   CheckCircle2,
-  ArrowUpRight
+  ArrowUpRight,
+  Building2
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -723,6 +724,199 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          7. COLLABORATIVE BRAND PARTNERS & ALLIANCES
+          ═══════════════════════════════════════ */}
+      <section className="pt-6 pb-20 bg-[#0c0c0e] border-t border-[#27272a]/50 relative overflow-hidden">
+        <div className="container mx-auto px-6 mb-12 text-center">
+          <span className="text-[#d4af37] font-medium text-xs tracking-[0.25em] uppercase mb-3 inline-block">
+            Collaborative Alliances &amp; CSR Engagements
+          </span>
+          <h2 className="text-2xl sm:text-4xl font-serif font-normal text-white mb-4">
+            Organizations We Have Worked &amp; Collaborated With
+          </h2>
+          <p className="text-[#a1a1aa] text-xs sm:text-sm font-light max-w-xl mx-auto">
+            Honored to have partnered with leading institutional bodies, global corporations, and grassroots foundations for education, health, and social welfare drives.
+          </p>
+        </div>
+
+        {/* Infinite Partners Marquee */}
+        <div className="relative w-full overflow-hidden">
+          {/* Edge fades for seamless luxury aesthetic */}
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#0c0c0e] to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#0c0c0e] to-transparent z-10 pointer-events-none" />
+
+          <div className="flex animate-marquee hover:[animation-play-state:paused] w-max py-2 items-center">
+            {[...Array(2)].map((_, setIdx) => (
+              <div key={setIdx} className="flex gap-6 pr-6 items-center">
+                {[
+                  {
+                    name: 'The Times of India',
+                    subtitle: 'Media & Civic Outreach',
+                    badge: 'Media Alliance',
+                    logo: (
+                      <div className="flex flex-col items-center justify-center">
+                        <span className="font-serif text-lg sm:text-xl font-bold tracking-tight text-white uppercase" style={{ fontFamily: 'Georgia, serif' }}>
+                          THE TIMES OF INDIA
+                        </span>
+                        <div className="w-12 h-0.5 bg-[#d4af37] mt-1" />
+                      </div>
+                    )
+                  },
+                  {
+                    name: 'Colgate',
+                    subtitle: 'Oral Health & Hygiene Camps',
+                    badge: 'Health Partner',
+                    logo: (
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-sans text-2xl sm:text-3xl font-extrabold italic tracking-tighter text-[#e11d48]">
+                          Colgate
+                        </span>
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#e11d48] animate-pulse" />
+                      </div>
+                    )
+                  },
+                  {
+                    name: 'Vidyanjali',
+                    subtitle: 'Ministry of Education Initiative',
+                    badge: 'Govt. Initiative',
+                    logo: (
+                      <div className="flex flex-col items-center">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-serif text-lg sm:text-xl font-semibold tracking-wide text-[#fbbf24]">
+                            Vidyanjali
+                          </span>
+                          <span className="px-1.5 py-0.5 rounded text-[8px] font-bold bg-[#fbbf24]/10 text-[#fbbf24] border border-[#fbbf24]/30">
+                            GOI
+                          </span>
+                        </div>
+                        <span className="text-[9px] text-[#a1a1aa] tracking-widest uppercase">School Volunteer Program</span>
+                      </div>
+                    )
+                  },
+                  {
+                    name: 'British Council',
+                    subtitle: 'International Education & Arts',
+                    badge: 'Global Council',
+                    logo: (
+                      <div className="flex items-center gap-3">
+                        <div className="grid grid-cols-2 gap-1 w-6 h-6">
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8]" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8]" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8]" />
+                          <span className="w-2.5 h-2.5 rounded-full bg-[#38bdf8]" />
+                        </div>
+                        <div className="flex flex-col leading-tight text-left">
+                          <span className="font-sans text-sm sm:text-base font-bold tracking-tight text-white uppercase">
+                            BRITISH
+                          </span>
+                          <span className="font-sans text-sm sm:text-base font-bold tracking-tight text-white uppercase">
+                            COUNCIL
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  },
+                  {
+                    name: 'Mercedes-Benz',
+                    subtitle: 'Corporate Social Responsibility',
+                    badge: 'CSR Partner',
+                    logo: (
+                      <div className="flex items-center gap-2.5">
+                        <svg viewBox="0 0 100 100" className="w-8 h-8 fill-none stroke-current text-[#fafafa] stroke-[4]" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="50" cy="50" r="46" />
+                          <line x1="50" y1="50" x2="50" y2="6" strokeWidth="5" />
+                          <line x1="50" y1="50" x2="12" y2="72" strokeWidth="5" />
+                          <line x1="50" y1="50" x2="88" y2="72" strokeWidth="5" />
+                        </svg>
+                        <span className="font-serif text-sm sm:text-base font-light tracking-[0.2em] text-[#fafafa] uppercase">
+                          Mercedes-Benz
+                        </span>
+                      </div>
+                    )
+                  },
+                  {
+                    name: 'Zarnetic',
+                    subtitle: 'Digital Infrastructure & IT Support',
+                    badge: 'Technology Partner',
+                    logo: (
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#06b6d4] to-[#3b82f6] flex items-center justify-center font-bold text-white text-xs shadow-md">
+                          Z
+                        </div>
+                        <span className="font-sans text-lg sm:text-xl font-bold tracking-wider text-white">
+                          ZARNETIC
+                        </span>
+                      </div>
+                    )
+                  },
+                  {
+                    name: 'NCF',
+                    subtitle: 'Noble Citizen Foundation',
+                    badge: 'Civic Foundation',
+                    logo: (
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-full border border-[#d4af37] flex items-center justify-center bg-[#18181b] text-[#d4af37]">
+                          <Shield className="w-4 h-4" />
+                        </div>
+                        <div className="flex flex-col leading-none text-left">
+                          <span className="font-serif text-base sm:text-lg font-bold tracking-wider text-white">
+                            NCF
+                          </span>
+                          <span className="text-[8px] text-[#a1a1aa] tracking-wider uppercase mt-0.5">
+                            Noble Citizen Foundation
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  },
+                  {
+                    name: 'Spread Smiles Foundation',
+                    subtitle: 'Grassroots Community Relief',
+                    badge: 'Community NGO',
+                    logo: (
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#f59e0b] to-[#ea580c] flex items-center justify-center text-white shadow-md">
+                          <Heart className="w-4 h-4 fill-white" />
+                        </div>
+                        <div className="flex flex-col leading-none text-left">
+                          <span className="font-serif text-sm sm:text-base font-medium tracking-wide text-white">
+                            Spread Smiles
+                          </span>
+                          <span className="text-[8px] text-[#f59e0b] tracking-wider uppercase mt-0.5 font-medium">
+                            Foundation
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  }
+                ].map((partner, idx) => (
+                  <div
+                    key={`${setIdx}-${idx}`}
+                    className="w-[280px] sm:w-[320px] flex-shrink-0 h-[120px] bg-[#121214] border border-[#27272a] rounded-2xl px-6 py-4 shadow-xl hover:border-[#d4af37]/40 hover:bg-[#151518] transition-all duration-300 flex flex-col justify-between group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] tracking-[0.2em] uppercase font-semibold text-[#d4af37] bg-[#18181b] px-2.5 py-0.5 rounded-full border border-[#27272a]">
+                        {partner.badge}
+                      </span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#27272a] group-hover:bg-[#d4af37] transition-colors" />
+                    </div>
+
+                    <div className="flex items-center justify-center my-auto">
+                      {partner.logo}
+                    </div>
+
+                    <div className="text-[10px] text-[#71717a] tracking-wide text-center truncate">
+                      {partner.subtitle}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       </section>
