@@ -32,10 +32,10 @@ export default function ProgramsPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-[#09090b] text-[#f4f4f5] pt-32 pb-32 px-6 sm:px-8 lg:px-12">
+    <main className="min-h-screen bg-[#09090b] text-[#f4f4f5] pt-12 pb-20 px-6 sm:px-8 lg:px-12">
       <div className="max-w-7xl mx-auto">
         {/* Hero */}
-        <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-24 max-w-3xl mx-auto">
+        <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-14 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#121214] rounded-full mb-6 border border-[#27272a] text-[#d4af37] text-xs font-medium tracking-widest uppercase">
             <span className="w-1.5 h-1.5 rounded-full bg-[#d4af37]" />
             Ground Interventions

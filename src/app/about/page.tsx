@@ -94,9 +94,9 @@ const approachList = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-[#09090b] text-[#f4f4f5] pb-32 pt-32">
+    <div className="min-h-screen bg-[#09090b] text-[#f4f4f5] pt-12 pb-20">
       {/* 1. HERO SECTION */}
-      <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-32">
+      <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-16 lg:mb-20">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -130,7 +130,7 @@ export default function AboutPage() {
       </section>
 
       {/* 2. CURATED KEY FACTS */}
-      <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-32">
+      <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-16 lg:mb-20">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {stats.map((stat, idx) => (
@@ -154,7 +154,7 @@ export default function AboutPage() {
       </section>
 
       {/* 3. MISSION & VISION */}
-      <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-32">
+      <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-16 lg:mb-20">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Mission */}
@@ -195,7 +195,7 @@ export default function AboutPage() {
       </section>
 
       {/* 4. METHODOLOGY & ACTION */}
-      <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-32">
+      <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-16 lg:mb-20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-[#d4af37] font-medium text-xs tracking-[0.2em] uppercase mb-3 inline-block">Methodology</span>

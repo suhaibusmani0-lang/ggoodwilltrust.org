@@ -443,9 +443,9 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           2. LIVE VERIFIABLE IMPACT COUNTERS
           ═══════════════════════════════════════ */}
-      <section className="relative py-24 bg-[#0c0c0e] border-b border-[#27272a]/40">
+      <section className="relative py-16 lg:py-20 bg-[#0c0c0e] border-b border-[#27272a]/40">
         <div className="container mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="text-[#d4af37] font-medium text-xs tracking-[0.2em] uppercase mb-3 inline-block">
               Verifiable Milestones
             </span>
@@ -487,9 +487,9 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           3. ASYMMETRICAL BENTO BOX (INTERVENTIONS)
           ═══════════════════════════════════════ */}
-      <section className="py-28 relative">
+      <section className="py-16 lg:py-20 relative">
         <div className="container mx-auto px-6 sm:px-8 lg:px-12">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6 max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-14 gap-6 max-w-6xl mx-auto">
             <div>
               <span className="text-[#d4af37] font-medium tracking-[0.2em] text-xs uppercase mb-3 inline-block">
                 Core Initiatives
@@ -561,8 +561,8 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           4. INFINITE MARQUEE REVIEWS (CURATED)
           ═══════════════════════════════════════ */}
-      <section className="py-24 bg-[#0c0c0e] border-y border-[#27272a]/40 relative overflow-hidden">
-        <div className="container mx-auto px-6 mb-16 text-center">
+      <section className="py-16 lg:py-20 bg-[#0c0c0e] border-y border-[#27272a]/40 relative overflow-hidden">
+        <div className="container mx-auto px-6 mb-12 text-center">
           <span className="text-[#d4af37] font-medium text-xs tracking-[0.2em] uppercase mb-3 inline-block">
             Voice of the Community
           </span>
@@ -627,7 +627,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           5. UPCOMING EVENTS & DRIVES
           ═══════════════════════════════════════ */}
-      <section className="py-28">
+      <section className="pt-16 pb-8">
         <div className="container mx-auto px-6 sm:px-8 lg:px-12">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-[#d4af37] font-medium text-xs tracking-[0.2em] uppercase mb-3 inline-block">
@@ -689,7 +689,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           6. GRAND CTA — PATRONAGE & MEMBERSHIP
           ═══════════════════════════════════════ */}
-      <section className="py-20 pb-32">
+      <section className="pt-8 pb-20">
         <div className="container mx-auto px-6 sm:px-8 lg:px-12">
           <div className="relative rounded-3xl overflow-hidden bg-[#121214] border border-[#27272a] p-10 sm:p-16 lg:p-20 text-center max-w-5xl mx-auto shadow-2xl">
             

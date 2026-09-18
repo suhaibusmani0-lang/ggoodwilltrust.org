@@ -47,14 +47,14 @@ export default function Footer() {
           {/* Column 1: Brand */}
           <div className="lg:col-span-4 flex flex-col">
             <Link href="/" className="flex items-center gap-3 mb-6 group w-fit">
-              <div className="bg-[#121214] px-3.5 py-2.5 rounded-2xl border border-[#27272a] transition-all duration-500 flex items-center justify-center">
-                <Image src="/logo.png" alt="G Goodwill Trust Logo" width={120} height={56} className="h-10 w-auto object-contain brightness-110" />
+              <div className="w-12 h-12 rounded-full bg-[#121214] p-1.5 border border-[#27272a] transition-all duration-500 flex items-center justify-center group-hover:border-[#d4af37]/40">
+                <Image src="/logo-icon.png" alt="G Goodwill Trust Emblem" width={48} height={48} className="object-contain w-full h-full" />
               </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] tracking-[0.2em] font-medium uppercase text-[#d4af37]">
+              <div className="flex flex-col leading-none">
+                <span className="text-[10px] tracking-[0.2em] font-medium uppercase text-[#d4af37] mb-1">
                   Non-Profit Organisation
                 </span>
-                <div className="flex items-start leading-none mt-1">
+                <div className="flex items-start">
                   <h3 className="font-serif text-lg text-white font-normal tracking-wide">G GOODWILL TRUST</h3>
                   <span className="text-[10px] text-[#71717a] ml-1">&reg;</span>
                 </div>

@@ -152,7 +152,7 @@ export default function DonatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-[#fafafa] pt-32 pb-32">
+    <div className="min-h-screen bg-[#09090b] text-[#fafafa] pt-12 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Editorial Hero Header */}
@@ -160,7 +160,7 @@ export default function DonatePage() {
           initial="hidden"
           animate="visible"
           variants={fadeUp}
-          className="text-center max-w-3xl mx-auto mb-20"
+          className="text-center max-w-3xl mx-auto mb-12"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#d4af37]/30 bg-[#d4af37]/5 text-[#d4af37] text-xs font-semibold tracking-widest uppercase mb-6">
             <Sparkles className="w-3 h-3" /> Direct Community Contribution

@@ -44,10 +44,10 @@ export default function DocumentsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#09090b] text-[#fafafa] pt-32 pb-32 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#09090b] text-[#fafafa] pt-12 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Editorial Hero */}
-        <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-20">
+        <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#d4af37]/30 bg-[#d4af37]/5 text-[#d4af37] text-xs font-semibold tracking-widest uppercase mb-6">
             <Shield className="w-3.5 h-3.5" /> Institutional Transparency
           </div>

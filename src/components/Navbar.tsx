@@ -71,16 +71,26 @@ export default function Navbar() {
               : 'bg-[#09090b]/60 backdrop-blur-md border border-[#27272a]/50 shadow-none'
           }`}
         >
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <Image 
-              src="/logo.png" 
-              alt="G Goodwill Trust Logo" 
-              width={160} 
-              height={50} 
-              className="object-contain h-10 w-auto brightness-110" 
-              priority 
-            />
+          {/* Logo with clean dark-mode typography pairing */}
+          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+            <div className="w-9 h-9 rounded-full bg-[#18181b] border border-[#27272a] p-1 flex items-center justify-center shrink-0 group-hover:border-[#d4af37]/40 transition-colors">
+              <Image 
+                src="/logo-icon.png" 
+                alt="G Goodwill Trust Emblem" 
+                width={36} 
+                height={36} 
+                className="object-contain w-full h-full" 
+                priority 
+              />
+            </div>
+            <div className="flex flex-col leading-none">
+              <span className="font-serif text-[15px] sm:text-base font-normal tracking-wider text-[#fafafa] group-hover:text-white transition-colors">
+                G GOODWILL TRUST
+              </span>
+              <span className="text-[9px] tracking-[0.2em] font-medium uppercase text-[#d4af37] mt-0.5">
+                Non-Profit Org
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation Links */}
@@ -129,7 +139,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-2xl pt-24 px-6 pb-8 overflow-y-auto xl:hidden animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="fixed inset-0 z-40 bg-[#09090b]/98 backdrop-blur-2xl pt-24 px-6 pb-8 overflow-y-auto xl:hidden animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="flex flex-col gap-2 max-w-md mx-auto">
             {navLinks.map((link) => (
               <Link
@@ -137,9 +147,9 @@ export default function Navbar() {
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
                 className={
-                  'text-lg font-bold py-3.5 px-5 rounded-2xl transition-all ' +
+                  'text-base font-medium py-3.5 px-5 rounded-2xl transition-all ' +
                   (pathname === link.href
-                    ? 'bg-white/10 text-cyan-400 border border-white/10'
+                    ? 'bg-[#18181b] text-[#d4af37] border border-[#27272a]'
                     : 'text-slate-300 hover:bg-white/5 hover:text-white')
                 }
               >
@@ -147,16 +157,16 @@ export default function Navbar() {
               </Link>
             ))}
 
-            <div className="border-t border-white/10 mt-6 pt-6">
+            <div className="border-t border-[#27272a] mt-6 pt-6">
               <div className="flex items-center gap-2 px-5 py-2 text-slate-400">
-                <Globe className="w-4 h-4 text-cyan-400" />
+                <Globe className="w-4 h-4 text-[#d4af37]" />
                 <div id="google_translate_element_mobile" />
               </div>
             </div>
 
             <Link href="/donate" onClick={() => setMobileOpen(false)} className="mt-4">
-              <button className="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white rounded-2xl py-4 text-lg font-extrabold shadow-xl shadow-orange-500/30 flex items-center justify-center gap-2">
-                Donate Now <Heart className="w-5 h-5 fill-white" />
+              <button className="w-full bg-[#d4af37] text-black rounded-2xl py-4 text-base font-bold shadow-xl shadow-[#d4af37]/20 flex items-center justify-center gap-2 uppercase tracking-wider">
+                Contribute Now <Heart className="w-5 h-5 fill-black" />
               </button>
             </Link>
           </div>

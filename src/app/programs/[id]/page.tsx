@@ -55,7 +55,7 @@ export default function ProgramDetailsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#09090b] text-[#fafafa] pt-32 pb-32 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-[#09090b] text-[#fafafa] pt-12 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Back Link */}
         <Link 

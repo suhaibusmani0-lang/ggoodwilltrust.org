@@ -56,7 +56,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-[#f4f4f5] pt-32 pb-32 px-6 sm:px-8 lg:px-12">
+    <div className="min-h-screen bg-[#09090b] text-[#f4f4f5] pt-12 pb-20 px-6 sm:px-8 lg:px-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
         
         {/* Left Column: Contact Information & Volunteer Registration */}
