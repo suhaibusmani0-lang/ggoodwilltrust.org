@@ -491,20 +491,20 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          3. 3D TILT CARDS FOR INTERVENTIONS
+          3. ASYMMETRICAL BENTO BOX GRID (INTERVENTIONS)
           ═══════════════════════════════════════ */}
       <section className="py-28 relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6 max-w-6xl mx-auto">
             <div>
-              <span className="text-blue-400 font-bold tracking-widest text-xs uppercase mb-2 inline-block">
-                Core Pillars
+              <span className="text-blue-400 font-bold tracking-widest text-xs uppercase mb-3 inline-flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-cyan-400" /> Strategic Architecture
               </span>
-              <h2 className="text-3xl sm:text-5xl font-black text-white">
-                Core Interventions
+              <h2 className="text-4xl sm:text-6xl font-black text-white tracking-tighter leading-none">
+                Core Interventions.
               </h2>
               <p className="text-slate-400 text-base sm:text-lg mt-3 max-w-xl">
-                Deep-rooted programs engineered for continuous, sustainable grassroots transformation.
+                High-impact initiatives built with structured grassroots execution and verified accountability.
               </p>
             </div>
             <Link
@@ -515,39 +515,51 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto" style={{ perspective: '1200px' }}>
-            {[
-              {
-                title: 'Education & Scholarships',
-                desc: 'Supporting underprivileged children with tuition fees, notebooks, bags, and vocational guidance to prevent school dropouts.',
-                icon: GraduationCap,
-                gradient: 'from-blue-500 to-indigo-600',
-                badge: 'Youth Future'
-              },
-              {
-                title: 'Free Health & Dental Camps',
-                desc: 'Regular grassroots clinics offering checkups, medicines, dental hygiene kits, and emergency surgical consultation guidance.',
-                icon: HeartPulse,
-                gradient: 'from-rose-500 to-red-600',
-                badge: 'Grassroots Care'
-              },
-              {
-                title: 'Ration & Poverty Relief',
-                desc: 'Direct food security packages distributed to widows, daily wagers, and impoverished families facing sudden crisis.',
-                icon: HandHeart,
-                gradient: 'from-amber-500 to-orange-600',
-                badge: 'Direct Aid'
-              }
-            ].map((program, idx) => (
+          {/* Asymmetrical Bento Box Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-6xl mx-auto" style={{ perspective: '1200px' }}>
+            {/* Bento 1: Large Featured Card (Span 7) */}
+            <div className="md:col-span-7">
               <InteractiveTiltCard
-                key={idx}
-                title={program.title}
-                desc={program.desc}
-                icon={program.icon}
-                gradient={program.gradient}
-                badge={program.badge}
+                title="Education & Lifelong Scholarships"
+                desc="Enabling first-generation school learners from slum clusters with continuous school tuition support, digital literacy labs, textbooks, and career guidance counseling to eliminate dropout rates."
+                icon={GraduationCap}
+                gradient="from-blue-600 via-cyan-500 to-indigo-600"
+                badge="High Priority &bull; Youth Future"
               />
-            ))}
+            </div>
+
+            {/* Bento 2: Secondary Card (Span 5) */}
+            <div className="md:col-span-5">
+              <InteractiveTiltCard
+                title="Grassroots Health & Dental Care"
+                desc="Regular diagnostic clinics with MBBS doctors, pediatricians, free medications, dental kits, and immediate hospital referrals for critical cases."
+                icon={HeartPulse}
+                gradient="from-rose-500 via-pink-500 to-red-600"
+                badge="Monthly Camps"
+              />
+            </div>
+
+            {/* Bento 3: Third Card (Span 5) */}
+            <div className="md:col-span-5">
+              <InteractiveTiltCard
+                title="Ration & Emergency Poverty Relief"
+                desc="Direct monthly grain kits, nutritional nourishment for malnourished children, and immediate winter blanket drives for homeless households."
+                icon={HandHeart}
+                gradient="from-amber-500 via-orange-500 to-red-500"
+                badge="Direct Aid"
+              />
+            </div>
+
+            {/* Bento 4: Fourth Card - Community Trust Spotlight (Span 7) */}
+            <div className="md:col-span-7">
+              <InteractiveTiltCard
+                title="Legal Documentation & Citizen Rights"
+                desc="Specialized camps assisting widows, laborers, and underprivileged families in procuring essential Aadhaar, Ayushman Bharat health cards, and pension benefits."
+                icon={Shield}
+                gradient="from-emerald-500 via-teal-500 to-cyan-600"
+                badge="Empowerment & Advocacy"
+              />
+            </div>
           </div>
         </div>
       </section>

@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import SmoothScrollProvider from '@/components/SmoothScrollProvider';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
@@ -37,10 +38,22 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body className={inter.className + ' bg-slate-50 text-slate-900 flex flex-col min-h-screen antialiased'}>
-        <Navbar />
-        <main className="flex-grow pt-20">{children}</main>
-        <Footer />
+      <body className={inter.className + ' bg-slate-950 text-slate-100 flex flex-col min-h-screen antialiased relative selection:bg-cyan-500 selection:text-black'}>
+        {/* Subtle static noise/grain overlay for organic texture */}
+        <div 
+          className="fixed inset-0 pointer-events-none z-50 opacity-[0.035] mix-blend-overlay"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            backgroundRepeat: 'repeat',
+          }}
+        />
+
+        <SmoothScrollProvider>
+          <Navbar />
+          <main className="flex-grow pt-20">{children}</main>
+          <Footer />
+        </SmoothScrollProvider>
+
         <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
         <Script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" strategy="lazyOnload" />
         <Script
