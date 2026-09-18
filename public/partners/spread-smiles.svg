@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 50" width="260" height="50">
+  <defs>
+    <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+  </defs>
+  <circle cx="25" cy="25" r="20" fill="url(#sg)" />
+  <path d="M25 32 C21 28 17 25 17 21 C17 18 19 16 22 16 C23.5 16 24.5 17 25 18 C25.5 17 26.5 16 28 16 C31 16 33 18 33 21 C33 25 29 28 25 32 Z" fill="#ffffff" />
+  <path d="M20 34 Q25 39 30 34" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" />
+  <text x="54" y="24" font-family="Georgia, serif" font-size="15" font-weight="bold" fill="#ffffff" letter-spacing="0.5">Spread Smiles</text>
+  <text x="54" y="38" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#f59e0b" letter-spacing="2">FOUNDATION</text>
+</svg>
+
