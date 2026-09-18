@@ -22,6 +22,10 @@ body {
   scrollbar-width: none;
 }
 
+/* ═══════════════════════════════════════════════════
+   PREMIUM ANIMATIONS
+   ═══════════════════════════════════════════════════ */
+
 /* Loading skeleton */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
@@ -33,7 +37,164 @@ body {
   animation: shimmer 1.5s infinite;
 }
 
-/* Google Translate Widget Cleanup */
+/* Floating particles / blobs */
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+  25% { transform: translateY(-20px) translateX(10px) scale(1.05); }
+  50% { transform: translateY(-10px) translateX(-15px) scale(0.95); }
+  75% { transform: translateY(-25px) translateX(5px) scale(1.02); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  33% { transform: translateY(-30px) rotate(5deg); }
+  66% { transform: translateY(-15px) rotate(-3deg); }
+}
+
+/* Hero Ken Burns zoom effect */
+@keyframes ken-burns {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.15) translate(-2%, -1%); }
+}
+
+/* Gradient mesh animation */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Infinite marquee scroll */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Pulse glow */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); }
+}
+
+/* Rotating conic gradient border */
+@keyframes rotate-gradient {
+  0% { --angle: 0deg; }
+  100% { --angle: 360deg; }
+}
+
+/* Scroll indicator bounce */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(10px); opacity: 0.5; }
+}
+
+/* Aurora / ambient glow */
+@keyframes aurora {
+  0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 0.4; }
+  33% { transform: translateX(30px) translateY(-50px) rotate(120deg); opacity: 0.6; }
+  66% { transform: translateX(-20px) translateY(20px) rotate(240deg); opacity: 0.3; }
+  100% { transform: translateX(0) translateY(0) rotate(360deg); opacity: 0.4; }
+}
+
+/* Text reveal */
+@keyframes text-reveal {
+  0% { clip-path: inset(0 100% 0 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+
+/* Slide up reveal */
+@keyframes slide-up-reveal {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* Counter pulse */
+@keyframes counter-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* ═══════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═══════════════════════════════════════════════════ */
+
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-border {
+  position: relative;
+  border-radius: 1.5rem;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--angle, 0deg), #3b82f6, #06b6d4, #8b5cf6, #3b82f6);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.gradient-border:hover::before {
+  opacity: 1;
+}
+
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float-slow { animation: float-slow 8s ease-in-out infinite; }
+.animate-ken-burns { animation: ken-burns 20s ease-in-out infinite alternate; }
+.animate-gradient { animation: gradient-shift 6s ease infinite; background-size: 200% 200%; }
+.animate-marquee { animation: marquee 40s linear infinite; }
+.animate-marquee-slow { animation: marquee 60s linear infinite; }
+.animate-scroll-bounce { animation: scroll-bounce 2s ease-in-out infinite; }
+.animate-aurora { animation: aurora 15s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+
+/* 3D Tilt card */
+.tilt-card {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transform-style: preserve-3d;
+}
+.tilt-card:hover {
+  transform: perspective(1000px) rotateX(-2deg) rotateY(3deg) translateY(-8px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* Video overlay */
+.video-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.3) 40%,
+    rgba(0, 0, 0, 0.5) 70%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  z-index: 1;
+}
+
+/* ═══════════════════════════════════════════════════
+   GOOGLE TRANSLATE WIDGET CLEANUP
+   ═══════════════════════════════════════════════════ */
+
 body { top: 0 !important; }
 .goog-te-banner-frame { display: none !important; }
 .skiptranslate > iframe { display: none !important; }
