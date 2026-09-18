@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { motion, useInView, type Variants } from 'framer-motion'
+import { motion, useInView, useMotionValue, useSpring, useTransform, type Variants } from 'framer-motion'
 import {
   Heart,
   HeartPulse,
@@ -18,11 +18,8 @@ import {
   Shield,
   Quote,
   CheckCircle2,
-  Calendar,
-  Sparkle,
-  Award,
-  Globe,
-  ArrowUpRight
+  ArrowUpRight,
+  Lock
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -82,7 +79,7 @@ const heroImages = [
 ]
 
 /* ═══════════════════════════════════════════
-   ANIMATED COUNTER COMPONENT
+   ANIMATED COUNTER COMPONENT (useInView)
    ═══════════════════════════════════════════ */
 
 function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
@@ -115,6 +112,116 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
 }
 
 /* ═══════════════════════════════════════════
+   3D TILT CARD COMPONENT
+   ═══════════════════════════════════════════ */
+
+interface TiltCardProps {
+  title: string
+  desc: string
+  icon: React.ElementType
+  gradient: string
+  badge: string
+}
+
+function InteractiveTiltCard({ title, desc, icon: Icon, gradient, badge }: TiltCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  const mouseXSpring = useSpring(x, { stiffness: 200, damping: 20 })
+  const mouseYSpring = useSpring(y, { stiffness: 200, damping: 20 })
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['10deg', '-10deg'])
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-10deg', '10deg'])
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const width = rect.width
+    const height = rect.height
+    const mouseX = e.clientX - rect.left
+    const mouseY = e.clientY - rect.top
+    const xPct = mouseX / width - 0.5
+    const yPct = mouseY / height - 0.5
+    x.set(xPct)
+    y.set(yPct)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+  }
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: 'preserve-3d',
+      }}
+      className="relative rounded-3xl p-8 sm:p-10 glass border border-white/10 group cursor-pointer transition-colors duration-500 hover:border-cyan-400/40 flex flex-col justify-between"
+    >
+      {/* Dynamic glow behind card */}
+      <div 
+        className={`absolute -inset-1 rounded-3xl bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-30 blur-2xl transition duration-500 pointer-events-none`}
+      />
+
+      <div style={{ transform: 'translateZ(30px)' }}>
+        <div className="flex justify-between items-center mb-6">
+          <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+            <Icon className="w-7 h-7 text-white" />
+          </div>
+          <span className="px-3 py-1 rounded-full text-[11px] font-bold text-slate-300 bg-white/5 border border-white/10">
+            {badge}
+          </span>
+        </div>
+
+        <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
+          {title}
+        </h3>
+        <p className="text-slate-300 text-sm leading-relaxed mb-8">
+          {desc}
+        </p>
+      </div>
+
+      <div style={{ transform: 'translateZ(20px)' }}>
+        <Link
+          href="/programs"
+          className="inline-flex items-center text-sm font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors"
+        >
+          View Details <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
+    </motion.div>
+  )
+}
+
+/* ═══════════════════════════════════════════
+   MAGNETIC GLOWING CTA BUTTON
+   ═══════════════════════════════════════════ */
+
+function GlowingDonateButton() {
+  return (
+    <Link
+      href="/donate"
+      className="relative group inline-flex items-center gap-3 px-9 py-4 text-base sm:text-lg font-bold text-white rounded-full overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_35px_rgba(249,115,22,0.6)]"
+    >
+      {/* Animated Conic Border Glow */}
+      <span className="absolute -inset-[2px] rounded-full bg-gradient-to-r from-orange-500 via-amber-400 to-red-500 animate-gradient blur-sm opacity-90 group-hover:opacity-100 transition duration-300" />
+      <span className="absolute inset-[1px] rounded-full bg-gradient-to-r from-orange-600 via-red-600 to-amber-600" />
+      
+      <span className="relative flex items-center gap-2 tracking-wide">
+        Donate Now <Heart className="w-5 h-5 fill-white text-white animate-pulse" />
+      </span>
+    </Link>
+  )
+}
+
+/* ═══════════════════════════════════════════
    HOME PAGE
    ═══════════════════════════════════════════ */
 
@@ -140,20 +247,19 @@ export default function HomePage() {
     <div className="min-h-screen bg-slate-950 text-slate-100 overflow-hidden -mt-20 selection:bg-blue-600 selection:text-white">
 
       {/* ═══════════════════════════════════════
-          1. NEXT-LEVEL CINEMATIC HERO SECTION
+          1. MODERN HERO SECTION (AURORA MESH BG)
           ═══════════════════════════════════════ */}
       <section className="relative min-h-screen pt-28 pb-16 lg:pt-36 lg:pb-24 flex items-center justify-center overflow-hidden">
         
-        {/* Background Mesh Gradients & Cyber Auroras */}
+        {/* Subtle Animated Mesh Gradient & Cyber Aurora Background */}
         <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-          {/* Animated dynamic gradient orbs */}
-          <div className="absolute -top-32 left-1/4 w-[600px] h-[600px] rounded-full bg-blue-600/20 blur-[140px] animate-aurora" />
-          <div className="absolute top-1/3 -right-32 w-[550px] h-[550px] rounded-full bg-cyan-500/15 blur-[150px] animate-aurora" style={{ animationDelay: '-6s' }} />
-          <div className="absolute -bottom-40 left-10 w-[500px] h-[500px] rounded-full bg-indigo-600/20 blur-[130px] animate-aurora" style={{ animationDelay: '-12s' }} />
+          <div className="absolute -top-32 left-1/4 w-[650px] h-[650px] rounded-full bg-blue-600/25 blur-[150px] animate-aurora" />
+          <div className="absolute top-1/3 -right-32 w-[600px] h-[600px] rounded-full bg-cyan-500/20 blur-[160px] animate-aurora" style={{ animationDelay: '-6s' }} />
+          <div className="absolute -bottom-40 left-10 w-[550px] h-[550px] rounded-full bg-indigo-600/25 blur-[140px] animate-aurora" style={{ animationDelay: '-12s' }} />
           
-          {/* Grid overlay texture */}
+          {/* Subtle geometric dot grid pattern */}
           <div 
-            className="absolute inset-0 opacity-[0.12]" 
+            className="absolute inset-0 opacity-[0.15]" 
             style={{
               backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.2) 1px, transparent 1px)',
               backgroundSize: '32px 32px'
@@ -164,7 +270,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
-            {/* Left Column: Typography & CTAs */}
+            {/* Left Column: Bold High-Contrast Typography & Glowing CTA */}
             <motion.div
               initial="hidden"
               animate="visible"
@@ -180,7 +286,7 @@ export default function HomePage() {
                 <span>Govt. 80G Certified Non-Profit &bull; Shaheen Bagh, New Delhi</span>
               </motion.div>
 
-              {/* Main Grand Title */}
+              {/* Bold High-Contrast Headline */}
               <motion.h1
                 variants={fadeInUp}
                 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.05] mb-6 text-white"
@@ -197,20 +303,12 @@ export default function HomePage() {
                 variants={fadeInUp}
                 className="text-base sm:text-lg lg:text-xl text-slate-300 font-normal leading-relaxed mb-8 max-w-xl"
               >
-                G Goodwill Trust bridges the gap between privilege and disadvantage. From daily ration drives and free dental checkups to child education scholarships — every rupee delivers verifiable hope.
+                G Goodwill Trust bridges the gap between privilege and disadvantage. From daily ration drives and free medical consultations to child education scholarships — every rupee delivers verifiable hope.
               </motion.p>
 
-              {/* Action Buttons */}
-              <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-4 mb-10">
-                <Link
-                  href="/donate"
-                  className="relative group inline-flex items-center gap-3 px-8 py-4 text-base sm:text-lg font-bold text-white rounded-full overflow-hidden shadow-2xl shadow-orange-500/25 transition-all duration-300 hover:-translate-y-1"
-                >
-                  <span className="absolute inset-0 bg-gradient-to-r from-orange-500 via-red-500 to-amber-500 transition-all duration-300 group-hover:scale-105" />
-                  <span className="relative flex items-center gap-2">
-                    Donate Now <Heart className="w-5 h-5 fill-white text-white animate-pulse" />
-                  </span>
-                </Link>
+              {/* Action Buttons: Glowing Donate Button */}
+              <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-5 mb-10">
+                <GlowingDonateButton />
 
                 <Link
                   href="/about"
@@ -227,7 +325,7 @@ export default function HomePage() {
               >
                 <div className="flex flex-col">
                   <span className="text-2xl sm:text-3xl font-black text-white">100%</span>
-                  <span className="text-xs text-slate-400 font-medium mt-0.5">Verified Direct Aid</span>
+                  <span className="text-xs text-slate-400 font-medium mt-0.5">Direct Aid Reached</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="text-2xl sm:text-3xl font-black text-cyan-400">80G</span>
@@ -240,7 +338,7 @@ export default function HomePage() {
               </motion.div>
             </motion.div>
 
-            {/* Right Column: High-Tech Glass Image Showcase & Ken-Burns Carousel */}
+            {/* Right Column: Holographic Photo Showcase with Slide Descriptions */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -304,7 +402,7 @@ export default function HomePage() {
                   </button>
                 </div>
 
-                {/* Bottom slide thumbnail progress bar */}
+                {/* Bottom slide progress indicator */}
                 <div className="flex items-center justify-between px-4 py-3 bg-white/[0.03]">
                   <div className="flex items-center gap-2">
                     {heroImages.map((_, idx) => (
@@ -326,7 +424,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Floating Floating Live Badge */}
+              {/* Floating Live Active Status Badge */}
               <div className="absolute -bottom-5 -left-4 sm:-left-6 glass border border-white/20 rounded-2xl p-3.5 sm:p-4 shadow-2xl flex items-center gap-3 backdrop-blur-xl z-30 animate-float">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-green-400 flex items-center justify-center text-white font-bold shadow-md">
                   <CheckCircle2 className="w-5 h-5" />
@@ -349,7 +447,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          2. IMPACT STATS — HIGH CONTRAST STATS
+          2. LIVE IMPACT COUNTERS (useInView)
           ═══════════════════════════════════════ */}
       <section className="relative py-20 bg-gradient-to-b from-slate-950 via-blue-950/40 to-slate-950 border-y border-white/5">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -393,7 +491,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          3. OUR INTERVENTIONS — MODERN 3D CARDS
+          3. 3D TILT CARDS FOR INTERVENTIONS
           ═══════════════════════════════════════ */}
       <section className="py-28 relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -403,7 +501,7 @@ export default function HomePage() {
                 Core Pillars
               </span>
               <h2 className="text-3xl sm:text-5xl font-black text-white">
-                Our Ongoing Interventions
+                Core Interventions
               </h2>
               <p className="text-slate-400 text-base sm:text-lg mt-3 max-w-xl">
                 Deep-rooted programs engineered for continuous, sustainable grassroots transformation.
@@ -417,7 +515,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto" style={{ perspective: '1200px' }}>
             {[
               {
                 title: 'Education & Scholarships',
@@ -441,46 +539,21 @@ export default function HomePage() {
                 badge: 'Direct Aid'
               }
             ].map((program, idx) => (
-              <motion.div
+              <InteractiveTiltCard
                 key={idx}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeInUp}
-                className="tilt-card rounded-3xl glass border border-white/10 p-8 sm:p-10 relative overflow-hidden group hover:border-white/30 transition-all duration-500 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex justify-between items-center mb-6">
-                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${program.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                      <program.icon className="w-7 h-7 text-white" />
-                    </div>
-                    <span className="px-3 py-1 rounded-full text-[11px] font-bold text-slate-300 bg-white/5 border border-white/10">
-                      {program.badge}
-                    </span>
-                  </div>
-
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
-                    {program.title}
-                  </h3>
-                  <p className="text-slate-300 text-sm leading-relaxed mb-8">
-                    {program.desc}
-                  </p>
-                </div>
-
-                <Link
-                  href="/programs"
-                  className="inline-flex items-center text-sm font-bold text-cyan-400 group-hover:text-cyan-300 transition-colors"
-                >
-                  View Details <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </motion.div>
+                title={program.title}
+                desc={program.desc}
+                icon={program.icon}
+                gradient={program.gradient}
+                badge={program.badge}
+              />
             ))}
           </div>
         </div>
       </section>
 
       {/* ═══════════════════════════════════════
-          4. COMMUNITY REVIEWS — INFINITE AUTO-MARQUEE
+          4. INFINITE MARQUEE REVIEWS
           ═══════════════════════════════════════ */}
       <section className="py-24 bg-slate-900/60 border-y border-white/5 relative overflow-hidden">
         <div className="container mx-auto px-4 mb-14 text-center">
@@ -611,7 +684,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          6. GRAND CTA — MEMBERSHIP & MEMBERS
+          6. GRAND CTA — MEMBERSHIP & SUPPORT
           ═══════════════════════════════════════ */}
       <section className="py-20 pb-32">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

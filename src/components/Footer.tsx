@@ -182,21 +182,18 @@ export default function Footer() {
         <div className="pt-8 mt-12 relative flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 gap-4">
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
           <p className="flex items-center gap-1.5">
-            &copy; {new Date().getFullYear()} G Goodwill Trust. Made with <Heart size={12} className="text-red-500 fill-red-500" /> for humanity.
+            &copy; {new Date().getFullYear()} G Goodwill Trust. All rights reserved. Registered Non-Profit Trust.
           </p>
           <div className="flex items-center gap-6">
-            <a
-              href="https://www.zarnetic.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-slate-400 hover:text-orange-400 transition-colors flex items-center gap-1"
-            >
-              <span>Developed by</span>
-              <span className="font-bold text-slate-300 hover:text-orange-400 underline underline-offset-4">Zarnetic</span>
-            </a>
+            <Link href="/about" className="hover:text-slate-300 transition-colors">
+              About Trust
+            </Link>
+            <Link href="/documents" className="hover:text-slate-300 transition-colors">
+              80G & Legal
+            </Link>
             <Link href="/admin/login" className="flex items-center gap-1.5 text-slate-500 hover:text-white transition-colors">
               <Lock size={12} />
-              Secure Admin
+              Portal
             </Link>
           </div>
         </div>
