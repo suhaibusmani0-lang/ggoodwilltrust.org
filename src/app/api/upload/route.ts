@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     // Sanitize and configure Cloudinary credentials
     const cloudName = (process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || 'jofrbqku').trim().replace(/['"]/g, '');
     const apiKey = (process.env.CLOUDINARY_API_KEY || '334686696886189').trim().replace(/['"]/g, '');
-    const apiSecret = (process.env.CLOUDINARY_API_SECRET || 'Oxm4VBRyOHUR5mrMzxRkdKv6Nv8').trim().replace(/['"]/g, '');
+    const apiSecret = (process.env.CLOUDINARY_API_SECRET || 'Oxm4VBRy0HUR5mrMzxRkdKv6Nv8').trim().replace(/['"]/g, '');
 
     cloudinary.config({
       cloud_name: cloudName,
