@@ -64,10 +64,10 @@ const team = [
     initial: 'F',
   },
   {
-    name: 'Mr. Bilal Akhtar',
+    name: 'Mr. Khubaib Usmani',
     role: 'Development Manager',
     desc: 'Focusing on strategic community partnerships, sustainable program expansions, and building lasting relationships with patrons and institutions.',
-    initial: 'B',
+    initial: 'K',
   },
   {
     name: 'Mr. Faheem Ahmad',
