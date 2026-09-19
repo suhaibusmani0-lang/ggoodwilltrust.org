@@ -56,7 +56,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 pt-12 pb-20 px-6 sm:px-8 lg:px-12">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50/30 via-white to-slate-50/50 text-slate-900 pt-12 pb-20 px-6 sm:px-8 lg:px-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
         
         {/* Left Column: Contact Information & Volunteer Registration */}
@@ -67,7 +67,7 @@ export default function ContactPage() {
           className="lg:col-span-5 space-y-10"
         >
           <div>
-            <span className="text-[#b45309] text-xs font-semibold tracking-[0.2em] uppercase mb-3 inline-block">
+            <span className="text-[#b45309] text-xs font-bold tracking-[0.2em] uppercase mb-3 inline-block bg-amber-50 px-3.5 py-1 rounded-full border border-amber-200 shadow-2xs">
               Communication Secretariat
             </span>
             <h1 className="text-4xl sm:text-5xl font-serif font-normal tracking-normal text-slate-900 mb-4 leading-tight">
@@ -82,35 +82,35 @@ export default function ContactPage() {
           </div>
 
           <div className="space-y-4">
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 flex items-start gap-4 shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-[#b45309] shrink-0">
-                <MapPin className="w-4 h-4" />
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 hover:border-amber-300 transition-all flex items-start gap-4 shadow-xs">
+              <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-[#b45309] shrink-0 shadow-2xs">
+                <MapPin className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-serif text-base text-slate-900 mb-1">Headquarters</h3>
+                <h3 className="font-serif text-base text-slate-900 mb-1">Central Secretariat</h3>
                 <p className="text-xs text-slate-600 font-light leading-relaxed">G-48 Shaheen Bagh, Okhla, New Delhi - 110025, India</p>
               </div>
             </div>
             
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 flex items-start gap-4 shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-[#b45309] shrink-0">
-                <Mail className="w-4 h-4" />
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 hover:border-blue-300 transition-all flex items-start gap-4 shadow-xs">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shrink-0 shadow-2xs">
+                <Mail className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="font-serif text-base text-slate-900 mb-1">Official Inquiry</h3>
-                <a href="mailto:globalgoodwill4@gmail.com" className="text-xs text-slate-600 hover:text-[#b45309] transition-colors font-medium">
+                <a href="mailto:globalgoodwill4@gmail.com" className="text-xs text-blue-600 hover:text-blue-800 transition-colors font-semibold">
                   globalgoodwill4@gmail.com
                 </a>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 flex items-start gap-4 shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-[#b45309] shrink-0">
-                <Phone className="w-4 h-4" />
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 hover:border-emerald-300 transition-all flex items-start gap-4 shadow-xs">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shrink-0 shadow-2xs">
+                <Phone className="w-5 h-5" />
               </div>
               <div>
                 <h3 className="font-serif text-base text-slate-900 mb-1">Direct Helpline</h3>
-                <a href="tel:+917982804385" className="text-xs text-slate-600 hover:text-[#b45309] transition-colors font-medium">
+                <a href="tel:+917982804385" className="text-xs text-emerald-700 hover:text-emerald-900 transition-colors font-semibold">
                   +91 79828 04385
                 </a>
               </div>

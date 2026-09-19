@@ -202,9 +202,10 @@ interface TiltCardProps {
   icon: React.ElementType
   badge: string
   number: string
+  colorTheme?: 'amber' | 'emerald' | 'rose' | 'blue'
 }
 
-function LuxuryBentoCard({ title, desc, icon: Icon, badge, number }: TiltCardProps) {
+function LuxuryBentoCard({ title, desc, icon: Icon, badge, number, colorTheme = 'amber' }: TiltCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
 
   const x = useMotionValue(0)
@@ -234,6 +235,34 @@ function LuxuryBentoCard({ title, desc, icon: Icon, badge, number }: TiltCardPro
     y.set(0)
   }
 
+  // Theme styling presets
+  const themeStyles = {
+    amber: {
+      iconBg: 'bg-amber-50 text-[#b45309] border-amber-200 group-hover:border-amber-400',
+      badgeBg: 'bg-amber-50 text-[#b45309] border-amber-300',
+      glow: 'bg-[#d4af37]/15',
+      hoverBorder: 'hover:border-amber-400',
+    },
+    emerald: {
+      iconBg: 'bg-emerald-50 text-emerald-700 border-emerald-200 group-hover:border-emerald-400',
+      badgeBg: 'bg-emerald-50 text-emerald-800 border-emerald-300',
+      glow: 'bg-emerald-500/10',
+      hoverBorder: 'hover:border-emerald-400',
+    },
+    rose: {
+      iconBg: 'bg-rose-50 text-rose-700 border-rose-200 group-hover:border-rose-400',
+      badgeBg: 'bg-rose-50 text-rose-800 border-rose-300',
+      glow: 'bg-rose-500/10',
+      hoverBorder: 'hover:border-rose-400',
+    },
+    blue: {
+      iconBg: 'bg-blue-50 text-blue-700 border-blue-200 group-hover:border-blue-400',
+      badgeBg: 'bg-blue-50 text-blue-800 border-blue-300',
+      glow: 'bg-blue-500/10',
+      hoverBorder: 'hover:border-blue-400',
+    },
+  }[colorTheme];
+
   return (
     <motion.div
       ref={cardRef}
@@ -244,20 +273,20 @@ function LuxuryBentoCard({ title, desc, icon: Icon, badge, number }: TiltCardPro
         rotateY,
         transformStyle: 'preserve-3d',
       }}
-      className="relative rounded-3xl p-8 sm:p-10 bg-white border border-slate-200 group cursor-pointer transition-all duration-700 hover:border-[#b45309]/50 flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-xl"
+      className={`relative rounded-3xl p-8 sm:p-10 bg-white border border-slate-200 group cursor-pointer transition-all duration-700 ${themeStyles.hoverBorder} flex flex-col justify-between overflow-hidden shadow-xs hover:shadow-xl`}
     >
-      {/* Subtle gold ambient glow on hover */}
+      {/* Subtle ambient glow on hover */}
       <div 
-        className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-[#d4af37]/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+        className={`absolute -right-20 -top-20 w-64 h-64 rounded-full ${themeStyles.glow} blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`}
       />
 
       <div style={{ transform: 'translateZ(25px)' }}>
         <div className="flex justify-between items-center mb-8">
-          <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-[#b45309] group-hover:border-[#b45309]/40 transition-colors duration-500">
+          <div className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-colors duration-500 shadow-2xs ${themeStyles.iconBg}`}>
             <Icon className="w-5 h-5" />
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#b45309] px-3 py-1 rounded-full bg-amber-50 border border-amber-200">
+            <span className={`text-[10px] tracking-[0.2em] font-bold uppercase px-3 py-1 rounded-full border ${themeStyles.badgeBg}`}>
               {badge}
             </span>
             <span className="font-serif text-lg text-slate-400 font-light">
@@ -601,10 +630,10 @@ export default function HomePage() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {[
-              { label: 'Families Sustained with Rations', value: stats.stat_rations, suffix: '+', icon: HandHeart },
-              { label: 'Rakhis Tied for Social Harmony', value: stats.stat_rakhis, suffix: '+', icon: Heart },
-              { label: 'Beneficiaries Reached via Camps', value: stats.stat_beneficiaries, suffix: '+', icon: Users },
-              { label: 'Free Clinical Consultations', value: stats.stat_clinics, suffix: '+', icon: HeartPulse }
+              { label: 'Families Sustained with Rations', value: stats.stat_rations, suffix: '+', icon: HandHeart, color: 'rose', bg: 'bg-rose-50 text-rose-600 border-rose-200' },
+              { label: 'Rakhis Tied for Social Harmony', value: stats.stat_rakhis, suffix: '+', icon: Heart, color: 'amber', bg: 'bg-amber-50 text-amber-600 border-amber-200' },
+              { label: 'Beneficiaries Reached via Camps', value: stats.stat_beneficiaries, suffix: '+', icon: Users, color: 'blue', bg: 'bg-blue-50 text-blue-600 border-blue-200' },
+              { label: 'Free Clinical Consultations', value: stats.stat_clinics, suffix: '+', icon: HeartPulse, color: 'emerald', bg: 'bg-emerald-50 text-emerald-600 border-emerald-200' }
             ].map((stat, idx) => (
               <motion.div
                 key={idx}
@@ -614,8 +643,8 @@ export default function HomePage() {
                 variants={fadeInScale}
                 className="relative"
               >
-                <div className="h-full rounded-2xl bg-white border border-slate-200 p-7 text-center hover:border-[#b45309]/50 transition-all duration-300 shadow-xs hover:shadow-md">
-                  <div className="w-10 h-10 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center mx-auto mb-5 text-[#b45309]">
+                <div className="h-full rounded-2xl bg-white border border-slate-200 p-7 text-center hover:border-amber-300 transition-all duration-300 shadow-xs hover:shadow-md">
+                  <div className={`w-12 h-12 rounded-xl border flex items-center justify-center mx-auto mb-5 shadow-2xs ${stat.bg}`}>
                     <stat.icon className="w-5 h-5" />
                   </div>
                   <AnimatedCounter target={stat.value} suffix={stat.suffix} />
@@ -632,11 +661,11 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           3. ASYMMETRICAL BENTO BOX (INTERVENTIONS)
           ═══════════════════════════════════════ */}
-      <section className="py-16 lg:py-20 relative bg-white">
+      <section className="py-16 lg:py-20 relative bg-gradient-to-b from-white via-amber-50/20 to-white">
         <div className="container mx-auto px-6 sm:px-8 lg:px-12">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-14 gap-6 max-w-6xl mx-auto">
             <div>
-              <span className="text-[#b45309] font-semibold tracking-[0.2em] text-xs uppercase mb-3 inline-block">
+              <span className="text-[#b45309] font-bold tracking-[0.2em] text-xs uppercase mb-3 inline-block bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
                 Core Initiatives
               </span>
               <h2 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900">
@@ -648,7 +677,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/programs"
-              className="inline-flex items-center gap-2 text-[#b45309] hover:text-black text-xs font-semibold uppercase tracking-wider transition-colors group"
+              className="inline-flex items-center gap-2 text-[#b45309] hover:text-black text-xs font-bold uppercase tracking-wider transition-colors group"
             >
               Explore All Projects <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </Link>
@@ -664,6 +693,7 @@ export default function HomePage() {
                 icon={GraduationCap}
                 badge="High Priority"
                 number="01"
+                colorTheme="amber"
               />
             </div>
 
@@ -675,6 +705,7 @@ export default function HomePage() {
                 icon={HeartPulse}
                 badge="Monthly"
                 number="02"
+                colorTheme="emerald"
               />
             </div>
 
@@ -686,6 +717,7 @@ export default function HomePage() {
                 icon={HandHeart}
                 badge="Direct Aid"
                 number="03"
+                colorTheme="rose"
               />
             </div>
 
@@ -697,6 +729,7 @@ export default function HomePage() {
                 icon={Shield}
                 badge="Advocacy"
                 number="04"
+                colorTheme="blue"
               />
             </div>
           </div>

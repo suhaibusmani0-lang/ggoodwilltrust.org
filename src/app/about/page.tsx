@@ -93,8 +93,19 @@ const approachList = [
 ];
 
 export default function AboutPage() {
+  const roleColors: Record<string, { bg: string; text: string; border: string; initialBg: string }> = {
+    'Founder': { bg: 'bg-amber-50', text: 'text-[#b45309]', border: 'border-amber-300', initialBg: 'bg-amber-100/70 text-[#b45309] border-amber-300' },
+    'Managing Director': { bg: 'bg-amber-50', text: 'text-[#b45309]', border: 'border-amber-300', initialBg: 'bg-amber-100/70 text-[#b45309] border-amber-300' },
+    'Treasurer': { bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-300', initialBg: 'bg-emerald-100/70 text-emerald-700 border-emerald-300' },
+    'Operations Director': { bg: 'bg-blue-50', text: 'text-blue-800', border: 'border-blue-300', initialBg: 'bg-blue-100/70 text-blue-700 border-blue-300' },
+    'I.T. Head': { bg: 'bg-purple-50', text: 'text-purple-800', border: 'border-purple-300', initialBg: 'bg-purple-100/70 text-purple-700 border-purple-300' },
+    'Development Manager': { bg: 'bg-teal-50', text: 'text-teal-800', border: 'border-teal-300', initialBg: 'bg-teal-100/70 text-teal-700 border-teal-300' },
+    'Volunteer Coordinator': { bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-300', initialBg: 'bg-rose-100/70 text-rose-700 border-rose-300' },
+    'Fundraiser': { bg: 'bg-indigo-50', text: 'text-indigo-800', border: 'border-indigo-300', initialBg: 'bg-indigo-100/70 text-indigo-700 border-indigo-300' },
+  };
+
   return (
-    <div className="min-h-screen bg-white text-slate-900 pt-12 pb-20">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50/30 via-white to-slate-50/50 text-slate-900 pt-12 pb-20">
       {/* 1. HERO SECTION */}
       <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-16 lg:mb-20">
         <div className="max-w-4xl mx-auto text-center">
@@ -102,10 +113,10 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-50 border border-amber-200 text-[#b45309] text-xs font-semibold tracking-widest uppercase mb-8 shadow-2xs"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-300 text-[#b45309] text-xs font-bold tracking-widest uppercase mb-8 shadow-2xs"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#b45309]" />
-            Foundational Charter
+            Foundational Charter &bull; 80G Certified Non-Profit
           </motion.div>
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -133,16 +144,20 @@ export default function AboutPage() {
       <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-16 lg:mb-20">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {stats.map((stat, idx) => (
+            {[
+              { icon: Calendar, label: 'Established', value: 'Sep 30, 2024', color: 'bg-amber-50 border-amber-200 text-[#b45309]' },
+              { icon: Users, label: 'Lives Impacted', value: '5,000+ Citizens', color: 'bg-blue-50 border-blue-200 text-blue-600' },
+              { icon: MapPin, label: 'Core Focus', value: 'Delhi NCR, India', color: 'bg-emerald-50 border-emerald-200 text-emerald-600' }
+            ].map((stat, idx) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="bg-white p-8 rounded-2xl border border-slate-200 flex flex-col items-center text-center shadow-xs hover:border-[#b45309]/40 hover:shadow-md transition-all"
+                className="bg-white p-8 rounded-2xl border border-slate-200 flex flex-col items-center text-center shadow-xs hover:border-amber-300 hover:shadow-md transition-all"
               >
-                <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-[#b45309] mb-5">
+                <div className={`w-12 h-12 rounded-xl border flex items-center justify-center mb-5 shadow-2xs ${stat.color}`}>
                   <stat.icon className="w-5 h-5" />
                 </div>
                 <div className="text-slate-500 text-xs uppercase tracking-widest font-semibold mb-1.5">{stat.label}</div>
@@ -163,9 +178,9 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="bg-white p-10 sm:p-12 rounded-3xl border border-slate-200 relative overflow-hidden group hover:border-[#b45309]/50 transition-all duration-300 shadow-xs hover:shadow-lg"
+              className="bg-gradient-to-br from-white via-amber-50/30 to-white p-10 sm:p-12 rounded-3xl border border-amber-200/80 relative overflow-hidden group hover:border-[#b45309]/50 transition-all duration-300 shadow-xs hover:shadow-lg"
             >
-              <div className="w-12 h-12 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-center mb-8 text-[#b45309]">
+              <div className="w-12 h-12 bg-amber-50 border border-amber-300 rounded-xl flex items-center justify-center mb-8 text-[#b45309] shadow-2xs">
                 <Target className="w-5 h-5" />
               </div>
               <h2 className="text-2xl sm:text-3xl font-serif font-normal text-slate-900 mb-4">Our Institutional Mission</h2>
@@ -180,9 +195,9 @@ export default function AboutPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="bg-white p-10 sm:p-12 rounded-3xl border border-slate-200 relative overflow-hidden group hover:border-[#b45309]/50 transition-all duration-300 shadow-xs hover:shadow-lg"
+              className="bg-gradient-to-br from-white via-emerald-50/20 to-white p-10 sm:p-12 rounded-3xl border border-emerald-200/80 relative overflow-hidden group hover:border-emerald-400 transition-all duration-300 shadow-xs hover:shadow-lg"
             >
-              <div className="w-12 h-12 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-center mb-8 text-[#b45309]">
+              <div className="w-12 h-12 bg-emerald-50 border border-emerald-300 rounded-xl flex items-center justify-center mb-8 text-emerald-700 shadow-2xs">
                 <Eye className="w-5 h-5" />
               </div>
               <h2 className="text-2xl sm:text-3xl font-serif font-normal text-slate-900 mb-4">Our Enduring Vision</h2>
@@ -198,34 +213,36 @@ export default function AboutPage() {
       <section className="container mx-auto px-6 sm:px-8 lg:px-12 mb-16 lg:mb-20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-[#b45309] font-semibold text-xs tracking-[0.2em] uppercase mb-3 inline-block">Methodology</span>
+            <span className="text-[#b45309] font-bold text-xs tracking-[0.2em] uppercase mb-3 inline-block bg-amber-50 px-3.5 py-1 rounded-full border border-amber-200">
+              Methodology
+            </span>
             <h2 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900">How We Operate On Ground</h2>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <div className="bg-white p-10 rounded-3xl border border-slate-200 shadow-xs">
+            <div className="bg-white p-10 rounded-3xl border border-slate-200 shadow-xs hover:border-amber-200 transition-all">
               <h3 className="text-xl font-serif font-normal text-slate-900 mb-6">Action Areas</h3>
               <ul className="space-y-4">
                 {approachList.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-3.5">
-                    <CheckCircle2 className="w-5 h-5 text-[#b45309] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                     <span className="text-slate-700 text-sm font-light leading-relaxed">{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="flex flex-col justify-between bg-white p-10 rounded-3xl border border-slate-200 shadow-xs">
+            <div className="flex flex-col justify-between bg-white p-10 rounded-3xl border border-slate-200 shadow-xs hover:border-amber-200 transition-all">
               <div>
-                <span className="text-[#b45309] text-xs uppercase tracking-widest font-semibold mb-2 block">Headquarters</span>
+                <span className="text-[#b45309] text-xs uppercase tracking-widest font-bold mb-2 block">Headquarters</span>
                 <h3 className="text-2xl font-serif font-normal text-slate-900 mb-4">Shaheen Bagh Relief Center</h3>
                 <p className="text-slate-600 text-sm leading-relaxed font-light mb-8">
                   Currently active across New Delhi, we strategically deploy resources to areas with the greatest concentration of vulnerable families.
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-[#f8fafc] border border-slate-200">
-                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 font-semibold">Official Address</p>
+              <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-50/50 via-slate-50 to-amber-50/30 border border-amber-200/70">
+                <p className="text-xs text-[#b45309] uppercase tracking-wider mb-1 font-bold">Official Secretariat</p>
                 <p className="text-sm font-semibold text-slate-900">G-48 Shaheen Bagh, Okhla, New Delhi - 110025</p>
                 <p className="text-xs text-slate-600 mt-1">Delhi NCR, India</p>
               </div>
@@ -238,7 +255,9 @@ export default function AboutPage() {
       <section className="container mx-auto px-6 sm:px-8 lg:px-12">
         <div className="max-w-6xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-20">
-            <span className="text-[#b45309] font-semibold text-xs tracking-[0.2em] uppercase mb-3 inline-block">Leadership</span>
+            <span className="text-[#b45309] font-bold text-xs tracking-[0.2em] uppercase mb-3 inline-block bg-amber-50 px-3.5 py-1 rounded-full border border-amber-200">
+              Leadership
+            </span>
             <h2 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900 mb-4">Board of Trustees</h2>
             <p className="text-slate-600 text-sm sm:text-base font-light">
               Our dedicated executive team ensuring transparent governance and compassionate ground execution.
@@ -246,32 +265,36 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {team.map((member, idx) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.08 }}
-                className="bg-white p-7 rounded-2xl border border-slate-200 hover:border-[#b45309]/50 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between shadow-xs hover:shadow-md"
-              >
-                <div>
-                  <div className="w-14 h-14 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center font-serif text-xl font-normal text-[#b45309] mb-5">
-                    {member.initial}
+            {team.map((member, idx) => {
+              const style = roleColors[member.role] || roleColors['Founder'];
+              return (
+                <motion.div
+                  key={member.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.08 }}
+                  className="bg-white p-7 rounded-2xl border border-slate-200 hover:border-amber-300 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between shadow-xs hover:shadow-md"
+                >
+                  <div>
+                    <div className={`w-14 h-14 rounded-2xl border flex items-center justify-center font-serif text-xl font-normal mb-5 shadow-2xs ${style.initialBg}`}>
+                      {member.initial}
+                    </div>
+                    <span className={`text-[10px] tracking-[0.2em] font-bold uppercase px-2.5 py-0.5 rounded-full border inline-block mb-3 ${style.bg} ${style.text} ${style.border}`}>
+                      {member.role}
+                    </span>
+                    <h3 className="text-lg font-serif font-normal text-slate-900 mb-3">{member.name}</h3>
+                    <p className="text-slate-600 text-xs leading-relaxed font-light mb-6">
+                      {member.desc}
+                    </p>
                   </div>
-                  <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-[#b45309] mb-2 block">
-                    {member.role}
-                  </span>
-                  <h3 className="text-lg font-serif font-normal text-slate-900 mb-3">{member.name}</h3>
-                  <p className="text-slate-600 text-xs leading-relaxed font-light mb-6">
-                    {member.desc}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
     </div>
   );
 }
+

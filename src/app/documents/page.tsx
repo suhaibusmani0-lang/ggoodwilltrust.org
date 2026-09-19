@@ -43,13 +43,26 @@ export default function DocumentsPage() {
     return new Date(dateStr).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
+  const getCategoryBadge = (cat?: string) => {
+    switch (cat?.toLowerCase()) {
+      case 'certificates':
+        return 'bg-emerald-50 text-emerald-800 border-emerald-300';
+      case 'policies':
+        return 'bg-amber-50 text-[#b45309] border-amber-300';
+      case 'reports':
+        return 'bg-blue-50 text-blue-800 border-blue-300';
+      default:
+        return 'bg-slate-50 text-slate-700 border-slate-300';
+    }
+  };
+
   return (
-    <main className="min-h-screen bg-white text-slate-900 pt-12 pb-20 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-gradient-to-b from-amber-50/30 via-white to-slate-50/50 text-slate-900 pt-12 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Editorial Hero */}
         <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-[#b45309] text-xs font-semibold tracking-widest uppercase mb-6 shadow-2xs">
-            <Shield className="w-3.5 h-3.5" /> Institutional Transparency
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-300 bg-amber-50 text-[#b45309] text-xs font-bold tracking-widest uppercase mb-6 shadow-2xs">
+            <Shield className="w-3.5 h-3.5 text-amber-600" /> Institutional Transparency &bull; 80G Certified
           </div>
           <h1 className="font-serif text-5xl md:text-7xl font-normal tracking-tight text-slate-900 mb-6 leading-tight">
             Official <span className="italic font-serif text-[#b45309]">Documents</span>
@@ -61,7 +74,7 @@ export default function DocumentsPage() {
 
         {/* Filter Pills */}
         <div className="flex items-center justify-center gap-2 mb-16 flex-wrap">
-          <div className="bg-slate-50 p-1.5 rounded-full border border-slate-200 inline-flex gap-1 shadow-2xs">
+          <div className="bg-white p-1.5 rounded-full border border-slate-200 inline-flex gap-1 shadow-xs">
             {categories.map((cat) => (
               <button
                 key={cat}
@@ -69,8 +82,8 @@ export default function DocumentsPage() {
                 className={
                   'px-6 py-2 rounded-full text-xs uppercase tracking-widest font-semibold transition-all ' +
                   (activeTab === cat
-                    ? 'bg-[#d4af37] text-black shadow-xs font-bold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100')
+                    ? 'bg-gradient-to-r from-[#d4af37] to-[#b45309] text-white shadow-xs font-bold'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50')
                 }
               >
                 {cat}
@@ -86,7 +99,7 @@ export default function DocumentsPage() {
             <p className="text-xs uppercase tracking-widest text-slate-500 font-medium">Loading Registry Records...</p>
           </div>
         ) : filteredDocs.length === 0 ? (
-          <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center py-24 bg-[#f8fafc] border border-slate-200 rounded-3xl p-8">
+          <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center py-24 bg-white border border-slate-200 rounded-3xl p-8 shadow-xs">
             <FileText className="w-12 h-12 text-slate-400 mx-auto mb-4" />
             <h3 className="font-serif text-2xl font-normal text-slate-900 mb-2">No Documents In This Category</h3>
             <p className="text-sm text-slate-500">
@@ -105,14 +118,14 @@ export default function DocumentsPage() {
                   hidden: { opacity: 0, y: 24 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.08 } }
                 }}
-                className="bg-white border border-slate-200 hover:border-[#b45309]/50 rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col justify-between p-7 relative shadow-xs hover:shadow-md"
+                className="bg-white border border-slate-200 hover:border-amber-300 rounded-3xl overflow-hidden transition-all duration-300 group flex flex-col justify-between p-7 relative shadow-xs hover:shadow-xl hover:-translate-y-1"
               >
                 <div className="space-y-4">
                   <div className="flex items-start justify-between">
-                    <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-[#b45309] flex items-center justify-center shrink-0 group-hover:border-[#b45309]/60 transition-colors">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-[#b45309] flex items-center justify-center shrink-0 group-hover:border-amber-400 transition-colors shadow-2xs">
                       <FileText className="w-6 h-6" />
                     </div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#b45309] bg-amber-50 border border-amber-200 px-3 py-1 rounded-full font-semibold">
+                    <span className={`text-[10px] font-mono uppercase tracking-widest px-3 py-1 rounded-full font-bold border ${getCategoryBadge(doc.category)}`}>
                       {doc.category || 'Official'}
                     </span>
                   </div>

@@ -55,12 +55,12 @@ export default function ProgramDetailsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white text-slate-900 pt-12 pb-20 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-gradient-to-b from-amber-50/30 via-white to-slate-50/50 text-slate-900 pt-12 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         {/* Back Link */}
         <Link 
           href="/programs" 
-          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-slate-600 hover:text-[#b45309] transition-colors mb-12 font-semibold"
+          className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-slate-600 hover:text-[#b45309] transition-colors mb-10 font-semibold px-4 py-2 rounded-full border border-slate-200 bg-white shadow-2xs hover:border-amber-300"
         >
           <ArrowLeft className="w-4 h-4" /> Back to All Programs
         </Link>
@@ -70,7 +70,7 @@ export default function ProgramDetailsPage() {
           initial={{ opacity: 0, y: 20 }} 
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.6 }}
-          className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm"
+          className="bg-white rounded-3xl overflow-hidden border border-amber-200/60 shadow-sm"
         >
           {program.image_urls && program.image_urls.length > 0 ? (
             <div className="w-full h-[460px] overflow-hidden bg-slate-100 relative">
@@ -81,19 +81,22 @@ export default function ProgramDetailsPage() {
               />
             </div>
           ) : (
-            <div className="w-full h-64 bg-slate-50 flex items-center justify-center text-slate-400 border-b border-slate-200">
+            <div className="w-full h-64 bg-amber-50/50 flex items-center justify-center text-amber-500/60 border-b border-slate-200">
               <Briefcase className="w-16 h-16 stroke-[1.2]" />
             </div>
           )}
 
           <div className="p-8 md:p-14">
-            <div className="flex flex-wrap items-center gap-4 mb-6">
+            <div className="flex flex-wrap items-center gap-3 mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-[#b45309] text-xs font-semibold uppercase tracking-wider">
-                <Sparkles className="w-3 h-3" /> Core Strategic Pillar
+                <Sparkles className="w-3 h-3 text-amber-600" /> Core Strategic Pillar
+              </span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+                <ShieldCheck className="w-3.5 h-3.5" /> 80G Tax Deductible
               </span>
               {program.createdAt && (
-                <span className="inline-flex items-center gap-1.5 text-xs font-mono text-slate-500">
-                  <Calendar className="w-3.5 h-3.5" />
+                <span className="inline-flex items-center gap-1.5 text-xs font-mono text-slate-500 ml-auto">
+                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
                   {new Date(program.createdAt).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' })}
                 </span>
               )}
@@ -110,20 +113,20 @@ export default function ProgramDetailsPage() {
             </div>
 
             {/* Impact & Donate Action Banner */}
-            <div className="p-8 rounded-2xl bg-[#f8fafc] border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="p-8 rounded-2xl bg-gradient-to-br from-amber-50/80 via-white to-emerald-50/30 border border-amber-200 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xs">
               <div>
-                <div className="flex items-center gap-2 text-[#b45309] text-xs uppercase tracking-widest font-semibold mb-1">
-                  <ShieldCheck className="w-4 h-4" /> 100% Directed Funding
+                <div className="flex items-center gap-2 text-emerald-800 text-xs uppercase tracking-widest font-bold mb-1">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" /> 100% Directed Humanitarian Funding
                 </div>
                 <p className="text-xs text-slate-600 max-w-md font-light">
-                  Help us expand this specific initiative to serve more families and children in need.
+                  Help us expand this specific initiative to serve more families, women, and children across New Delhi.
                 </p>
               </div>
               <Link
                 href="/donate"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#d4af37] hover:bg-[#c59b27] text-black text-xs uppercase tracking-widest font-bold transition-all shadow-xs shrink-0"
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#d4af37] to-[#f59e0b] hover:from-[#c59b27] hover:to-[#d97706] text-black text-xs uppercase tracking-widest font-bold transition-all shadow-[0_4px_16px_rgba(212,175,55,0.25)] hover:scale-[1.02] shrink-0"
               >
-                Support This Cause <Heart className="w-4 h-4 fill-current" />
+                Support This Cause <Heart className="w-4 h-4 fill-black" />
               </Link>
             </div>
           </div>

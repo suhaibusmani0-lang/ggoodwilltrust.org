@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Loader2, ArrowRight, Heart } from 'lucide-react';
+import { Loader2, ArrowRight, Heart, Sparkles, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
 interface Program {
@@ -32,13 +32,13 @@ export default function ProgramsPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-white text-slate-900 pt-12 pb-20 px-6 sm:px-8 lg:px-12">
+    <main className="min-h-screen bg-gradient-to-b from-amber-50/30 via-white to-slate-50/50 text-slate-900 pt-12 pb-20 px-6 sm:px-8 lg:px-12">
       <div className="max-w-7xl mx-auto">
         {/* Hero */}
         <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-14 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-amber-50 rounded-full mb-6 border border-amber-200 text-[#b45309] text-xs font-semibold tracking-widest uppercase shadow-2xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#b45309]" />
-            Ground Interventions
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-amber-50 rounded-full mb-6 border border-amber-300 text-[#b45309] text-xs font-bold tracking-widest uppercase shadow-2xs">
+            <Sparkles className="w-3.5 h-3.5" />
+            Ground Interventions &bull; 80G Tax Exemption
           </div>
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal mb-6 tracking-tight leading-[1.08] text-slate-900">
             Programs &amp;{' '}
@@ -61,7 +61,7 @@ export default function ProgramsPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-24 bg-[#f8fafc] border border-slate-200 rounded-3xl"
+            className="text-center py-24 bg-white border border-slate-200 rounded-3xl shadow-xs"
           >
             <Heart className="w-12 h-12 text-slate-400 mx-auto mb-4" />
             <h3 className="text-xl font-serif font-normal text-slate-900 mb-2">No Active Records Found</h3>
@@ -79,7 +79,7 @@ export default function ProgramsPage() {
                   hidden: { opacity: 0, y: 30 },
                   visible: { opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.1 } }
                 }}
-                className="bg-white rounded-2xl overflow-hidden border border-slate-200 hover:border-[#b45309]/50 transition-all duration-300 group flex flex-col h-full hover:-translate-y-1 shadow-xs hover:shadow-md"
+                className="bg-white rounded-3xl overflow-hidden border border-slate-200 hover:border-amber-300 transition-all duration-300 group flex flex-col h-full hover:-translate-y-1 shadow-xs hover:shadow-xl"
               >
                 <div className="h-64 overflow-hidden relative bg-slate-100">
                   {program.image_urls && program.image_urls.length > 0 ? (
@@ -93,6 +93,9 @@ export default function ProgramsPage() {
                       G Goodwill Trust Field Archive
                     </div>
                   )}
+                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-[10px] font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
+                    <ShieldCheck className="w-3 h-3 text-emerald-400" /> Verified Initiative
+                  </span>
                 </div>
 
                 <div className="p-8 flex flex-col flex-grow justify-between">
@@ -105,12 +108,20 @@ export default function ProgramsPage() {
                     </p>
                   </div>
 
-                  <Link
-                    href={`/programs/${program._id}`}
-                    className="inline-flex items-center text-xs font-semibold tracking-wider uppercase text-[#b45309] hover:text-black transition-colors"
-                  >
-                    Examine Project Mandate <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1.5 transition-transform" />
-                  </Link>
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <Link
+                      href={`/programs/${program._id}`}
+                      className="inline-flex items-center text-xs font-bold tracking-wider uppercase text-[#b45309] hover:text-black transition-colors"
+                    >
+                      Examine Mandate <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1.5 transition-transform" />
+                    </Link>
+                    <Link
+                      href="/donate"
+                      className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200 text-[#b45309] text-[11px] font-bold transition-colors"
+                    >
+                      Donate <Heart className="w-3 h-3 fill-current" />
+                    </Link>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -120,4 +131,3 @@ export default function ProgramsPage() {
     </main>
   );
 }
-

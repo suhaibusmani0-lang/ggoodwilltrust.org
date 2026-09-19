@@ -80,12 +80,12 @@ export default function CertificatesPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white text-slate-900 pt-12 pb-20 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-gradient-to-b from-amber-50/30 via-white to-slate-50/50 text-slate-900 pt-12 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Editorial Hero */}
         <motion.div initial="hidden" animate="visible" variants={fadeUp} className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-amber-200 bg-amber-50 text-[#b45309] text-xs font-semibold tracking-widest uppercase mb-6 shadow-2xs">
-            <Award className="w-3.5 h-3.5" /> Credential Registry
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-300 bg-amber-50 text-amber-900 text-xs font-semibold tracking-widest uppercase mb-6 shadow-xs">
+            <Award className="w-3.5 h-3.5 text-amber-700" /> Credential Registry
           </div>
           <h1 className="font-serif text-5xl md:text-7xl font-normal tracking-tight text-slate-900 mb-6 leading-tight">
             Academic &amp; <span className="italic font-serif text-[#b45309]">Certificates</span>
@@ -108,21 +108,27 @@ export default function CertificatesPage() {
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 flex items-start gap-4 shadow-xs">
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-[#b45309] flex items-center justify-center shrink-0">
+            <div className="bg-white border border-emerald-100 rounded-3xl p-6 flex items-start gap-4 shadow-xs hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center justify-center shrink-0">
                 <ShieldCheck className="w-6 h-6" />
               </div>
               <div>
+                <div className="inline-block px-2.5 py-0.5 rounded-full bg-emerald-100/70 text-emerald-800 text-[10px] font-bold uppercase tracking-wider mb-1">
+                  100% Genuine
+                </div>
                 <h3 className="font-serif text-lg font-normal text-slate-900 mb-1">Authenticated Ledger</h3>
                 <p className="text-xs text-slate-600 leading-relaxed font-light">Cross-referenced against our central student register with zero external alteration risk.</p>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 flex items-start gap-4 shadow-xs">
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-[#b45309] flex items-center justify-center shrink-0">
+            <div className="bg-white border border-blue-100 rounded-3xl p-6 flex items-start gap-4 shadow-xs hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center shrink-0">
                 <Download className="w-6 h-6" />
               </div>
               <div>
+                <div className="inline-block px-2.5 py-0.5 rounded-full bg-blue-100/70 text-blue-800 text-[10px] font-bold uppercase tracking-wider mb-1">
+                  Instant Access
+                </div>
                 <h3 className="font-serif text-lg font-normal text-slate-900 mb-1">Direct PDF Certificate</h3>
                 <p className="text-xs text-slate-600 leading-relaxed font-light">Instantly access the archival print-resolution certificate once identity verification succeeds.</p>
               </div>
@@ -131,18 +137,21 @@ export default function CertificatesPage() {
 
           {/* Right: Verification Form Card */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="lg:col-span-7">
-            <div className="bg-white border border-slate-200 rounded-3xl p-8 md:p-10 shadow-xs relative">
+            <div className="bg-white border border-amber-200/80 rounded-3xl p-8 md:p-10 shadow-sm relative">
               {verifyResult === 'idle' && !verifyLoading && (
                 <>
                   <div className="mb-8">
-                    <h2 className="font-serif text-2xl font-normal text-slate-900 mb-2">Verify Credential</h2>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-[#b45309] text-[11px] font-bold uppercase tracking-wider mb-2">
+                      <Sparkles className="w-3 h-3" /> Secure Verification
+                    </div>
+                    <h2 className="font-serif text-2xl font-normal text-slate-900 mb-1">Verify Credential</h2>
                     <p className="text-xs text-slate-500">Enter the enrollment code and registered birth date to proceed.</p>
                   </div>
                   <form onSubmit={handleVerify} className="space-y-5">
                     <div className="space-y-1.5">
                       <label className="text-xs uppercase tracking-wider text-slate-700 font-medium">Enrollment / Certificate ID *</label>
                       <div className="relative">
-                        <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+                        <Hash className="absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-600 w-4 h-4" />
                         <input
                           type="text"
                           name="enrollNumber"
@@ -150,7 +159,7 @@ export default function CertificatesPage() {
                           onChange={(e) => setEnrollNumber(e.target.value.toUpperCase())}
                           required
                           placeholder="e.g. GGT-EDU-2025-0142"
-                          className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:border-[#b45309] outline-none text-slate-900 font-mono text-sm uppercase placeholder-slate-400"
+                          className="w-full pl-10 pr-4 py-3.5 bg-slate-50 border border-slate-300 rounded-xl focus:border-amber-600 focus:ring-2 focus:ring-amber-500/20 outline-none text-slate-900 font-mono text-sm uppercase placeholder-slate-400 transition-all"
                         />
                       </div>
                     </div>
@@ -158,21 +167,21 @@ export default function CertificatesPage() {
                     <div className="space-y-1.5">
                       <label className="text-xs uppercase tracking-wider text-slate-700 font-medium">Date of Birth *</label>
                       <div className="relative">
-                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+                        <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-600 w-4 h-4" />
                         <input
                           type="date"
                           name="dob"
                           value={dob}
                           onChange={(e) => setDob(e.target.value)}
                           required
-                          className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl focus:border-[#b45309] outline-none text-slate-900 text-sm"
+                          className="w-full pl-10 pr-4 py-3.5 bg-slate-50 border border-slate-300 rounded-xl focus:border-amber-600 focus:ring-2 focus:ring-amber-500/20 outline-none text-slate-900 text-sm transition-all"
                         />
                       </div>
                     </div>
 
                     <button
                       type="submit"
-                      className="w-full bg-[#d4af37] hover:bg-[#c59b27] text-black font-bold text-xs uppercase tracking-widest py-4 rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 mt-4"
+                      className="w-full bg-gradient-to-r from-[#d4af37] to-[#f59e0b] hover:from-[#c59b27] hover:to-[#d97706] text-black font-bold text-xs uppercase tracking-widest py-4 rounded-xl shadow-[0_4px_16px_rgba(212,175,55,0.25)] transition-all flex items-center justify-center gap-2 mt-4 hover:scale-[1.01]"
                     >
                       <Search className="w-4 h-4" /> Query Registry Records
                     </button>
@@ -190,41 +199,41 @@ export default function CertificatesPage() {
 
               {verifyResult === 'success' && foundCert && (
                 <div className="text-center py-4">
-                  <div className="inline-flex p-4 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 mb-5">
+                  <div className="inline-flex p-4 rounded-full bg-emerald-100/70 border border-emerald-300 text-emerald-700 mb-5 shadow-xs">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
                   <h3 className="font-serif text-3xl font-normal text-slate-900 mb-2">Credential Verified</h3>
-                  <span className="inline-block px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-mono mb-6 font-semibold">
-                    OFFICIAL RECORD MATCH
+                  <span className="inline-block px-3.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-300 text-[11px] font-mono mb-6 font-bold shadow-2xs">
+                    &bull; OFFICIAL RECORD MATCH &bull;
                   </span>
 
-                  <div className="text-left space-y-3 bg-slate-50 border border-slate-200 p-6 rounded-2xl text-xs font-sans mb-6">
-                    <div className="flex justify-between border-b border-slate-200 pb-2">
-                      <span className="text-slate-500">Candidate Name</span>
-                      <span className="font-semibold text-slate-900 text-sm">{foundCert.name}</span>
+                  <div className="text-left space-y-3 bg-gradient-to-br from-amber-50/40 via-white to-slate-50 border border-amber-200/70 p-6 rounded-2xl text-xs font-sans mb-6 shadow-xs">
+                    <div className="flex justify-between border-b border-slate-200/80 pb-2.5">
+                      <span className="text-slate-500 font-medium">Candidate Name</span>
+                      <span className="font-bold text-slate-900 text-sm">{foundCert.name}</span>
                     </div>
-                    <div className="flex justify-between border-b border-slate-200 pb-2">
-                      <span className="text-slate-500">Program / Course</span>
-                      <span className="font-medium text-slate-900">{foundCert.course}</span>
+                    <div className="flex justify-between border-b border-slate-200/80 pb-2.5">
+                      <span className="text-slate-500 font-medium">Program / Course</span>
+                      <span className="font-semibold text-blue-700">{foundCert.course}</span>
                     </div>
-                    <div className="flex justify-between border-b border-slate-200 pb-2">
-                      <span className="text-slate-500">Enrollment Number</span>
-                      <span className="font-mono text-[#b45309] font-bold">{foundCert.enrollNumber}</span>
+                    <div className="flex justify-between border-b border-slate-200/80 pb-2.5">
+                      <span className="text-slate-500 font-medium">Enrollment Number</span>
+                      <span className="font-mono text-[#b45309] font-bold bg-amber-100/60 px-2 py-0.5 rounded">{foundCert.enrollNumber}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-slate-500">Date of Issuance</span>
-                      <span className="font-mono text-slate-600">{foundCert.issueDate}</span>
+                      <span className="text-slate-500 font-medium">Date of Issuance</span>
+                      <span className="font-mono text-slate-700 font-medium">{foundCert.issueDate}</span>
                     </div>
                   </div>
 
                   <div className="flex gap-3">
                     <button
                       onClick={() => setVerifyResult('idle')}
-                      className="flex-1 py-3 rounded-xl border border-slate-300 text-slate-700 hover:text-slate-900 hover:bg-slate-50 text-xs uppercase tracking-widest font-semibold transition-all"
+                      className="flex-1 py-3.5 rounded-xl border border-slate-300 text-slate-700 hover:text-slate-900 hover:bg-slate-50 text-xs uppercase tracking-widest font-semibold transition-all"
                     >
                       New Search
                     </button>
-                    <button className="flex-1 py-3 rounded-xl bg-[#d4af37] text-black text-xs uppercase tracking-widest font-bold hover:bg-[#c59b27] transition-all flex items-center justify-center gap-2 shadow-xs">
+                    <button className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#f59e0b] hover:from-[#c59b27] hover:to-[#d97706] text-black text-xs uppercase tracking-widest font-bold transition-all flex items-center justify-center gap-2 shadow-xs">
                       <Download className="w-4 h-4" /> Download Certificate
                     </button>
                   </div>
@@ -233,7 +242,7 @@ export default function CertificatesPage() {
 
               {verifyResult === 'error' && (
                 <div className="text-center py-10">
-                  <div className="inline-flex p-4 rounded-full bg-red-50 border border-red-200 text-red-600 mb-4">
+                  <div className="inline-flex p-4 rounded-full bg-rose-50 border border-rose-200 text-rose-600 mb-4 shadow-xs">
                     <XCircle className="w-10 h-10" />
                   </div>
                   <h3 className="font-serif text-2xl font-normal text-slate-900 mb-2">Record Not Found</h3>
@@ -242,7 +251,7 @@ export default function CertificatesPage() {
                   </p>
                   <button
                     onClick={() => { setVerifyResult('idle'); setEnrollNumber(''); setDob(''); }}
-                    className="bg-[#d4af37] hover:bg-[#c59b27] text-black text-xs uppercase tracking-widest font-bold px-8 py-3 rounded-xl transition-all"
+                    className="bg-gradient-to-r from-[#d4af37] to-[#f59e0b] hover:from-[#c59b27] hover:to-[#d97706] text-black text-xs uppercase tracking-widest font-bold px-8 py-3.5 rounded-xl transition-all shadow-xs"
                   >
                     Try Again
                   </button>
@@ -256,6 +265,9 @@ export default function CertificatesPage() {
         {!loading && certs.length > 0 && (
           <div className="pt-16 border-t border-slate-200">
             <div className="text-center mb-16">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-[#b45309] text-[11px] font-bold uppercase tracking-wider mb-3">
+                <Award className="w-3.5 h-3.5" /> Official Records
+              </div>
               <h2 className="font-serif text-4xl font-normal text-slate-900 mb-3">Published Awards &amp; Merits</h2>
               <p className="text-xs uppercase tracking-widest text-slate-500 font-semibold">G Goodwill Trust Institutional Archive</p>
             </div>
@@ -267,16 +279,19 @@ export default function CertificatesPage() {
                   whileInView="visible"
                   viewport={{ once: true }}
                   variants={fadeUp}
-                  className="bg-white border border-slate-200 hover:border-[#b45309]/50 rounded-3xl overflow-hidden transition-all duration-300 group shadow-xs hover:shadow-md"
+                  className="bg-white border border-slate-200 hover:border-amber-300 rounded-3xl overflow-hidden transition-all duration-300 group shadow-xs hover:shadow-lg"
                 >
-                  <div className="aspect-[4/3] bg-slate-50 flex items-center justify-center overflow-hidden border-b border-slate-200">
+                  <div className="aspect-[4/3] bg-gradient-to-br from-amber-50/50 to-slate-100 flex items-center justify-center overflow-hidden border-b border-slate-200">
                     {cert.image_urls && cert.image_urls.length > 0 ? (
                       <img src={cert.image_urls[0]} alt={cert.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     ) : (
-                      <Award className="w-12 h-12 text-slate-400" />
+                      <Award className="w-12 h-12 text-amber-500/60" />
                     )}
                   </div>
                   <div className="p-6">
+                    <div className="inline-block px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-[10px] font-bold uppercase tracking-wider mb-2">
+                      Verified Credential
+                    </div>
                     <h3 className="font-serif text-xl font-normal mb-2 text-slate-900 group-hover:text-[#b45309] transition-colors">{cert.title}</h3>
                     <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed font-light">{cert.description}</p>
                   </div>
