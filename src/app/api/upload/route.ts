@@ -12,10 +12,16 @@ export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
+    const customFolder = formData.get('folder') as string | null;
 
     if (!file) {
       return NextResponse.json({ success: false, message: 'No file uploaded' }, { status: 400 });
     }
+
+    // Determine destination folder in Cloudinary
+    const targetFolder = customFolder 
+      ? `ggoodwilltrust/${customFolder.replace(/[^a-zA-Z0-9_-]/g, '')}`
+      : 'ggoodwilltrust/uploads';
 
     // Convert file to base64 data URI
     const bytes = await file.arrayBuffer();
@@ -25,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     // Upload directly to Cloudinary
     const result = await cloudinary.uploader.upload(base64, {
-      folder: 'ggoodwilltrust/programs',
+      folder: targetFolder,
       resource_type: 'auto',
     });
 
@@ -42,4 +48,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

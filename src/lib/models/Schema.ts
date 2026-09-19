@@ -1,5 +1,39 @@
 import mongoose from 'mongoose';
 
+// --- Hero Slide ---
+const HeroSlideSchema = new mongoose.Schema({
+  headline: { type: String, required: true, trim: true },
+  tag: { type: String, trim: true },
+  image_url: { type: String, required: true, trim: true },
+  order: { type: Number, default: 0 },
+  active: { type: Boolean, default: true },
+}, { timestamps: true });
+
+// --- Brand Partner ---
+const PartnerSchema = new mongoose.Schema({
+  name: { type: String, required: true, trim: true },
+  subtitle: { type: String, trim: true },
+  badge: { type: String, trim: true },
+  logo_url: { type: String, required: true, trim: true },
+  order: { type: Number, default: 0 },
+  active: { type: Boolean, default: true },
+}, { timestamps: true });
+
+// --- Testimonial ---
+const TestimonialSchema = new mongoose.Schema({
+  name: { type: String, required: true, trim: true },
+  review: { type: String, required: true, trim: true },
+  time: { type: String, trim: true, default: 'Recently' },
+  rating: { type: Number, default: 5, min: 1, max: 5 },
+  active: { type: Boolean, default: true },
+}, { timestamps: true });
+
+// --- Site Setting (Impact Counters & Global Config) ---
+const SiteSettingSchema = new mongoose.Schema({
+  key: { type: String, required: true, unique: true, trim: true },
+  value: { type: mongoose.Schema.Types.Mixed, required: true },
+}, { timestamps: true });
+
 // --- Program ---
 const ProgramSchema = new mongoose.Schema({
   title: { type: String, required: true, trim: true },
@@ -41,8 +75,11 @@ const DonationSchema = new mongoose.Schema({
   payment_status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
 }, { timestamps: true });
 
+export const HeroSlide = mongoose.models.HeroSlide || mongoose.model('HeroSlide', HeroSlideSchema);
+export const Partner = mongoose.models.Partner || mongoose.model('Partner', PartnerSchema);
+export const Testimonial = mongoose.models.Testimonial || mongoose.model('Testimonial', TestimonialSchema);
+export const SiteSetting = mongoose.models.SiteSetting || mongoose.model('SiteSetting', SiteSettingSchema);
 export const Program = mongoose.models.Program || mongoose.model('Program', ProgramSchema);
 export const GDocument = mongoose.models.GDocument || mongoose.model('GDocument', DocumentSchema);
 export const Certificate = mongoose.models.Certificate || mongoose.model('Certificate', CertificateSchema);
 export const Donation = mongoose.models.Donation || mongoose.model('Donation', DonationSchema);
-

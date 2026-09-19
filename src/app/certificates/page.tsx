@@ -104,7 +104,7 @@ export default function CertificatesPage() {
                 Tamper-Proof <span className="italic text-[#b45309]">Verification</span>
               </h2>
               <p className="text-sm text-slate-600 leading-relaxed font-light">
-                Every certificate issued by G Goodwill Trust carries a cryptographic registry footprint. Enter the unique identifier printed on the credential along with the recipient’s registered date of birth.
+                Every certificate issued by G Goodwill Trust carries a cryptographic registry footprint. Enter the unique identifier printed on the credential along with the recipient&apos;s registered date of birth.
               </p>
             </div>
 

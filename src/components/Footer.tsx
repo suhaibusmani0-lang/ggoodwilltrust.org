@@ -143,6 +143,19 @@ export default function Footer() {
             </Link>
           </div>
         </div>
+
+        {/* Developer Credit */}
+        <div className="mt-6 text-center text-[10px] text-slate-400">
+          Developed by{' '}
+          <a
+            href="https://www.zarnetic.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#b45309] hover:text-[#d4af37] font-semibold transition-colors"
+          >
+            Zarnetic
+          </a>
+        </div>
       </div>
     </footer>
   );

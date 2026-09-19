@@ -42,7 +42,7 @@ const team = [
   {
     name: 'Mr. Suhaib Usmani',
     role: 'Managing Director',
-    desc: 'Guiding the foundation’s strategic vision and operations, ensuring every philanthropic pledge translates into verified on-ground community progress.',
+    desc: 'Guiding the foundation\'s strategic vision and operations, ensuring every philanthropic pledge translates into verified on-ground community progress.',
     initial: 'S',
   },
   {

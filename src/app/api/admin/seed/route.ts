@@ -1,12 +1,159 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/db';
-import { Program, GDocument, Certificate } from '@/lib/models/Schema';
+import { Program, GDocument, Certificate, HeroSlide, Partner, Testimonial, SiteSetting } from '@/lib/models/Schema';
 
 export async function POST() {
   try {
     await connectDB();
 
-    // 1. Seed Programs (only if collection is empty or force seed)
+    // 1. Seed Hero Slides
+    const existingHero = await HeroSlide.countDocuments();
+    if (existingHero === 0) {
+      await HeroSlide.create([
+        {
+          tag: 'Chapter 01 • Education',
+          headline: 'Nurturing young minds with dignity, books & dreams',
+          image_url: '/assets/hompage1.jpg',
+          order: 1,
+          active: true,
+        },
+        {
+          tag: 'Chapter 02 • Healthcare',
+          headline: 'Bringing vital medical expertise to underserved communities',
+          image_url: '/assets/hompage2.jpg',
+          order: 2,
+          active: true,
+        },
+        {
+          tag: 'Chapter 03 • Sustenance',
+          headline: 'Direct food security & emergency humanitarian aid',
+          image_url: '/assets/hompage3.jpg',
+          order: 3,
+          active: true,
+        },
+        {
+          tag: 'Chapter 04 • Empowerment',
+          headline: 'Vocational avenues fostering financial independence',
+          image_url: '/assets/hompage4.jpg',
+          order: 4,
+          active: true,
+        },
+        {
+          tag: 'Chapter 05 • Brotherhood',
+          headline: 'Spreading harmony and grassroots care across New Delhi',
+          image_url: '/assets/hompage5.jpg',
+          order: 5,
+          active: true,
+        },
+      ]);
+    }
+
+    // 2. Seed Brand Partners & Alliances
+    const existingPartners = await Partner.countDocuments();
+    if (existingPartners === 0) {
+      await Partner.create([
+        {
+          name: 'The Times of India',
+          subtitle: 'Media & Civic Outreach',
+          badge: 'Media Alliance',
+          logo_url: '/partners/times-of-india.svg',
+          order: 1,
+          active: true,
+        },
+        {
+          name: 'Colgate',
+          subtitle: 'Oral Health & Hygiene Camps',
+          badge: 'Health Partner',
+          logo_url: '/partners/colgate.svg',
+          order: 2,
+          active: true,
+        },
+        {
+          name: 'Vidyanjali',
+          subtitle: 'Ministry of Education, Govt. of India',
+          badge: 'Govt. Initiative',
+          logo_url: '/partners/vidyanjali.png',
+          order: 3,
+          active: true,
+        },
+        {
+          name: 'British Council',
+          subtitle: 'International Education & Cultural Relations',
+          badge: 'Global Council',
+          logo_url: '/partners/british-council.svg',
+          order: 4,
+          active: true,
+        },
+        {
+          name: 'Mercedes-Benz',
+          subtitle: 'Corporate Social Responsibility (CSR)',
+          badge: 'CSR Partner',
+          logo_url: '/partners/mercedes-benz.svg',
+          order: 5,
+          active: true,
+        },
+        {
+          name: 'Zarnetic',
+          subtitle: 'Digital Infrastructure & IT Operations',
+          badge: 'Technology Partner',
+          logo_url: '/partners/zarnetic.svg',
+          order: 6,
+          active: true,
+        },
+        {
+          name: 'NCF',
+          subtitle: 'Noble Citizen Foundation',
+          badge: 'Civic Foundation',
+          logo_url: '/partners/ncf.webp',
+          order: 7,
+          active: true,
+        },
+        {
+          name: 'Spread Smiles Foundation',
+          subtitle: 'Grassroots Community & Child Welfare',
+          badge: 'Community NGO',
+          logo_url: '/partners/spread-smiles.svg',
+          order: 8,
+          active: true,
+        },
+      ]);
+    }
+
+    // 3. Seed Testimonials
+    const existingTestimonials = await Testimonial.countDocuments();
+    if (existingTestimonials === 0) {
+      await Testimonial.create([
+        { name: 'Mohd Minhaj Alam', review: 'Amazing NGO doing real, impactful work on the ground in Shaheen Bagh. Truly inspiring commitment.', time: '2 weeks ago', rating: 5, active: true },
+        { name: 'Dr. Bushra Shams', review: 'Very transparent and dedicated team. Their educational relief camps genuinely transform needy children.', time: '1 month ago', rating: 5, active: true },
+        { name: 'Suhaib Abbasi', review: 'Proud to see the grassroots footprint of G Goodwill Trust. Professional, genuine, and selfless.', time: '2 months ago', rating: 5, active: true },
+        { name: 'Farid Baig', review: 'Commendable ration relief drives. You can see your donation reaching right into the hands of widows and daily wagers.', time: '3 months ago', rating: 5, active: true },
+        { name: 'Zainab Khan', review: 'Attended their free health camp in Okhla. Free doctors, diagnostics and medicine for all without bias.', time: '1 month ago', rating: 5, active: true },
+      ]);
+    }
+
+    // 4. Seed Impact Stats & Settings
+    await SiteSetting.findOneAndUpdate(
+      { key: 'stat_rations' },
+      { key: 'stat_rations', value: 2000 },
+      { upsert: true }
+    );
+    await SiteSetting.findOneAndUpdate(
+      { key: 'stat_rakhis' },
+      { key: 'stat_rakhis', value: 5100 },
+      { upsert: true }
+    );
+    await SiteSetting.findOneAndUpdate(
+      { key: 'stat_beneficiaries' },
+      { key: 'stat_beneficiaries', value: 1100 },
+      { upsert: true }
+    );
+    await SiteSetting.findOneAndUpdate(
+      { key: 'stat_clinics' },
+      { key: 'stat_clinics', value: 1000 },
+      { upsert: true }
+    );
+
+    // 5. Seed Programs
     const existingPrograms = await Program.countDocuments();
     if (existingPrograms === 0) {
       await Program.create([
@@ -28,7 +175,7 @@ export async function POST() {
       ]);
     }
 
-    // 2. Seed Official Documents
+    // 6. Seed Official Documents
     const existingDocs = await GDocument.countDocuments();
     if (existingDocs === 0) {
       await GDocument.create([
@@ -53,7 +200,7 @@ export async function POST() {
       ]);
     }
 
-    // 3. Seed Sample Certificates for Verification Testing
+    // 7. Seed Sample Certificates for Verification Testing
     const existingCerts = await Certificate.countDocuments();
     if (existingCerts === 0) {
       await Certificate.create([
@@ -80,7 +227,7 @@ export async function POST() {
 
     return NextResponse.json({
       success: true,
-      message: 'Initial data seeded successfully into MongoDB!',
+      message: 'Initial data (Hero, Partners, Stats, Testimonials, Programs, Docs) seeded successfully into MongoDB!',
     });
   } catch (error: any) {
     console.error('Seed error:', error);
@@ -90,4 +237,3 @@ export async function POST() {
     }, { status: 500 });
   }
 }
-

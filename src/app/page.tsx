@@ -45,35 +45,118 @@ const staggerContainer: Variants = {
 }
 
 /* ═══════════════════════════════════════════
-   HERO IMAGES
+   DEFAULT / FALLBACK DATA
    ═══════════════════════════════════════════ */
 
-const heroImages = [
+interface HeroSlideData {
+  _id?: string
+  src?: string
+  image_url?: string
+  tag: string
+  headline: string
+}
+
+const DEFAULT_HERO_IMAGES: HeroSlideData[] = [
   {
-    src: '/assets/hompage1.jpg',
+    image_url: '/assets/hompage1.jpg',
     tag: 'Chapter 01 • Education',
     headline: 'Nurturing young minds with dignity, books & dreams'
   },
   {
-    src: '/assets/hompage2.jpg',
+    image_url: '/assets/hompage2.jpg',
     tag: 'Chapter 02 • Healthcare',
     headline: 'Bringing vital medical expertise to underserved communities'
   },
   {
-    src: '/assets/hompage3.jpg',
+    image_url: '/assets/hompage3.jpg',
     tag: 'Chapter 03 • Sustenance',
     headline: 'Direct food security & emergency humanitarian aid'
   },
   {
-    src: '/assets/hompage4.jpg',
+    image_url: '/assets/hompage4.jpg',
     tag: 'Chapter 04 • Empowerment',
     headline: 'Vocational avenues fostering financial independence'
   },
   {
-    src: '/assets/hompage5.jpg',
+    image_url: '/assets/hompage5.jpg',
     tag: 'Chapter 05 • Brotherhood',
     headline: 'Spreading harmony and grassroots care across New Delhi'
   }
+]
+
+interface PartnerData {
+  _id?: string
+  name: string
+  subtitle: string
+  badge: string
+  logo_url: string
+}
+
+const DEFAULT_PARTNERS: PartnerData[] = [
+  {
+    name: 'The Times of India',
+    subtitle: 'Media & Civic Outreach',
+    badge: 'Media Alliance',
+    logo_url: '/partners/times-of-india.svg'
+  },
+  {
+    name: 'Colgate',
+    subtitle: 'Oral Health & Hygiene Camps',
+    badge: 'Health Partner',
+    logo_url: '/partners/colgate.svg'
+  },
+  {
+    name: 'Vidyanjali',
+    subtitle: 'Ministry of Education, Govt. of India',
+    badge: 'Govt. Initiative',
+    logo_url: '/partners/vidyanjali.png'
+  },
+  {
+    name: 'British Council',
+    subtitle: 'International Education & Cultural Relations',
+    badge: 'Global Council',
+    logo_url: '/partners/british-council.svg'
+  },
+  {
+    name: 'Mercedes-Benz',
+    subtitle: 'Corporate Social Responsibility (CSR)',
+    badge: 'CSR Partner',
+    logo_url: '/partners/mercedes-benz.svg'
+  },
+  {
+    name: 'Zarnetic',
+    subtitle: 'Digital Infrastructure & IT Operations',
+    badge: 'Technology Partner',
+    logo_url: '/partners/zarnetic.svg'
+  },
+  {
+    name: 'NCF',
+    subtitle: 'Noble Citizen Foundation',
+    badge: 'Civic Foundation',
+    logo_url: '/partners/ncf.webp'
+  },
+  {
+    name: 'Spread Smiles Foundation',
+    subtitle: 'Grassroots Community & Child Welfare',
+    badge: 'Community NGO',
+    logo_url: '/partners/spread-smiles.svg'
+  }
+]
+
+interface TestimonialData {
+  _id?: string
+  name: string
+  review: string
+  time: string
+  rating?: number
+}
+
+const DEFAULT_TESTIMONIALS: TestimonialData[] = [
+  { name: 'Mohd Minhaj Alam', review: 'Amazing NGO doing real, impactful work on the ground in Shaheen Bagh. Truly inspiring commitment.', time: '2 weeks ago', rating: 5 },
+  { name: 'Dr. Bushra Shams', review: 'Very transparent and dedicated team. Their educational relief camps genuinely transform needy children.', time: '1 month ago', rating: 5 },
+  { name: 'Suhaib Abbasi', review: 'Proud to see the grassroots footprint of G Goodwill Trust. Professional, genuine, and selfless.', time: '2 months ago', rating: 5 },
+  { name: 'Farid Baig', review: 'Commendable ration relief drives. You can see your donation reaching right into the hands of widows and daily wagers.', time: '3 months ago', rating: 5 },
+  { name: 'Zainab Khan', review: 'Attended their free health camp in Okhla. Free doctors, diagnostics and medicine for all without bias.', time: '1 month ago', rating: 5 }
 ]
 
 /* ═══════════════════════════════════════════
@@ -229,13 +312,73 @@ export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isAutoPlay, setIsAutoPlay] = useState(true)
 
-  const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % heroImages.length)
+  // Dynamic state loaded from MongoDB
+  const [heroSlides, setHeroSlides] = useState<HeroSlideData[]>(DEFAULT_HERO_IMAGES)
+  const [partners, setPartners] = useState<PartnerData[]>(DEFAULT_PARTNERS)
+  const [testimonials, setTestimonials] = useState<TestimonialData[]>(DEFAULT_TESTIMONIALS)
+  const [stats, setStats] = useState({
+    stat_rations: 2000,
+    stat_rakhis: 5100,
+    stat_beneficiaries: 1100,
+    stat_clinics: 1000,
+  })
+
+  // Fetch dynamic content from MongoDB APIs on mount
+  useEffect(() => {
+    // 1. Hero Slides
+    fetch('/api/hero')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+          setHeroSlides(data.data)
+        }
+      })
+      .catch(() => {})
+
+    // 2. Brand Partners
+    fetch('/api/partners')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+          setPartners(data.data)
+        }
+      })
+      .catch(() => {})
+
+    // 3. Impact Stats
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data) {
+          setStats(prev => ({
+            ...prev,
+            ...(data.data.stat_rations && { stat_rations: Number(data.data.stat_rations) }),
+            ...(data.data.stat_rakhis && { stat_rakhis: Number(data.data.stat_rakhis) }),
+            ...(data.data.stat_beneficiaries && { stat_beneficiaries: Number(data.data.stat_beneficiaries) }),
+            ...(data.data.stat_clinics && { stat_clinics: Number(data.data.stat_clinics) }),
+          }))
+        }
+      })
+      .catch(() => {})
+
+    // 4. Testimonials
+    fetch('/api/testimonials')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+          setTestimonials(data.data)
+        }
+      })
+      .catch(() => {})
   }, [])
 
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
+  }, [heroSlides.length])
+
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length)
-  }, [])
+    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
+  }, [heroSlides.length])
 
   useEffect(() => {
     if (!isAutoPlay) return
@@ -346,37 +489,40 @@ export default function HomePage() {
               <div className="relative rounded-3xl overflow-hidden bg-white border border-slate-200 p-2.5 shadow-xl">
                 {/* Image Frame */}
                 <div className="relative h-[390px] sm:h-[480px] w-full rounded-2xl overflow-hidden bg-slate-900">
-                  {heroImages.map((item, idx) => (
-                    <div
-                      key={item.src}
-                      className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                        idx === currentSlide
-                          ? 'opacity-100 z-10'
-                          : 'opacity-0 z-0 pointer-events-none'
-                      }`}
-                    >
-                      <Image
-                        src={item.src}
-                        alt={item.headline}
-                        fill
-                        priority={idx === 0}
-                        className="object-cover brightness-95"
-                        sizes="(max-width: 1024px) 100vw, 45vw"
-                      />
-                      {/* Vignette Shadow */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                      
-                      {/* Captions */}
-                      <div className="absolute bottom-6 left-6 right-6 z-20">
-                        <span className="inline-block text-[#d4af37] text-[10px] tracking-[0.25em] font-semibold uppercase mb-2">
-                          {item.tag}
-                        </span>
-                        <p className="text-white font-serif text-lg sm:text-xl font-normal leading-snug">
-                          &ldquo;{item.headline}&rdquo;
-                        </p>
+                  {heroSlides.map((item, idx) => {
+                    const imgSrc = item.image_url || item.src || '/assets/hompage1.jpg'
+                    return (
+                      <div
+                        key={item._id || imgSrc + idx}
+                        className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                          idx === currentSlide
+                            ? 'opacity-100 z-10'
+                            : 'opacity-0 z-0 pointer-events-none'
+                        }`}
+                      >
+                        <Image
+                          src={imgSrc}
+                          alt={item.headline}
+                          fill
+                          priority={idx === 0}
+                          className="object-cover brightness-95"
+                          sizes="(max-width: 1024px) 100vw, 45vw"
+                        />
+                        {/* Vignette Shadow */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+                        
+                        {/* Captions */}
+                        <div className="absolute bottom-6 left-6 right-6 z-20">
+                          <span className="inline-block text-[#d4af37] text-[10px] tracking-[0.25em] font-semibold uppercase mb-2">
+                            {item.tag}
+                          </span>
+                          <p className="text-white font-serif text-lg sm:text-xl font-normal leading-snug">
+                            &ldquo;{item.headline}&rdquo;
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  })}
 
                   {/* Curated Navigation Controls */}
                   <button
@@ -398,7 +544,7 @@ export default function HomePage() {
                 {/* Progress Counter Bar */}
                 <div className="flex items-center justify-between px-5 py-3 bg-slate-50 rounded-b-xl border-t border-slate-100">
                   <div className="flex items-center gap-2">
-                    {heroImages.map((_, idx) => (
+                    {heroSlides.map((_, idx) => (
                       <button
                         key={idx}
                         onClick={() => setCurrentSlide(idx)}
@@ -412,7 +558,7 @@ export default function HomePage() {
                     ))}
                   </div>
                   <span className="text-[11px] font-mono text-slate-500 font-medium">
-                    0{currentSlide + 1} / 0{heroImages.length}
+                    0{currentSlide + 1} / 0{heroSlides.length}
                   </span>
                 </div>
               </div>
@@ -455,10 +601,10 @@ export default function HomePage() {
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {[
-              { label: 'Families Sustained with Rations', value: 2000, suffix: '+', icon: HandHeart },
-              { label: 'Rakhis Tied for Social Harmony', value: 5100, suffix: '+', icon: Heart },
-              { label: 'Beneficiaries Reached via Camps', value: 1100, suffix: '+', icon: Users },
-              { label: 'Free Clinical Consultations', value: 1000, suffix: '+', icon: HeartPulse }
+              { label: 'Families Sustained with Rations', value: stats.stat_rations, suffix: '+', icon: HandHeart },
+              { label: 'Rakhis Tied for Social Harmony', value: stats.stat_rakhis, suffix: '+', icon: Heart },
+              { label: 'Beneficiaries Reached via Camps', value: stats.stat_beneficiaries, suffix: '+', icon: Users },
+              { label: 'Free Clinical Consultations', value: stats.stat_clinics, suffix: '+', icon: HeartPulse }
             ].map((stat, idx) => (
               <motion.div
                 key={idx}
@@ -558,7 +704,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          4. INFINITE MARQUEE REVIEWS (CURATED)
+          4. INFINITE MARQUEE REVIEWS (CURATED & DYNAMIC)
           ═══════════════════════════════════════ */}
       <section className="py-16 lg:py-20 bg-[#f8fafc] border-y border-slate-200 relative overflow-hidden">
         <div className="container mx-auto px-6 mb-12 text-center">
@@ -590,15 +736,9 @@ export default function HomePage() {
           <div className="flex animate-marquee hover:[animation-play-state:paused] w-max py-2">
             {[...Array(2)].map((_, setIdx) => (
               <div key={setIdx} className="flex gap-6 pr-6">
-                {[
-                  { name: 'Mohd Minhaj Alam', review: 'Amazing NGO doing real, impactful work on the ground in Shaheen Bagh. Truly inspiring commitment.', time: '2 weeks ago' },
-                  { name: 'Dr. Bushra Shams', review: 'Very transparent and dedicated team. Their educational relief camps genuinely transform needy children.', time: '1 month ago' },
-                  { name: 'Suhaib Abbasi', review: 'Proud to see the grassroots footprint of G Goodwill Trust. Professional, genuine, and selfless.', time: '2 months ago' },
-                  { name: 'Farid Baig', review: 'Commendable ration relief drives. You can see your donation reaching right into the hands of widows and daily wagers.', time: '3 months ago' },
-                  { name: 'Zainab Khan', review: 'Attended their free health camp in Okhla. Free doctors, diagnostics and medicine for all without bias.', time: '1 month ago' }
-                ].map((review, idx) => (
+                {testimonials.map((review, idx) => (
                   <div
-                    key={`${setIdx}-${idx}`}
+                    key={`${setIdx}-${review._id || idx}`}
                     className="w-[340px] sm:w-[390px] flex-shrink-0 bg-white border border-slate-200 rounded-2xl p-6 sm:p-7 shadow-xs hover:border-[#b45309]/50 transition-all duration-300 flex flex-col justify-between"
                   >
                     <p className="text-slate-700 text-sm leading-relaxed font-light italic mb-6">
@@ -610,7 +750,7 @@ export default function HomePage() {
                         <p className="text-slate-400 text-xs">{review.time}</p>
                       </div>
                       <div className="flex text-[#d4af37]">
-                        {[1, 2, 3, 4, 5].map((star) => (
+                        {[...Array(review.rating || 5)].map((_, star) => (
                           <Star key={star} className="w-3.5 h-3.5 fill-current" />
                         ))}
                       </div>
@@ -727,7 +867,7 @@ export default function HomePage() {
       </section>
 
       {/* ═══════════════════════════════════════
-          7. COLLABORATIVE BRAND PARTNERS & ALLIANCES
+          7. COLLABORATIVE BRAND PARTNERS & ALLIANCES (DYNAMIC FROM MONGODB)
           ═══════════════════════════════════════ */}
       <section className="pt-6 pb-20 bg-[#f8fafc] border-t border-slate-200 relative overflow-hidden">
         <div className="container mx-auto px-6 mb-12 text-center">
@@ -751,130 +891,9 @@ export default function HomePage() {
           <div className="flex animate-marquee hover:[animation-play-state:paused] w-max py-2 items-center">
             {[...Array(2)].map((_, setIdx) => (
               <div key={setIdx} className="flex gap-6 pr-6 items-center">
-                {[
-                  {
-                    name: 'The Times of India',
-                    subtitle: 'Media & Civic Outreach',
-                    badge: 'Media Alliance',
-                    logo: (
-                      <div className="relative h-8 w-44 flex items-center justify-center">
-                        <Image
-                          src="/partners/times-of-india.svg"
-                          alt="The Times of India"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    )
-                  },
-                  {
-                    name: 'Colgate',
-                    subtitle: 'Oral Health & Hygiene Camps',
-                    badge: 'Health Partner',
-                    logo: (
-                      <div className="relative h-9 w-32 flex items-center justify-center">
-                        <Image
-                          src="/partners/colgate.svg"
-                          alt="Colgate"
-                          fill
-                          className="object-contain drop-shadow-[0_2px_8px_rgba(225,29,72,0.2)]"
-                        />
-                      </div>
-                    )
-                  },
-                  {
-                    name: 'Vidyanjali',
-                    subtitle: 'Ministry of Education, Govt. of India',
-                    badge: 'Govt. Initiative',
-                    logo: (
-                      <div className="relative h-11 w-36 flex items-center justify-center bg-white rounded-lg px-2 py-1 shadow-2xs border border-slate-100">
-                        <Image
-                          src="/partners/vidyanjali.png"
-                          alt="Vidyanjali - A School Volunteer Programme"
-                          fill
-                          className="object-contain p-0.5"
-                        />
-                      </div>
-                    )
-                  },
-                  {
-                    name: 'British Council',
-                    subtitle: 'International Education & Cultural Relations',
-                    badge: 'Global Council',
-                    logo: (
-                      <div className="relative h-8 w-40 flex items-center justify-center">
-                        <Image
-                          src="/partners/british-council.svg"
-                          alt="British Council"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    )
-                  },
-                  {
-                    name: 'Mercedes-Benz',
-                    subtitle: 'Corporate Social Responsibility (CSR)',
-                    badge: 'CSR Partner',
-                    logo: (
-                      <div className="relative h-10 w-44 flex items-center justify-center">
-                        <Image
-                          src="/partners/mercedes-benz.svg"
-                          alt="Mercedes-Benz"
-                          fill
-                          className="object-contain brightness-0"
-                        />
-                      </div>
-                    )
-                  },
-                  {
-                    name: 'Zarnetic',
-                    subtitle: 'Digital Infrastructure & IT Operations',
-                    badge: 'Technology Partner',
-                    logo: (
-                      <div className="relative h-9 w-36 flex items-center justify-center">
-                        <Image
-                          src="/partners/zarnetic.svg"
-                          alt="Zarnetic Digital Growth Agency"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    )
-                  },
-                  {
-                    name: 'NCF',
-                    subtitle: 'Noble Citizen Foundation',
-                    badge: 'Civic Foundation',
-                    logo: (
-                      <div className="relative h-10 w-36 flex items-center justify-center bg-white rounded-lg px-2 py-1 shadow-2xs border border-slate-100">
-                        <Image
-                          src="/partners/ncf.webp"
-                          alt="Noble Citizen Foundation"
-                          fill
-                          className="object-contain p-0.5"
-                        />
-                      </div>
-                    )
-                  },
-                  {
-                    name: 'Spread Smiles Foundation',
-                    subtitle: 'Grassroots Community & Child Welfare',
-                    badge: 'Community NGO',
-                    logo: (
-                      <div className="relative h-9 w-44 flex items-center justify-center">
-                        <Image
-                          src="/partners/spread-smiles.svg"
-                          alt="Spread Smiles Foundation"
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                    )
-                  }
-                ].map((partner, idx) => (
+                {partners.map((partner, idx) => (
                   <div
-                    key={`${setIdx}-${idx}`}
+                    key={`${setIdx}-${partner._id || idx}`}
                     className="w-[280px] sm:w-[320px] flex-shrink-0 h-[120px] bg-white border border-slate-200 rounded-2xl px-6 py-4 shadow-xs hover:border-[#b45309]/50 hover:shadow-md transition-all duration-300 flex flex-col justify-between group"
                   >
                     <div className="flex items-center justify-between">
@@ -884,8 +903,17 @@ export default function HomePage() {
                       <span className="w-1.5 h-1.5 rounded-full bg-slate-200 group-hover:bg-[#b45309] transition-colors" />
                     </div>
 
-                    <div className="flex items-center justify-center my-auto">
-                      {partner.logo}
+                    <div className="flex items-center justify-center my-auto relative h-10 w-full">
+                      {partner.logo_url ? (
+                        <Image
+                          src={partner.logo_url}
+                          alt={partner.name}
+                          fill
+                          className="object-contain"
+                        />
+                      ) : (
+                        <span className="font-serif text-sm font-semibold text-slate-800">{partner.name}</span>
+                      )}
                     </div>
 
                     <div className="text-[10px] text-slate-500 tracking-wide text-center truncate font-light">

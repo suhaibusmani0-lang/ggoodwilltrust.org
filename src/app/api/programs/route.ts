@@ -36,6 +36,37 @@ export async function POST(req: NextRequest) {
   }
 }
 
+export async function PUT(req: NextRequest) {
+  try {
+    await connectDB();
+    const body = await req.json();
+    const { id, title, description, image_urls } = body;
+
+    if (!id) {
+      return NextResponse.json({ success: false, message: 'Program ID is required' }, { status: 400 });
+    }
+
+    const updated = await Program.findByIdAndUpdate(
+      id,
+      {
+        ...(title && { title }),
+        ...(description !== undefined && { description }),
+        ...(image_urls && { image_urls: Array.isArray(image_urls) ? image_urls : [image_urls] }),
+      },
+      { new: true }
+    );
+
+    if (!updated) {
+      return NextResponse.json({ success: false, message: 'Program not found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ success: true, data: updated });
+  } catch (error: any) {
+    console.error('Program update error:', error);
+    return NextResponse.json({ success: false, message: error.message || 'Failed to update program' }, { status: 500 });
+  }
+}
+
 export async function DELETE(req: NextRequest) {
   try {
     await connectDB();
