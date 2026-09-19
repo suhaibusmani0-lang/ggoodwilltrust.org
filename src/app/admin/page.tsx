@@ -1161,10 +1161,25 @@ export default function AdminDashboard() {
                       </div>
                     )}
                   </label>
+                  <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
+                    <span className="h-px bg-slate-200 flex-1" />
+                    <span>OR PASTE URL</span>
+                    <span className="h-px bg-slate-200 flex-1" />
+                  </div>
+                  <input
+                    type="url"
+                    placeholder="https://... or paste image URL"
+                    value={newHero.image_url}
+                    onChange={e => setNewHero({ ...newHero, image_url: e.target.value })}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:border-[#b45309]"
+                  />
                   {newHero.image_url && (
-                    <div className="flex items-center gap-3 p-2 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span className="truncate font-mono">{newHero.image_url}</span>
+                    <div className="flex items-center gap-3 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800">
+                      <img src={newHero.image_url} alt="Preview" className="w-14 h-10 object-cover rounded-lg border border-emerald-200 shrink-0 bg-white" />
+                      <div className="overflow-hidden">
+                        <span className="font-bold text-emerald-900 block">Photo Attached</span>
+                        <span className="truncate block font-mono text-[10px] text-emerald-700 max-w-[280px]">{newHero.image_url.substring(0, 50)}...</span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1268,10 +1283,25 @@ export default function AdminDashboard() {
                       </div>
                     )}
                   </label>
+                  <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
+                    <span className="h-px bg-slate-200 flex-1" />
+                    <span>OR PASTE URL</span>
+                    <span className="h-px bg-slate-200 flex-1" />
+                  </div>
+                  <input
+                    type="url"
+                    placeholder="https://... or paste logo URL"
+                    value={newPartner.logo_url}
+                    onChange={e => setNewPartner({ ...newPartner, logo_url: e.target.value })}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:border-blue-500"
+                  />
                   {newPartner.logo_url && (
-                    <div className="flex items-center gap-3 p-2 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span className="truncate font-mono">{newPartner.logo_url}</span>
+                    <div className="flex items-center gap-3 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800">
+                      <img src={newPartner.logo_url} alt="Preview" className="w-12 h-12 object-contain rounded-lg border border-emerald-200 shrink-0 bg-white p-1" />
+                      <div className="overflow-hidden">
+                        <span className="font-bold text-emerald-900 block">Logo Attached</span>
+                        <span className="truncate block font-mono text-[10px] text-emerald-700 max-w-[280px]">{newPartner.logo_url.substring(0, 50)}...</span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1431,10 +1461,25 @@ export default function AdminDashboard() {
                       </div>
                     )}
                   </label>
+                  <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
+                    <span className="h-px bg-slate-200 flex-1" />
+                    <span>OR PASTE URL</span>
+                    <span className="h-px bg-slate-200 flex-1" />
+                  </div>
+                  <input
+                    type="url"
+                    placeholder="https://... or paste image URL"
+                    value={newProgram.image_url}
+                    onChange={e => setNewProgram({ ...newProgram, image_url: e.target.value })}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:border-emerald-500"
+                  />
                   {newProgram.image_url && (
-                    <div className="flex items-center gap-3 p-2 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span className="truncate font-mono">{newProgram.image_url}</span>
+                    <div className="flex items-center gap-3 p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-xs text-emerald-800">
+                      <img src={newProgram.image_url} alt="Preview" className="w-14 h-10 object-cover rounded-lg border border-emerald-200 shrink-0 bg-white" />
+                      <div className="overflow-hidden">
+                        <span className="font-bold text-emerald-900 block">Photo Attached</span>
+                        <span className="truncate block font-mono text-[10px] text-emerald-700 max-w-[280px]">{newProgram.image_url.substring(0, 50)}...</span>
+                      </div>
                     </div>
                   )}
                 </div>
