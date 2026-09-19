@@ -46,10 +46,10 @@ const team = [
     initial: 'S',
   },
   {
-    name: 'Mrs. Beena Verma',
+    name: 'Mr. Javed Ali Khan',
     role: 'Treasurer',
     desc: 'Our trusted financial custodian, upholding strict institutional transparency and accountability across all public donations and audited accounts.',
-    initial: 'B',
+    initial: 'J',
   },
   {
     name: 'Mr. Syed Iftekhar Ul Ameen',
