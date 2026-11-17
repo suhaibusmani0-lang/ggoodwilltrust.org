@@ -93,10 +93,35 @@ function MedhaParikshaContent() {
 
   const handleShare = () => {
     if (typeof window !== 'undefined') {
-      navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
+      const shareUrl = 'https://www.ggoodwilltrust.org/medha-pariksha';
+      if (navigator.share) {
+        navigator.share({
+          title: 'Dr. A.P.J. Abdul Kalam Medha Pariksha 2026-2027',
+          text: 'Apply now for Dr. A.P.J. Abdul Kalam Medha Pariksha! Combined Mega Cash Prizes: 1st ₹21,000, 2nd ₹11,000, 3rd ₹5,100 + Trophies for Classes 6-12. Registration Fee: ₹100 Only.',
+          url: shareUrl,
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(shareUrl);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      }
     }
+  };
+
+  const shareOnWhatsApp = () => {
+    const text = encodeURIComponent(
+      `*Dr. A.P.J. Abdul Kalam Medha Pariksha 2026-2027*\n` +
+      `G Goodwill Trust • National Merit Talent Hunt\n\n` +
+      `🏆 *Combined Mega Cash Prizes Across Categories:*\n` +
+      `🥇 *1st Mega Prize:* ₹21,000 + Trophy + Certificate\n` +
+      `🥈 *2nd Mega Prize:* ₹11,000 + Trophy + Certificate\n` +
+      `🥉 *3rd Mega Prize:* ₹5,100 + Trophy + Certificate\n\n` +
+      `📚 *Eligible Classes:* 6th to 12th (Sub-Junior, Junior & Senior)\n` +
+      `💰 *Registration Fee:* ₹100 Only (Instant Verifiable Receipt)\n` +
+      `📅 *Last Date to Apply:* 31.12.2026\n\n` +
+      `👉 *Apply Online & Get Digital Receipt:* \nhttps://www.ggoodwilltrust.org/medha-pariksha`
+    );
+    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
 
   // Form submission with Razorpay Payment Integration (₹100 fee)
@@ -591,12 +616,20 @@ function MedhaParikshaContent() {
             </a>
 
             <button
+              onClick={shareOnWhatsApp}
+              className="bg-[#25D366] hover:bg-[#20bd5a] text-white px-5 py-3 rounded-full text-xs font-bold tracking-wider uppercase transition-all shadow-xs flex items-center gap-1.5"
+              title="Share Directly on WhatsApp"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              <span>Share on WhatsApp</span>
+            </button>
+
+            <button
               onClick={handleShare}
               className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3 rounded-full text-xs font-semibold tracking-wider uppercase transition-colors flex items-center gap-1.5 border border-slate-200"
-              title="Share Program Link"
+              title="Copy Link"
             >
-              <Share2 className="w-3.5 h-3.5 text-slate-600" />
-              <span>{copied ? 'Copied!' : 'Share'}</span>
+              <span>{copied ? 'Copied Link!' : 'Copy Link'}</span>
             </button>
           </motion.div>
 
