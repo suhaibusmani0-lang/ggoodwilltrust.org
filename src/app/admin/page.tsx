@@ -27,11 +27,12 @@ import {
   Building2,
   Save,
   Check,
-  Edit2
+  Edit2,
+  GraduationCap
 } from 'lucide-react';
 import Link from 'next/link';
 
-type TabType = 'overview' | 'hero' | 'partners' | 'stats' | 'programs' | 'testimonials' | 'documents' | 'certificates' | 'donations';
+type TabType = 'overview' | 'hero' | 'partners' | 'stats' | 'programs' | 'testimonials' | 'documents' | 'certificates' | 'donations' | 'scholarship';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -43,6 +44,12 @@ export default function AdminDashboard() {
   const [heroSlides, setHeroSlides] = useState<any[]>([]);
   const [partners, setPartners] = useState<any[]>([]);
   const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [scholarshipRegistrations, setScholarshipRegistrations] = useState<any[]>([]);
+  const [scholarshipMeta, setScholarshipMeta] = useState<{ total: number; completed: number; totalFeesCollected: number }>({
+    total: 0,
+    completed: 0,
+    totalFeesCollected: 0,
+  });
   const [programs, setPrograms] = useState<any[]>([]);
   const [documents, setDocuments] = useState<any[]>([]);
   const [certificates, setCertificates] = useState<any[]>([]);
@@ -82,7 +89,7 @@ export default function AdminDashboard() {
 
   const fetchData = useCallback(async () => {
     try {
-      const [heroRes, partRes, testRes, progRes, docRes, certRes, setRes] = await Promise.all([
+      const [heroRes, partRes, testRes, progRes, docRes, certRes, setRes, medhaRes] = await Promise.all([
         fetch('/api/hero').then(r => r.json()).catch(() => ({ data: [] })),
         fetch('/api/partners').then(r => r.json()).catch(() => ({ data: [] })),
         fetch('/api/testimonials').then(r => r.json()).catch(() => ({ data: [] })),
@@ -90,6 +97,7 @@ export default function AdminDashboard() {
         fetch('/api/documents').then(r => r.json()).catch(() => ({ data: [] })),
         fetch('/api/certificates').then(r => r.json()).catch(() => ({ data: [] })),
         fetch('/api/settings').then(r => r.json()).catch(() => ({ data: null })),
+        fetch('/api/medha-pariksha/registrations').then(r => r.json()).catch(() => ({ data: [], meta: {} })),
       ]);
 
       if (heroRes.data) setHeroSlides(heroRes.data);
@@ -99,6 +107,10 @@ export default function AdminDashboard() {
       if (docRes.data) setDocuments(docRes.data);
       if (certRes.data) setCertificates(certRes.data);
       if (setRes.data) setStats(prev => ({ ...prev, ...setRes.data }));
+      if (medhaRes.data) {
+        setScholarshipRegistrations(medhaRes.data);
+        if (medhaRes.meta) setScholarshipMeta(medhaRes.meta);
+      }
     } catch {
       // Graceful fallback
     }
@@ -460,6 +472,7 @@ export default function AdminDashboard() {
               { id: 'testimonials', label: `Reviews (${testimonials.length})`, icon: MessageSquare },
               { id: 'documents', label: `Documents (${documents.length})`, icon: FileText },
               { id: 'certificates', label: `Certificates (${certificates.length})`, icon: Award },
+              { id: 'scholarship', label: `Medha Pariksha (${scholarshipRegistrations.length})`, icon: GraduationCap },
               { id: 'donations', label: 'Donations', icon: Heart },
             ].map((tab) => {
               const Icon = tab.icon;
@@ -1078,7 +1091,127 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ================= TAB 9: DONATIONS ================= */}
+        {/* ================= TAB 10: MEDHA PARIKSHA ================= */}
+        {activeTab === 'scholarship' && (
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-serif font-bold text-slate-900">Dr. A.P.J. Abdul Kalam Medha Pariksha</h2>
+                <p className="text-xs text-slate-500 font-light mt-0.5">Centralized candidate registration records &bull; ₹100 application fees &bull; Backend transparency</p>
+              </div>
+
+              <Link
+                href="/medha-pariksha"
+                target="_blank"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 text-[#b45309] hover:bg-amber-100 rounded-xl text-xs font-bold border border-amber-300 transition-colors shrink-0"
+              >
+                <span>View Public Page</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+
+            {/* Metrics Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Total Registrations</span>
+                <p className="text-3xl font-serif font-bold text-slate-900 mt-1">{scholarshipMeta.total}</p>
+                <p className="text-[11px] text-slate-400 mt-0.5">Applications submitted</p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+                <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Paid &amp; Verified</span>
+                <p className="text-3xl font-serif font-bold text-emerald-700 mt-1">{scholarshipMeta.completed}</p>
+                <p className="text-[11px] text-emerald-600 mt-0.5">₹100 Fee received via Razorpay</p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-amber-50 border border-amber-200">
+                <span className="text-[11px] font-bold text-[#b45309] uppercase tracking-wider">Exam Fund Collected</span>
+                <p className="text-3xl font-serif font-bold text-[#b45309] mt-1">₹{scholarshipMeta.totalFeesCollected.toLocaleString('en-IN')}</p>
+                <p className="text-[11px] text-amber-700 mt-0.5">100% Non-profit exam operations</p>
+              </div>
+            </div>
+
+            {/* Partners & Sponsors Note */}
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600">
+              <p className="font-semibold text-slate-800 mb-1">Collaborating Organizations:</p>
+              <p className="text-[11px]">
+                <strong>Partner NGOs:</strong> Spread Smiles Foundation &bull; No Crying Foundation &bull; Musawat Welfare Trust &bull; Nayab Training &amp; Educational Trust &bull; Buniyadi Sahara Trust
+              </p>
+              <p className="text-[11px] mt-1">
+                <strong>Sponsors:</strong> Zarnetic &bull; Arshi Cafe
+              </p>
+            </div>
+
+            {/* Candidate List Table */}
+            <div className="border border-slate-200 rounded-xl overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-600 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
+                    <tr>
+                      <th className="py-3 px-4">Reg No &amp; Date</th>
+                      <th className="py-3 px-4">Student Name</th>
+                      <th className="py-3 px-4">Category</th>
+                      <th className="py-3 px-4">School &amp; City</th>
+                      <th className="py-3 px-4">Phone / WhatsApp</th>
+                      <th className="py-3 px-4">Status &amp; Fee</th>
+                      <th className="py-3 px-4">Transaction ID</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-slate-700">
+                    {scholarshipRegistrations.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="py-8 text-center text-slate-400">
+                          No registrations recorded yet. Once students apply on /medha-pariksha, their verified records will appear here.
+                        </td>
+                      </tr>
+                    ) : (
+                      scholarshipRegistrations.map((item: any) => (
+                        <tr key={item._id} className="hover:bg-slate-50/50">
+                          <td className="py-3 px-4">
+                            <span className="font-mono font-bold text-slate-900 block">{item.registration_no}</span>
+                            <span className="text-[10px] text-slate-400">
+                              {new Date(item.createdAt).toLocaleDateString('en-IN')}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4">
+                            <span className="font-bold text-slate-900 block">{item.student_name}</span>
+                            <span className="text-[11px] text-slate-500">C/o {item.guardian_name}</span>
+                          </td>
+                          <td className="py-3 px-4">
+                            <span className="font-semibold text-[#b45309]">{item.category}</span>
+                          </td>
+                          <td className="py-3 px-4 max-w-[180px] truncate">
+                            <span className="block font-medium truncate">{item.school_name}</span>
+                            <span className="text-[10px] text-slate-400">{item.city}</span>
+                          </td>
+                          <td className="py-3 px-4 font-mono">
+                            <a href={`tel:${item.phone}`} className="hover:underline text-slate-800">
+                              {item.phone}
+                            </a>
+                          </td>
+                          <td className="py-3 px-4">
+                            <span
+                              className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                                item.payment_status === 'completed'
+                                  ? 'bg-emerald-100 text-emerald-800'
+                                  : 'bg-amber-100 text-amber-800'
+                              }`}
+                            >
+                              {item.payment_status === 'completed' ? 'PAID ₹100' : 'PENDING'}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4 font-mono text-[10px] text-slate-500">
+                            {item.razorpay_payment_id || item.razorpay_order_id || 'N/A'}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
         {activeTab === 'donations' && (
           <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
             <div>

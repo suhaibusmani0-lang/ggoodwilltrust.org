@@ -18,6 +18,7 @@ import {
   Shield,
   CheckCircle2,
   ArrowUpRight,
+  Trophy,
 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -448,10 +449,27 @@ export default function HomePage() {
               variants={staggerContainer}
               className="lg:col-span-7 max-w-2xl"
             >
-              {/* Trust Badge */}
-              <motion.div variants={fadeInUp} className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white border border-slate-200 text-slate-700 text-xs font-semibold tracking-wide mb-8 shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-[#b45309]" />
-                <span className="tracking-widest uppercase text-[11px] text-[#b45309]">80G Registered Trust • New Delhi</span>
+              {/* Trust Badge & Scholarship Announcement */}
+              <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-3 mb-8">
+                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white border border-slate-200 text-slate-700 text-xs font-semibold tracking-wide shadow-xs">
+                  <span className="w-2 h-2 rounded-full bg-[#b45309]" />
+                  <span className="tracking-widest uppercase text-[11px] text-[#b45309]">80G Registered Trust • New Delhi</span>
+                </div>
+
+                <Link
+                  href="/medha-pariksha"
+                  className="group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 text-slate-900 text-xs font-semibold shadow-xs hover:border-[#d4af37] transition-all"
+                >
+                  <span className="flex h-2 w-2 relative">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#d4af37] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#b45309]" />
+                  </span>
+                  <span className="font-bold text-[#b45309] text-[11px] uppercase tracking-wider">New Scholarship:</span>
+                  <span className="text-slate-800 font-medium">Kalam Medha Pariksha</span>
+                  <span className="bg-[#d4af37] text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded-full uppercase ml-0.5 group-hover:translate-x-0.5 transition-transform">
+                    ₹21,000 1st Prize &rarr;
+                  </span>
+                </Link>
               </motion.div>
 
               {/* Grand Editorial Headline */}
@@ -474,14 +492,23 @@ export default function HomePage() {
               </motion.p>
 
               {/* Action Buttons */}
-              <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-5 mb-14">
+              <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-4 mb-14">
                 <LuxuryDonateButton />
 
                 <Link
-                  href="/about"
-                  className="inline-flex items-center gap-2 px-8 py-4 text-xs font-semibold tracking-wider uppercase text-slate-800 bg-white border border-slate-300 rounded-full hover:border-slate-400 hover:bg-slate-50 transition-all duration-300 shadow-2xs"
+                  href="/medha-pariksha"
+                  className="inline-flex items-center gap-2 px-6 py-4 text-xs font-bold tracking-wider uppercase text-slate-900 bg-amber-50 border border-amber-300 rounded-full hover:bg-amber-100 hover:border-[#d4af37] transition-all duration-300 shadow-2xs group"
                 >
-                  Our Philosophy <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
+                  <Trophy className="w-4 h-4 text-[#b45309]" />
+                  <span>Kalam Medha Pariksha</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-600 group-hover:translate-x-1 transition-transform" />
+                </Link>
+
+                <Link
+                  href="/about"
+                  className="inline-flex items-center gap-2 px-6 py-4 text-xs font-semibold tracking-wider uppercase text-slate-800 bg-white border border-slate-300 rounded-full hover:border-slate-400 hover:bg-slate-50 transition-all duration-300 shadow-2xs"
+                >
+                  Our Philosophy
                 </Link>
               </motion.div>
 

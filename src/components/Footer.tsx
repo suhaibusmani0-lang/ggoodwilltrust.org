@@ -5,6 +5,7 @@ import Image from 'next/image';
 export default function Footer() {
   const quickLinks = [
     { name: 'About Us', href: '/about' },
+    { name: 'Kalam Medha Pariksha (Scholarship)', href: '/medha-pariksha' },
     { name: 'Programs & Projects', href: '/programs' },
     { name: 'Documents & 80G', href: '/documents' },
     { name: 'Certificates & Results', href: '/certificates' },

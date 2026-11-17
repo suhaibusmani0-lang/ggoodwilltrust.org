@@ -1,0 +1,1422 @@
+'use client';
+
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Trophy,
+  Award,
+  Medal,
+  Calendar,
+  Clock,
+  Sparkles,
+  BookOpen,
+  GraduationCap,
+  CheckCircle2,
+  AlertCircle,
+  HelpCircle,
+  Phone,
+  Mail,
+  Share2,
+  FileText,
+  School,
+  ArrowRight,
+  Send,
+  Star,
+  Users,
+  Check,
+  ChevronDown,
+  LayoutGrid,
+  Table as TableIcon,
+  ShieldCheck,
+  Building2,
+  HeartHandshake,
+  Search,
+  Loader2,
+  CreditCard,
+  Printer
+} from 'lucide-react';
+import Link from 'next/link';
+import MedhaReceipt, { MedhaReceiptData } from '@/components/MedhaReceipt';
+
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' as const } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 }
+  }
+};
+
+export default function MedhaParikshaPage() {
+  const [activeTab, setActiveTab] = useState<'grid' | 'table'>('grid');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [copied, setCopied] = useState(false);
+
+  // Form & Payment state
+  const [formData, setFormData] = useState({
+    studentName: '',
+    guardianName: '',
+    category: 'Junior Category (Classes 9 & 10)',
+    schoolName: '',
+    city: '',
+    phone: '',
+    email: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // Receipt Modal State
+  const [activeReceipt, setActiveReceipt] = useState<MedhaReceiptData | null>(null);
+
+  // Receipt Lookup State (For candidates who already registered)
+  const [lookupQuery, setLookupQuery] = useState('');
+  const [lookupLoading, setLookupLoading] = useState(false);
+  const [lookupError, setLookupError] = useState<string | null>(null);
+
+  const handleShare = () => {
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
+
+  // Form submission with Razorpay Payment Integration (₹100 fee)
+  const handlePaymentAndRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    try {
+      // 1. Create order in Backend & Store initial record
+      const res = await fetch('/api/medha-pariksha/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          student_name: formData.studentName,
+          guardian_name: formData.guardianName,
+          category: formData.category,
+          school_name: formData.schoolName,
+          city: formData.city,
+          phone: formData.phone,
+          email: formData.email,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || 'Failed to initiate registration.');
+      }
+
+      const { order, registration_no, receipt_no, key_id } = data;
+
+      // 2. Open Razorpay Checkout Modal
+      const win = window as unknown as { Razorpay?: new (opts: unknown) => { open: () => void } };
+
+      if (!win.Razorpay) {
+        throw new Error('Payment gateway is loading. Please check your internet or retry.');
+      }
+
+      const options = {
+        key: key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: order.currency || 'INR',
+        name: 'G Goodwill Trust',
+        description: `Exam Fee (₹100) - ${formData.category}`,
+        order_id: order.id,
+        prefill: {
+          name: formData.studentName,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        theme: {
+          color: '#d4af37',
+        },
+        handler: async function (response: {
+          razorpay_payment_id: string;
+          razorpay_order_id: string;
+          razorpay_signature: string;
+        }) {
+          try {
+            // 3. Verify Payment on Backend & Mark Record Completed
+            const verifyRes = await fetch('/api/medha-pariksha/verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                registration_no,
+                razorpay_order_id: response.razorpay_order_id || order.id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+
+            // 4. Show Instant Official Receipt
+            setActiveReceipt({
+              registrationNo: registration_no,
+              receiptNo: receipt_no,
+              studentName: formData.studentName,
+              guardianName: formData.guardianName,
+              category: formData.category,
+              schoolName: formData.schoolName,
+              city: formData.city,
+              phone: formData.phone,
+              email: formData.email,
+              amount: 100,
+              paymentId: response.razorpay_payment_id || 'PAY_' + Date.now(),
+              date: new Date().toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+              }),
+            });
+
+            // Reset form
+            setFormData({
+              studentName: '',
+              guardianName: '',
+              category: 'Junior Category (Classes 9 & 10)',
+              schoolName: '',
+              city: '',
+              phone: '',
+              email: '',
+            });
+          } catch (vErr) {
+            console.error('Verification error:', vErr);
+            alert('Payment succeeded! Your receipt is generated with ID: ' + response.razorpay_payment_id);
+          }
+        },
+      };
+
+      const rzp = new win.Razorpay(options);
+      rzp.open();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An error occurred during registration.';
+      setErrorMessage(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Lookup existing registration receipt
+  const handleReceiptLookup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!lookupQuery.trim()) return;
+    setLookupLoading(true);
+    setLookupError(null);
+
+    try {
+      const res = await fetch(`/api/medha-pariksha/registrations?search=${encodeURIComponent(lookupQuery.trim())}`);
+      const data = await res.json();
+
+      if (res.ok && data.success && Array.isArray(data.data) && data.data.length > 0) {
+        const item = data.data[0];
+        setActiveReceipt({
+          registrationNo: item.registration_no,
+          receiptNo: item.receipt_no,
+          studentName: item.student_name,
+          guardianName: item.guardian_name,
+          category: item.category,
+          schoolName: item.school_name,
+          city: item.city,
+          phone: item.phone,
+          email: item.email,
+          amount: item.amount || 100,
+          paymentId: item.razorpay_payment_id || item.razorpay_order_id || 'VERIFIED_OFFLINE',
+          date: new Date(item.createdAt || Date.now()).toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          }),
+        });
+      } else {
+        setLookupError('No verified registration found for the provided Registration No or Mobile Number.');
+      }
+    } catch {
+      setLookupError('Failed to search registration. Please try again.');
+    } finally {
+      setLookupLoading(false);
+    }
+  };
+
+  // Partner NGOs
+  const partnerNgos = [
+    {
+      name: 'Spread Smiles Foundation',
+      desc: 'Committed to educational empowerment and child welfare across underprivileged communities.',
+      tag: 'Partner NGO',
+    },
+    {
+      name: 'No Crying Foundation',
+      desc: 'Grassroots humanitarian relief, child education, and medical outreach foundation.',
+      tag: 'Partner NGO',
+    },
+    {
+      name: 'Musawat Welfare Trust',
+      desc: 'Championing social equality, youth scholarship, and educational advancement.',
+      tag: 'Partner NGO',
+    },
+    {
+      name: 'Nayab Training & Educational Trust',
+      desc: 'Fostering vocational skills, competitive exam training, and academic literacy.',
+      tag: 'Partner NGO',
+    },
+    {
+      name: 'Buniyadi Sahara Trust',
+      desc: 'Delivering foundational welfare, community relief, and education support.',
+      tag: 'Partner NGO',
+    },
+  ];
+
+  // Sponsors
+  const sponsors = [
+    {
+      name: 'Zarnetic',
+      category: 'Official Technology & Digital Partner',
+      desc: 'Powering cutting-edge digital infrastructure and educational technology for social impact.',
+      tag: 'Lead Sponsor',
+    },
+    {
+      name: 'Arshi Cafe',
+      category: 'Community & Refreshment Sponsor',
+      desc: 'Proud local hospitality partner fueling youth events, community gatherings, and talent drives.',
+      tag: 'Official Sponsor',
+    },
+  ];
+
+  // Prizes data
+  const prizes = [
+    {
+      rank: '1st Prize',
+      title: 'Mega Champion Trophy',
+      amount: '₹21,000',
+      badge: 'Gold Laureate • Rank 1',
+      badgeBg: 'bg-amber-100 text-amber-900 border-amber-300',
+      cardBorder: 'border-amber-400/90 shadow-[0_12px_40px_rgba(212,175,55,0.25)]',
+      cardBg: 'bg-gradient-to-b from-amber-50/70 via-white to-amber-50/30',
+      accentGlow: 'bg-[#d4af37]/20',
+      icon: Trophy,
+      iconColor: 'text-amber-500 fill-amber-100',
+      iconBoxBg: 'bg-gradient-to-br from-amber-500 to-[#d4af37] text-white shadow-amber-300/50',
+      trophyText: 'Grand Championship Trophy',
+      benefits: [
+        '₹21,000 Cash Scholarship Award',
+        'Official Gold Champion Trophy',
+        'State / National Merit Certificate of Honor',
+        'Special Felicitation at Grand Award Ceremony',
+        'Mentorship & Academic Guidance from Scholars',
+        'Featured in Trust Annual Magazine & Website'
+      ],
+      popular: true,
+    },
+    {
+      rank: '2nd Prize',
+      title: 'Excellence Trophy',
+      amount: '₹11,000',
+      badge: 'Silver Achiever • Rank 2',
+      badgeBg: 'bg-slate-100 text-slate-800 border-slate-300',
+      cardBorder: 'border-slate-300 shadow-[0_10px_30px_rgba(100,116,139,0.12)]',
+      cardBg: 'bg-gradient-to-b from-slate-50/80 via-white to-slate-50/20',
+      accentGlow: 'bg-slate-400/15',
+      icon: Medal,
+      iconColor: 'text-slate-600 fill-slate-200',
+      iconBoxBg: 'bg-gradient-to-br from-slate-600 to-slate-400 text-white shadow-slate-300/50',
+      trophyText: 'Silver Prestigious Trophy',
+      benefits: [
+        '₹11,000 Cash Scholarship Award',
+        'Official Silver Achiever Trophy',
+        'Distinguished Merit Certificate',
+        'Special Felicitation at Grand Award Ceremony',
+        'Exclusive Academic Skill Development Kit',
+        'Featured in Trust Honor Roll'
+      ],
+      popular: false,
+    },
+    {
+      rank: '3rd Prize',
+      title: 'Distinction Trophy',
+      amount: '₹5,100',
+      badge: 'Bronze Laureate • Rank 3',
+      badgeBg: 'bg-orange-100 text-orange-950 border-orange-300',
+      cardBorder: 'border-orange-300/80 shadow-[0_10px_30px_rgba(180,83,9,0.12)]',
+      cardBg: 'bg-gradient-to-b from-orange-50/60 via-white to-orange-50/20',
+      accentGlow: 'bg-amber-600/15',
+      icon: Award,
+      iconColor: 'text-amber-700 fill-orange-200',
+      iconBoxBg: 'bg-gradient-to-br from-amber-700 to-amber-500 text-white shadow-orange-300/50',
+      trophyText: 'Bronze Distinction Trophy',
+      benefits: [
+        '₹5,100 Cash Scholarship Award',
+        'Official Bronze Distinction Trophy',
+        'State Merit Certificate of Excellence',
+        'Special Felicitation at Grand Award Ceremony',
+        'Official Recognition Certificate',
+        'Featured on Foundation Portal'
+      ],
+      popular: false,
+    },
+  ];
+
+  // Exam categories
+  const categories = [
+    {
+      id: 'sub-junior',
+      name: 'Sub-Junior Category',
+      hindiName: 'सब-जूनियर वर्ग',
+      classes: 'Classes 6 to 8',
+      classesDetail: 'Class 6th, 7th & 8th (Any Recognized Board)',
+      subjects: ['Basic Maths', 'Science', 'GK', 'English'],
+      subjectsDetail: [
+        { name: 'Basic Mathematics', desc: 'Arithmetic, Fractions, Mensuration, Decimals, Number Systems' },
+        { name: 'General Science', desc: 'Physical, Chemical & Biological basics from NCERT syllabus' },
+        { name: 'General Knowledge & Current Affairs', desc: 'India, Great Personalities, Science Discoveries, Kalam Life' },
+        { name: 'English Language', desc: 'Grammar, Synonyms/Antonyms, Comprehension & Vocabulary' },
+      ],
+      examFormat: 'Objective Multiple Choice (MCQ)',
+      totalQuestions: '100 Questions',
+      duration: '90 Minutes',
+      accentColor: 'border-blue-200 hover:border-blue-400 bg-blue-50/30',
+      badgeColor: 'bg-blue-100 text-blue-900 border-blue-300',
+    },
+    {
+      id: 'junior',
+      name: 'Junior Category',
+      hindiName: 'जूनियर वर्ग',
+      classes: 'Classes 9 & 10',
+      classesDetail: 'Class 9th & 10th (Secondary School Level)',
+      subjects: ['Maths', 'Science', 'English', 'Logical Reasoning'],
+      subjectsDetail: [
+        { name: 'Mathematics', desc: 'Algebra, Geometry, Trigonometry, Statistics & Number Theory' },
+        { name: 'Science (Physics, Chemistry, Bio)', desc: 'Fundamental Laws, Reactions, Energy, Life Processes' },
+        { name: 'English Language', desc: 'Analytical Reading, Applied Grammar, Idioms & Error Detection' },
+        { name: 'Logical Reasoning & Mental Ability', desc: 'Series, Patterns, Coding-Decoding, Blood Relations & Puzzles' },
+      ],
+      examFormat: 'Objective Multiple Choice (MCQ)',
+      totalQuestions: '100 Questions',
+      duration: '90 Minutes',
+      accentColor: 'border-amber-200 hover:border-amber-400 bg-amber-50/30',
+      badgeColor: 'bg-amber-100 text-amber-900 border-amber-300',
+    },
+    {
+      id: 'senior',
+      name: 'Senior Category',
+      hindiName: 'सीनियर वर्ग',
+      classes: 'Classes 11 & 12',
+      classesDetail: 'Class 11th & 12th (Higher Secondary / Intermediate)',
+      subjects: ['Stream-wise', 'Aptitude'],
+      subjectsDetail: [
+        { name: 'Stream-wise Core Subjects', desc: 'Science (PCM/PCB) / Commerce / Humanities foundational syllabus' },
+        { name: 'Quantitative & Analytical Aptitude', desc: 'Higher level data interpretation, quantitative math, critical problem-solving' },
+        { name: 'General Aptitude & Reasoning', desc: 'Verbal & Non-verbal reasoning, competitive aptitude matching CUET/JEE/NEET foundation' },
+        { name: 'English & Current Awareness', desc: 'Advanced comprehension, global and national science/current events' },
+      ],
+      examFormat: 'Objective Multiple Choice (MCQ)',
+      totalQuestions: '100 Questions',
+      duration: '90 Minutes',
+      accentColor: 'border-emerald-200 hover:border-emerald-400 bg-emerald-50/30',
+      badgeColor: 'bg-emerald-100 text-emerald-900 border-emerald-300',
+    },
+  ];
+
+  const filteredCategories = selectedCategory === 'all'
+    ? categories
+    : categories.filter((c) => c.id === selectedCategory);
+
+  const faqs = [
+    {
+      q: 'What is the examination registration fee?',
+      a: 'The registration fee is a nominal ₹100 only. This fee covers examination administration, bilingual question paper booklet, computerized OMR evaluation, and official Certificate of Participation for every candidate.'
+    },
+    {
+      q: 'Will I receive a receipt after paying ₹100?',
+      a: 'Yes, absolutely! Immediately upon successful payment via Razorpay, an official computer-generated receipt with your Unique Registration Number, Receipt Number, and Payment Transaction ID will appear on your screen to download or print.'
+    },
+    {
+      q: 'Where is my registration stored?',
+      a: 'All registrations are securely recorded in the G Goodwill Trust central database. You can re-download your receipt anytime using your registration number or phone number on this page.'
+    },
+    {
+      q: 'Who are the partner NGOs and sponsors?',
+      a: 'This noble initiative is organized by G Goodwill Trust in collaboration with esteemed partner NGOs: Spread Smiles Foundation, No Crying Foundation, Musawat Welfare Trust, Nayab Training & Educational Trust, and Buniyadi Sahara Trust, proudly supported by sponsors Zarnetic and Arshi Cafe.'
+    },
+    {
+      q: 'What is the last date to apply?',
+      a: 'The last date to register and submit your ₹100 application is 31st December 2026.'
+    },
+    {
+      q: 'When will the Exam Date and Award Ceremony be announced?',
+      a: 'The official Exam Date and Award Ceremony date will be announced soon on this website and notified directly via SMS and WhatsApp to all registered candidates.'
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#fafaf8] text-slate-900 selection:bg-[#d4af37] selection:text-black">
+      
+      {/* ═══════════════════════════════════════
+          HERO SECTION
+          ═══════════════════════════════════════ */}
+      <section className="relative overflow-hidden pt-12 pb-20 lg:pt-16 lg:pb-28 border-b border-slate-200">
+        {/* Ambient background glows */}
+        <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+          <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-amber-100/50 via-amber-50/20 to-transparent rounded-full blur-3xl" />
+          <div className="absolute top-1/3 -left-32 w-80 h-80 bg-amber-200/30 rounded-full blur-3xl" />
+          <div className="absolute bottom-10 -right-32 w-96 h-96 bg-slate-200/40 rounded-full blur-3xl" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
+          
+          {/* Breadcrumb / Top Pill */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center justify-center gap-2 mb-6"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-300 text-[#b45309] text-xs font-bold uppercase tracking-widest shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
+              <span>G Goodwill Trust • National Scholarship Drive</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#b45309]" />
+              <span className="text-slate-800 font-extrabold">2026-2027</span>
+            </div>
+          </motion.div>
+
+          {/* Main Title Heading */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal tracking-tight text-slate-900 leading-[1.1] mb-6">
+              Dr. A.P.J. Abdul Kalam <br className="hidden sm:inline" />
+              <span className="italic font-serif text-[#b45309] relative inline-block">
+                Medha Pariksha
+                <span className="absolute bottom-1 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent opacity-70" />
+              </span>
+            </h1>
+            <p className="text-lg sm:text-xl text-slate-700 font-normal leading-relaxed max-w-2xl mx-auto mb-4">
+              डॉ. ए.पी.जे. अब्दुल कलाम मेधा परीक्षा — A prestigious talent scholarship examination empowering students from Classes 6 to 12 with verified cash grants, grand trophies, and national honors.
+            </p>
+
+            {/* Fee & Transparent Badge Pill */}
+            <div className="inline-flex flex-wrap items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white border border-amber-300/80 shadow-xs mb-4">
+              <span className="text-xs font-semibold text-slate-600">Application Fee:</span>
+              <span className="text-sm font-extrabold text-[#b45309] bg-amber-100/80 px-2.5 py-0.5 rounded-full">
+                ₹100 Only
+              </span>
+              <span className="text-slate-300">&bull;</span>
+              <span className="text-xs text-emerald-700 font-medium flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5" /> Instant Printable Receipt
+              </span>
+              <span className="text-slate-300">&bull;</span>
+              <span className="text-xs text-slate-500 font-medium">100% Backend Transparent</span>
+            </div>
+          </motion.div>
+
+          {/* Action CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.6 }}
+            className="flex flex-wrap items-center justify-center gap-4 mt-6"
+          >
+            <a
+              href="#apply-now"
+              className="bg-[#d4af37] hover:bg-[#c59b27] text-slate-950 px-8 py-3.5 rounded-full font-bold text-sm tracking-wider uppercase shadow-[0_4px_20px_rgba(212,175,55,0.4)] hover:shadow-[0_6px_25px_rgba(212,175,55,0.55)] transition-all duration-300 hover:scale-[1.02] flex items-center gap-2 group"
+            >
+              <span>Apply Online (₹100)</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </a>
+
+            <a
+              href="#download-receipt"
+              className="bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 px-6 py-3.5 rounded-full font-bold text-xs tracking-wider uppercase transition-all duration-300 shadow-xs flex items-center gap-2"
+            >
+              <Printer className="w-4 h-4 text-[#b45309]" />
+              <span>Download Receipt</span>
+            </a>
+
+            <a
+              href="#partners"
+              className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-3.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-colors flex items-center gap-2 border border-slate-200"
+            >
+              <HeartHandshake className="w-4 h-4 text-slate-600" />
+              <span>Partners &amp; Sponsors</span>
+            </a>
+
+            <button
+              onClick={handleShare}
+              className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-colors flex items-center gap-2 border border-slate-200"
+              title="Share Program Link"
+            >
+              <Share2 className="w-4 h-4 text-slate-600" />
+              <span>{copied ? 'Copied!' : 'Share'}</span>
+            </button>
+          </motion.div>
+
+          {/* Key Dates & Transparency Strip */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.6 }}
+            className="mt-14 max-w-5xl mx-auto"
+          >
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-[0_4px_24px_rgba(0,0,0,0.04)] grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+              
+              {/* Item 1: Last Date */}
+              <div className="flex items-start gap-4 pt-4 md:pt-0">
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-[#b45309] shrink-0">
+                  <Calendar className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[11px] font-bold uppercase tracking-wider mb-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    Registrations Open (₹100)
+                  </div>
+                  <h4 className="text-xs uppercase font-bold text-slate-400 tracking-wider">Last Date to Apply</h4>
+                  <p className="text-2xl font-serif font-bold text-slate-900 mt-0.5">31.12.2026</p>
+                  <p className="text-xs text-slate-500 mt-0.5">31st December 2026</p>
+                </div>
+              </div>
+
+              {/* Item 2: Exam Date */}
+              <div className="flex items-start gap-4 pt-4 md:pt-0 md:pl-6">
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 shrink-0">
+                  <Clock className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-50 text-[#b45309] border border-amber-200 text-[11px] font-bold uppercase tracking-wider mb-1">
+                    Upcoming Milestone
+                  </div>
+                  <h4 className="text-xs uppercase font-bold text-slate-400 tracking-wider">Exam Date</h4>
+                  <p className="text-2xl font-serif font-bold text-[#b45309] mt-0.5">To Be Announced</p>
+                  <p className="text-xs text-slate-500 mt-0.5">शीघ्र घोषित की जाएगी</p>
+                </div>
+              </div>
+
+              {/* Item 3: Award Ceremony */}
+              <div className="flex items-start gap-4 pt-4 md:pt-0 md:pl-6">
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-[#d4af37] shrink-0">
+                  <Award className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200 text-[11px] font-bold uppercase tracking-wider mb-1">
+                    Grand Ceremony
+                  </div>
+                  <h4 className="text-xs uppercase font-bold text-slate-400 tracking-wider">Award Ceremony</h4>
+                  <p className="text-2xl font-serif font-bold text-slate-900 mt-0.5">To Be Announced</p>
+                  <p className="text-xs text-slate-500 mt-0.5">शीघ्र घोषित की जाएगी</p>
+                </div>
+              </div>
+
+            </div>
+          </motion.div>
+
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════
+          MEGA PRIZE STRUCTURE (VISUALLY APPEALING CARDS)
+          ═══════════════════════════════════════ */}
+      <section id="prizes" className="py-20 lg:py-28 px-6 sm:px-8 lg:px-12 bg-white relative">
+        <div className="max-w-7xl mx-auto">
+          
+          {/* Section Header */}
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-300 text-[#b45309] text-xs font-bold tracking-widest uppercase mb-4">
+              <Trophy className="w-3.5 h-3.5 text-[#d4af37]" />
+              Mega Recognition &amp; Rewards
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900 tracking-tight mb-4">
+              Mega Prize <span className="italic text-[#b45309] font-serif">Structure</span>
+            </h2>
+            <p className="text-base text-slate-600 font-light max-w-xl mx-auto leading-relaxed">
+              Every outstanding student deserves grand recognition. Top scholars are felicitated with handsome cash grants, prestigious engraved trophies, and national merit credentials.
+            </p>
+          </div>
+
+          {/* 3 Mega Prize Cards */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-60px' }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-8 items-stretch"
+          >
+            {prizes.map((prize) => {
+              const IconComponent = prize.icon;
+              return (
+                <motion.div
+                  key={prize.rank}
+                  variants={fadeInUp}
+                  whileHover={{ y: -8, transition: { duration: 0.3 } }}
+                  className={`relative rounded-3xl p-8 flex flex-col justify-between border-2 transition-all duration-300 ${prize.cardBg} ${prize.cardBorder}`}
+                >
+                  {/* Popular / Top Rank Banner */}
+                  {prize.popular && (
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-600 via-[#d4af37] to-amber-600 text-white text-[11px] font-bold tracking-widest uppercase px-4 py-1 rounded-full shadow-md shadow-amber-300/40">
+                      Most Prestigious Award
+                    </div>
+                  )}
+
+                  <div>
+                    {/* Header: Badge & Icon */}
+                    <div className="flex items-center justify-between gap-4 mb-6">
+                      <span className={`text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${prize.badgeBg}`}>
+                        {prize.badge}
+                      </span>
+                      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg ${prize.iconBoxBg}`}>
+                        <IconComponent className="w-7 h-7" />
+                      </div>
+                    </div>
+
+                    {/* Prize Title & Amount */}
+                    <div className="mb-6">
+                      <h3 className="text-2xl font-serif font-bold text-slate-900">{prize.rank}</h3>
+                      <p className="text-xs uppercase tracking-wider text-slate-500 font-medium mb-3">{prize.title}</p>
+                      
+                      <div className="inline-block p-4 rounded-2xl bg-white/90 border border-slate-200/80 shadow-xs w-full">
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block mb-0.5">Cash Award</span>
+                        <div className="text-4xl sm:text-5xl font-serif font-extrabold text-slate-950 tracking-tight">
+                          {prize.amount}
+                        </div>
+                        <div className="text-xs font-semibold text-[#b45309] mt-1 flex items-center gap-1">
+                          <Check className="w-3.5 h-3.5" /> + Trophy + Certificate
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Perks List */}
+                    <div className="space-y-3 pt-2 mb-8">
+                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Included Honours &amp; Benefits:</p>
+                      {prize.benefits.map((b, bIdx) => (
+                        <div key={bIdx} className="flex items-start gap-2.5 text-xs text-slate-700 leading-normal">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                          <span>{b}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Apply Button */}
+                  <div className="pt-4 border-t border-slate-200/70">
+                    <a
+                      href="#apply-now"
+                      className={`w-full py-3 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
+                        prize.popular
+                          ? 'bg-[#d4af37] hover:bg-[#c59b27] text-slate-950 shadow-md shadow-amber-200/50'
+                          : 'bg-slate-900 hover:bg-slate-800 text-white'
+                      }`}
+                    >
+                      <span>Apply For This Rank (₹100)</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+
+          {/* Consolation / Participation Certificate Banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12 bg-gradient-to-r from-amber-500/10 via-amber-100/40 to-amber-500/10 border border-amber-200 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6"
+          >
+            <div className="flex items-center gap-4 text-center sm:text-left">
+              <div className="w-14 h-14 rounded-2xl bg-white border border-amber-300 text-[#b45309] flex items-center justify-center shrink-0 shadow-xs mx-auto sm:mx-0">
+                <FileText className="w-7 h-7" />
+              </div>
+              <div>
+                <h4 className="text-lg font-serif font-bold text-slate-900">Certificate of Participation for All Candidates</h4>
+                <p className="text-xs text-slate-600 font-light mt-0.5">
+                  Every candidate who registers (₹100) and attempts the Dr. A.P.J. Abdul Kalam Medha Pariksha will receive an official verifiable Certificate of Participation from G Goodwill Trust to boost their future academic portfolio.
+                </p>
+              </div>
+            </div>
+
+            <a
+              href="#apply-now"
+              className="bg-white hover:bg-amber-50 text-slate-900 border border-amber-300 font-bold px-6 py-3 rounded-full text-xs tracking-wider uppercase shrink-0 transition-all shadow-xs"
+            >
+              Register Candidate (₹100)
+            </a>
+          </motion.div>
+
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════
+          EXAM CATEGORIES (GRID & MODERN TABLE VIEW)
+          ═══════════════════════════════════════ */}
+      <section id="categories" className="py-20 lg:py-28 px-6 sm:px-8 lg:px-12 bg-[#f8fafc] border-y border-slate-200">
+        <div className="max-w-7xl mx-auto">
+          
+          {/* Header with View Toggle */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-300 text-[#b45309] text-xs font-bold tracking-widest uppercase mb-4">
+                <GraduationCap className="w-3.5 h-3.5 text-[#d4af37]" />
+                Curriculum &amp; Target Classes
+              </div>
+              <h2 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900 tracking-tight">
+                Exam <span className="italic text-[#b45309] font-serif">Categories</span>
+              </h2>
+              <p className="text-sm sm:text-base text-slate-600 font-light mt-2 max-w-xl">
+                Structured into three distinct tiers catering from Middle School to Senior Secondary. Each tier features age-appropriate syllabus, bilingual question paper, and fair evaluation.
+              </p>
+            </div>
+
+            {/* View Switcher Controls */}
+            <div className="flex items-center gap-2 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-xs self-start md:self-auto">
+              <button
+                onClick={() => setActiveTab('grid')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  activeTab === 'grid'
+                    ? 'bg-slate-900 text-white shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span>Card Grid</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('table')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                  activeTab === 'table'
+                    ? 'bg-slate-900 text-white shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+              >
+                <TableIcon className="w-3.5 h-3.5" />
+                <span>Modern Table</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="flex flex-wrap items-center gap-2 mb-8">
+            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider mr-2">Filter Tier:</span>
+            {[
+              { id: 'all', label: 'All Categories (6th-12th)' },
+              { id: 'sub-junior', label: 'Sub-Junior (Classes 6-8)' },
+              { id: 'junior', label: 'Junior (Classes 9-10)' },
+              { id: 'senior', label: 'Senior (Classes 11-12)' },
+            ].map((btn) => (
+              <button
+                key={btn.id}
+                onClick={() => setSelectedCategory(btn.id)}
+                className={`text-xs px-4 py-1.5 rounded-full font-medium transition-all ${
+                  selectedCategory === btn.id
+                    ? 'bg-[#d4af37] text-slate-950 font-bold shadow-xs'
+                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                }`}
+              >
+                {btn.label}
+              </button>
+            ))}
+          </div>
+
+          {/* View 1: Modern Card Grid */}
+          {activeTab === 'grid' && (
+            <motion.div
+              layout
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            >
+              {filteredCategories.map((cat) => (
+                <motion.div
+                  layout
+                  key={cat.id}
+                  variants={fadeInUp}
+                  className="bg-white rounded-3xl p-8 border border-slate-200 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+                >
+                  <div>
+                    {/* Category Header */}
+                    <div className="flex items-center justify-between gap-3 mb-4">
+                      <span className={`text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${cat.badgeColor}`}>
+                        {cat.name}
+                      </span>
+                      <span className="text-xs text-slate-400 font-medium">{cat.hindiName}</span>
+                    </div>
+
+                    <h3 className="text-2xl font-serif font-bold text-slate-900 mb-1">{cat.classes}</h3>
+                    <p className="text-xs text-slate-500 font-light mb-6">{cat.classesDetail}</p>
+
+                    {/* Subject Tags */}
+                    <div className="mb-6">
+                      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2.5">
+                        Core Examination Subjects:
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {cat.subjects.map((sub, sIdx) => (
+                          <span
+                            key={sIdx}
+                            className="bg-slate-100 text-slate-800 text-xs font-semibold px-3 py-1 rounded-xl border border-slate-200/80"
+                          >
+                            {sub}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Detailed Syllabus Preview */}
+                    <div className="space-y-3 mb-8 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                      <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Syllabus Highlights:</p>
+                      {cat.subjectsDetail.map((item, iIdx) => (
+                        <div key={iIdx} className="text-xs">
+                          <span className="font-semibold text-slate-800">{item.name}: </span>
+                          <span className="text-slate-500">{item.desc}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Format & Details Footer */}
+                  <div className="pt-4 border-t border-slate-100 space-y-2 text-xs text-slate-600">
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400">Exam Pattern:</span>
+                      <span className="font-semibold text-slate-800">{cat.examFormat}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400">Duration:</span>
+                      <span className="font-semibold text-slate-800">{cat.duration}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-400">Total Questions:</span>
+                      <span className="font-semibold text-slate-800">{cat.totalQuestions}</span>
+                    </div>
+
+                    <a
+                      href="#apply-now"
+                      onClick={() => setFormData({ ...formData, category: `${cat.name} (${cat.classes})` })}
+                      className="mt-4 w-full block text-center py-2.5 bg-slate-100 hover:bg-[#d4af37] hover:text-black text-slate-900 rounded-xl font-bold text-xs uppercase tracking-wider transition-colors"
+                    >
+                      Select &amp; Register for {cat.classes} (₹100)
+                    </a>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+
+          {/* View 2: Modern Table */}
+          {activeTab === 'table' && (
+            <motion.div
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden"
+            >
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-widest">
+                      <th className="py-4 px-6">Category Tier</th>
+                      <th className="py-4 px-6">Eligible Classes</th>
+                      <th className="py-4 px-6">Examination Subjects</th>
+                      <th className="py-4 px-6">Exam Format</th>
+                      <th className="py-4 px-6">Duration &amp; Qs</th>
+                      <th className="py-4 px-6 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-xs text-slate-700">
+                    {filteredCategories.map((cat) => (
+                      <tr key={cat.id} className="hover:bg-slate-50/60 transition-colors">
+                        <td className="py-5 px-6 font-semibold text-slate-900">
+                          <div className="flex items-center gap-2">
+                            <span className={`w-2.5 h-2.5 rounded-full ${
+                              cat.id === 'sub-junior' ? 'bg-blue-500' : cat.id === 'junior' ? 'bg-amber-500' : 'bg-emerald-500'
+                            }`} />
+                            <div>
+                              <p className="font-bold text-sm text-slate-900">{cat.name}</p>
+                              <p className="text-[11px] text-slate-400">{cat.hindiName}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-5 px-6 font-medium text-slate-800">
+                          <span className="inline-block bg-slate-100 px-3 py-1 rounded-full font-bold text-slate-800">
+                            {cat.classes}
+                          </span>
+                        </td>
+                        <td className="py-5 px-6 max-w-xs">
+                          <div className="flex flex-wrap gap-1.5">
+                            {cat.subjects.map((sub, sIdx) => (
+                              <span
+                                key={sIdx}
+                                className="bg-amber-50 text-[#b45309] font-medium px-2 py-0.5 rounded-md border border-amber-200/60 text-[11px]"
+                              >
+                                {sub}
+                              </span>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="py-5 px-6 text-slate-600 font-medium">
+                          {cat.examFormat}
+                        </td>
+                        <td className="py-5 px-6 text-slate-600">
+                          <p className="font-semibold text-slate-800">{cat.totalQuestions}</p>
+                          <p className="text-[11px] text-slate-400">{cat.duration}</p>
+                        </td>
+                        <td className="py-5 px-6 text-right">
+                          <a
+                            href="#apply-now"
+                            onClick={() => setFormData({ ...formData, category: `${cat.name} (${cat.classes})` })}
+                            className="inline-flex items-center gap-1.5 bg-slate-900 hover:bg-[#d4af37] hover:text-black text-white px-4 py-2 rounded-xl text-xs font-bold transition-all"
+                          >
+                            <span>Enroll (₹100)</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </motion.div>
+          )}
+
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════
+          PARTNER NGOS & SPONSORS SECTION
+          ═══════════════════════════════════════ */}
+      <section id="partners" className="py-20 lg:py-28 px-6 sm:px-8 lg:px-12 bg-white relative">
+        <div className="max-w-7xl mx-auto">
+          
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-300 text-[#b45309] text-xs font-bold tracking-widest uppercase mb-4">
+              <HeartHandshake className="w-3.5 h-3.5 text-[#d4af37]" />
+              Collective Impact &bull; Transparent Governance
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900 tracking-tight mb-4">
+              Partner NGOs &amp; <span className="italic text-[#b45309] font-serif">Sponsors</span>
+            </h2>
+            <p className="text-base text-slate-600 font-light max-w-2xl mx-auto leading-relaxed">
+              Dr. A.P.J. Abdul Kalam Medha Pariksha is organized with the joint collaboration of esteemed non-profit organizations and philanthropic sponsors committed to transparent student development.
+            </p>
+          </div>
+
+          {/* 1. Partner NGOs Grid */}
+          <div className="mb-16">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-xl bg-amber-100 text-[#b45309] flex items-center justify-center font-bold">
+                <HeartHandshake className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-xl font-serif font-bold text-slate-900">Partner Non-Profit Organizations</h3>
+                <p className="text-xs text-slate-500">Collaborating trusts supporting outreach, invigilation, and scholarship disbursement</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {partnerNgos.map((ngo, idx) => (
+                <div
+                  key={idx}
+                  className="p-6 rounded-2xl bg-[#fafaf8] border border-slate-200 hover:border-amber-300 transition-all shadow-2xs hover:shadow-md"
+                >
+                  <div className="flex items-center justify-between gap-2 mb-3">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-amber-50 text-[#b45309] border border-amber-200">
+                      {ngo.tag}
+                    </span>
+                    <span className="text-xs text-slate-400 font-bold">#{idx + 1}</span>
+                  </div>
+                  <h4 className="text-base font-serif font-bold text-slate-900 mb-1.5">{ngo.name}</h4>
+                  <p className="text-xs text-slate-600 font-light leading-relaxed">{ngo.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 2. Official Sponsors Grid */}
+          <div>
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-xl bg-slate-900 text-amber-300 flex items-center justify-center font-bold">
+                <Building2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-xl font-serif font-bold text-slate-900">Official Programme Sponsors</h3>
+                <p className="text-xs text-slate-500">Corporate &amp; community leaders providing prize endowments and digital backing</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {sponsors.map((sp, idx) => (
+                <div
+                  key={idx}
+                  className="p-8 rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 text-white border border-slate-700 shadow-xl relative overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-[#d4af37]/10 rounded-full blur-2xl pointer-events-none" />
+                  <div className="relative z-10">
+                    <div className="inline-block px-3 py-1 rounded-full bg-white/10 text-amber-300 text-[10px] font-bold uppercase tracking-wider mb-4 border border-amber-300/30">
+                      {sp.tag}
+                    </div>
+                    <h4 className="text-2xl font-serif font-bold text-white mb-1">{sp.name}</h4>
+                    <p className="text-xs font-semibold text-amber-300 uppercase tracking-wider mb-3">{sp.category}</p>
+                    <p className="text-xs text-slate-300 font-light leading-relaxed">{sp.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════
+          APPLICATION & REGISTRATION SECTION (₹100 FEE)
+          ═══════════════════════════════════════ */}
+      <section id="apply-now" className="py-20 lg:py-28 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-amber-50/40 via-white to-slate-50 border-t border-slate-200">
+        <div className="max-w-4xl mx-auto">
+          
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-300 text-[#b45309] text-xs font-bold tracking-widest uppercase mb-4">
+              <CreditCard className="w-3.5 h-3.5 text-[#d4af37]" />
+              Secure Online Registration (₹100)
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900 tracking-tight mb-4">
+              Register for <span className="italic text-[#b45309] font-serif">Medha Pariksha</span>
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 font-light max-w-lg mx-auto">
+              Fill candidate details below and complete the nominal <strong className="text-slate-900">₹100</strong> registration fee. You will immediately receive a verifiable digital receipt.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200 shadow-xl relative overflow-hidden">
+            
+            {/* Error notification */}
+            {errorMessage && (
+              <div className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-bold">Registration Alert</p>
+                  <p>{errorMessage}</p>
+                </div>
+              </div>
+            )}
+
+            <form onSubmit={handlePaymentAndRegister} className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                
+                {/* Student Name */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Student&apos;s Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Aryan Sharma / Ayesha Khan"
+                    value={formData.studentName}
+                    onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
+                    className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-[#d4af37] focus:bg-white transition-all"
+                  />
+                </div>
+
+                {/* Guardian Name */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Father&apos;s / Mother&apos;s / Guardian&apos;s Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Rajesh Sharma"
+                    value={formData.guardianName}
+                    onChange={(e) => setFormData({ ...formData, guardianName: e.target.value })}
+                    className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-[#d4af37] focus:bg-white transition-all"
+                  />
+                </div>
+
+                {/* Category Selection */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Exam Category / Class *
+                  </label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-[#d4af37] focus:bg-white transition-all"
+                  >
+                    <option value="Sub-Junior Category (Classes 6 to 8)">Sub-Junior Category: Classes 6 to 8</option>
+                    <option value="Junior Category (Classes 9 & 10)">Junior Category: Classes 9 &amp; 10</option>
+                    <option value="Senior Category (Classes 11 & 12)">Senior Category: Classes 11 &amp; 12</option>
+                  </select>
+                </div>
+
+                {/* School Name */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    School / College Name *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Modern Public School, Okhla"
+                    value={formData.schoolName}
+                    onChange={(e) => setFormData({ ...formData, schoolName: e.target.value })}
+                    className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-[#d4af37] focus:bg-white transition-all"
+                  />
+                </div>
+
+                {/* City / State */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    City &amp; State *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. New Delhi / Patna / Lucknow"
+                    value={formData.city}
+                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                    className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-[#d4af37] focus:bg-white transition-all"
+                  />
+                </div>
+
+                {/* Contact Number */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    WhatsApp / Mobile Contact *
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="e.g. 9876543210"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-[#d4af37] focus:bg-white transition-all"
+                  />
+                </div>
+
+              </div>
+
+              {/* Email (Optional) */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                  Email Address (For Admit Card &amp; Updates)
+                </label>
+                <input
+                  type="email"
+                  placeholder="student@example.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-[#d4af37] focus:bg-white transition-all"
+                />
+              </div>
+
+              {/* Fee Notice Box */}
+              <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-300 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-bold text-slate-900">Total Registration Fee Payable:</p>
+                  <p className="text-[11px] text-slate-500">Includes examination paper, computerized OMR evaluation, and Participation Certificate</p>
+                </div>
+                <div className="text-right">
+                  <span className="text-2xl font-serif font-black text-[#b45309]">₹100</span>
+                  <span className="text-[10px] text-slate-500 block">INR (One-Time)</span>
+                </div>
+              </div>
+
+              <div className="pt-2 flex flex-col sm:flex-row items-center gap-4">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full sm:w-auto bg-[#d4af37] hover:bg-[#c59b27] text-slate-950 px-10 py-4 rounded-full font-bold text-xs uppercase tracking-wider shadow-[0_4px_20px_rgba(212,175,55,0.4)] hover:scale-[1.01] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Connecting Payment Gateway...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Pay ₹100 &amp; Generate Official Receipt</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+
+                <p className="text-[11px] text-slate-500 text-center sm:text-left">
+                  256-Bit SSL Encrypted Razorpay &bull; Helpdesk: <a href="tel:+917982804385" className="text-[#b45309] font-bold hover:underline">+91 79828 04385</a>
+                </p>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════
+          RECEIPT LOOKUP / RE-DOWNLOAD SECTION
+          ═══════════════════════════════════════ */}
+      <section id="download-receipt" className="py-16 px-6 sm:px-8 lg:px-12 bg-white border-t border-slate-200">
+        <div className="max-w-3xl mx-auto">
+          <div className="p-8 rounded-3xl bg-slate-50 border border-slate-200 shadow-xs">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-2xl bg-amber-100 text-[#b45309] flex items-center justify-center">
+                <Printer className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-lg font-serif font-bold text-slate-900">Already Registered? Download Your Receipt</h3>
+                <p className="text-xs text-slate-500">Enter your Registration Number (e.g. AKMP-2026-XXXXX) or registered Mobile Number</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleReceiptLookup} className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="text"
+                placeholder="Registration No or 10-digit Phone..."
+                value={lookupQuery}
+                onChange={(e) => setLookupQuery(e.target.value)}
+                className="flex-1 px-4 py-3 rounded-2xl bg-white border border-slate-300 text-xs focus:outline-none focus:border-[#d4af37]"
+              />
+              <button
+                type="submit"
+                disabled={lookupLoading}
+                className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-2xl text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+              >
+                {lookupLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                <span>Find Receipt</span>
+              </button>
+            </form>
+
+            {lookupError && (
+              <p className="text-xs text-rose-600 mt-3">{lookupError}</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════
+          FAQS ACCORDION
+          ═══════════════════════════════════════ */}
+      <section className="py-20 lg:py-24 px-6 sm:px-8 lg:px-12 bg-[#fafaf8] border-t border-slate-200">
+        <div className="max-w-4xl mx-auto">
+          
+          <div className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-bold tracking-widest uppercase mb-4">
+              <HelpCircle className="w-3.5 h-3.5 text-[#b45309]" />
+              Need Guidance?
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900 tracking-tight">
+              Frequently Asked <span className="italic text-[#b45309] font-serif">Questions</span>
+            </h2>
+            <p className="text-sm text-slate-600 font-light mt-2">
+              Everything you need to know about eligibility, dates, syllabus, fees, and results.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, fIdx) => (
+              <div
+                key={fIdx}
+                className="border border-slate-200 rounded-2xl overflow-hidden transition-all duration-200 bg-white"
+              >
+                <button
+                  onClick={() => setOpenFaq(openFaq === fIdx ? null : fIdx)}
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 font-semibold text-sm sm:text-base text-slate-900 hover:text-[#b45309] transition-colors"
+                >
+                  <span>{faq.q}</span>
+                  <ChevronDown
+                    className={`w-5 h-5 text-slate-400 shrink-0 transition-transform duration-300 ${
+                      openFaq === fIdx ? 'rotate-180 text-[#b45309]' : ''
+                    }`}
+                  />
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {openFaq === fIdx && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="px-5 pb-5 text-xs sm:text-sm text-slate-600 font-light leading-relaxed border-t border-slate-200/60 pt-3"
+                    >
+                      {faq.a}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+
+      {/* ═══════════════════════════════════════
+          HELPLINE & TRUST FOOTER BANNER
+          ═══════════════════════════════════════ */}
+      <section className="py-12 bg-slate-900 text-white px-6 sm:px-8 lg:px-12">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+          <div>
+            <h3 className="text-xl font-serif font-bold text-amber-300">
+              Questions regarding Kalam Medha Pariksha?
+            </h3>
+            <p className="text-xs text-slate-300 font-light mt-1">
+              Contact our academic committee at G Goodwill Trust Secretariat, Shaheen Bagh, New Delhi.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <a
+              href="tel:+917982804385"
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-2.5 rounded-full text-xs font-semibold flex items-center gap-2 transition-all"
+            >
+              <Phone className="w-3.5 h-3.5 text-amber-300" />
+              <span>+91 79828 04385</span>
+            </a>
+
+            <a
+              href="mailto:globalgoodwill4@gmail.com"
+              className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-2.5 rounded-full text-xs font-semibold flex items-center gap-2 transition-all"
+            >
+              <Mail className="w-3.5 h-3.5 text-amber-300" />
+              <span>globalgoodwill4@gmail.com</span>
+            </a>
+
+            <a
+              href="https://api.whatsapp.com/send?phone=917982804385&text=Hello%20G%20Goodwill%20Trust,%20I%20have%20an%20inquiry%20regarding%20Dr.%20A.P.J.%20Abdul%20Kalam%20Medha%20Pariksha"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#25D366] hover:bg-[#20bd5a] text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all shadow-md"
+            >
+              <span>WhatsApp Helpline</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          OFFICIAL PRINTABLE RECEIPT MODAL
+          ═══════════════════════════════════════ */}
+      <MedhaReceipt
+        receipt={activeReceipt}
+        onClose={() => setActiveReceipt(null)}
+      />
+
+    </div>
+  );
+}

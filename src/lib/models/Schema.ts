@@ -75,6 +75,24 @@ const DonationSchema = new mongoose.Schema({
   payment_status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
 }, { timestamps: true });
 
+// --- Scholarship Registration (Dr. A.P.J. Abdul Kalam Medha Pariksha) ---
+const ScholarshipRegistrationSchema = new mongoose.Schema({
+  registration_no: { type: String, unique: true, required: true, uppercase: true, trim: true },
+  receipt_no: { type: String, unique: true, required: true, uppercase: true, trim: true },
+  student_name: { type: String, required: true, trim: true },
+  guardian_name: { type: String, required: true, trim: true },
+  category: { type: String, required: true, trim: true },
+  school_name: { type: String, required: true, trim: true },
+  city: { type: String, required: true, trim: true },
+  phone: { type: String, required: true, trim: true },
+  email: { type: String, trim: true, lowercase: true },
+  amount: { type: Number, default: 100 },
+  razorpay_order_id: { type: String, trim: true },
+  razorpay_payment_id: { type: String, trim: true },
+  payment_status: { type: String, enum: ['pending', 'completed', 'failed'], default: 'pending' },
+  exam_name: { type: String, default: 'Dr. A.P.J. Abdul Kalam Medha Pariksha' },
+}, { timestamps: true });
+
 export const HeroSlide = mongoose.models.HeroSlide || mongoose.model('HeroSlide', HeroSlideSchema);
 export const Partner = mongoose.models.Partner || mongoose.model('Partner', PartnerSchema);
 export const Testimonial = mongoose.models.Testimonial || mongoose.model('Testimonial', TestimonialSchema);
@@ -83,3 +101,4 @@ export const Program = mongoose.models.Program || mongoose.model('Program', Prog
 export const GDocument = mongoose.models.GDocument || mongoose.model('GDocument', DocumentSchema);
 export const Certificate = mongoose.models.Certificate || mongoose.model('Certificate', CertificateSchema);
 export const Donation = mongoose.models.Donation || mongoose.model('Donation', DonationSchema);
+export const ScholarshipRegistration = mongoose.models.ScholarshipRegistration || mongoose.model('ScholarshipRegistration', ScholarshipRegistrationSchema);
