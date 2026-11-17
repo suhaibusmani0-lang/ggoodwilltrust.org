@@ -160,7 +160,7 @@ function MedhaParikshaContent() {
         }) {
           try {
             // 3. Verify Payment on Backend & Mark Record Completed
-            await fetch('/api/medha-pariksha/verify', {
+            const verifyRes = await fetch('/api/medha-pariksha/verify', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -171,22 +171,31 @@ function MedhaParikshaContent() {
               }),
             });
 
-            // 4. Show Instant Official Receipt
+            const verifyData = await verifyRes.json();
+
+            if (!verifyRes.ok || !verifyData.success) {
+              alert(verifyData.message || 'Payment verification failed. Please contact the trust helpline.');
+              return;
+            }
+
+            const verifiedItem = verifyData.data;
+
+            // 4. Show Instant Official Receipt ONLY after verified payment
             setActiveReceipt({
-              registrationNo: registration_no,
-              receiptNo: receipt_no,
-              studentName: formData.studentName,
-              guardianName: formData.guardianName,
-              category: formData.category,
-              schoolName: formData.schoolName,
-              schoolCode: formData.schoolCode,
-              referralCode: formData.referralCode,
-              city: formData.city,
-              phone: formData.phone,
-              email: formData.email,
-              amount: 100,
-              paymentId: response.razorpay_payment_id || 'PAY_' + Date.now(),
-              date: new Date().toLocaleDateString('en-IN', {
+              registrationNo: verifiedItem.registration_no || registration_no,
+              receiptNo: verifiedItem.receipt_no || receipt_no,
+              studentName: verifiedItem.student_name || formData.studentName,
+              guardianName: verifiedItem.guardian_name || formData.guardianName,
+              category: verifiedItem.category || formData.category,
+              schoolName: verifiedItem.school_name || formData.schoolName,
+              schoolCode: verifiedItem.school_code || formData.schoolCode,
+              referralCode: verifiedItem.referral_code || formData.referralCode,
+              city: verifiedItem.city || formData.city,
+              phone: verifiedItem.phone || formData.phone,
+              email: verifiedItem.email || formData.email,
+              amount: verifiedItem.amount || 100,
+              paymentId: verifiedItem.razorpay_payment_id || response.razorpay_payment_id,
+              date: new Date(verifiedItem.updatedAt || Date.now()).toLocaleDateString('en-IN', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric',
@@ -209,7 +218,7 @@ function MedhaParikshaContent() {
             });
           } catch (vErr) {
             console.error('Verification error:', vErr);
-            alert('Payment succeeded! Your receipt is generated with ID: ' + response.razorpay_payment_id);
+            alert('Payment received, but verification encountered an issue. Please contact the helpline with ID: ' + response.razorpay_payment_id);
           }
         },
       };
@@ -224,7 +233,7 @@ function MedhaParikshaContent() {
     }
   };
 
-  // Lookup existing registration receipt
+  // Lookup existing registration receipt (STRICTLY verifies completed payment)
   const handleReceiptLookup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!lookupQuery.trim()) return;
@@ -232,11 +241,15 @@ function MedhaParikshaContent() {
     setLookupError(null);
 
     try {
-      const res = await fetch(`/api/medha-pariksha/registrations?search=${encodeURIComponent(lookupQuery.trim())}`);
+      const res = await fetch('/api/medha-pariksha/receipt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: lookupQuery.trim() }),
+      });
       const data = await res.json();
 
-      if (res.ok && data.success && Array.isArray(data.data) && data.data.length > 0) {
-        const item = data.data[0];
+      if (res.ok && data.success && data.data) {
+        const item = data.data;
         setActiveReceipt({
           registrationNo: item.registration_no,
           receiptNo: item.receipt_no,
@@ -250,15 +263,15 @@ function MedhaParikshaContent() {
           phone: item.phone,
           email: item.email,
           amount: item.amount || 100,
-          paymentId: item.razorpay_payment_id || item.razorpay_order_id || 'VERIFIED_OFFLINE',
-          date: new Date(item.createdAt || Date.now()).toLocaleDateString('en-IN', {
+          paymentId: item.razorpay_payment_id || 'VERIFIED',
+          date: new Date(item.updatedAt || item.createdAt || Date.now()).toLocaleDateString('en-IN', {
             day: 'numeric',
             month: 'long',
             year: 'numeric',
           }),
         });
       } else {
-        setLookupError('No verified registration found for the provided Registration No or Mobile Number.');
+        setLookupError(data.message || 'No completed registration found. Please check your Registration No or Mobile Number.');
       }
     } catch {
       setLookupError('Failed to search registration. Please try again.');
