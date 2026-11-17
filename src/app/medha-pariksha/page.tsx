@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Trophy,
@@ -33,7 +34,9 @@ import {
   Search,
   Loader2,
   CreditCard,
-  Printer
+  Printer,
+  Hash,
+  Tag
 } from 'lucide-react';
 import Link from 'next/link';
 import MedhaReceipt, { MedhaReceiptData } from '@/components/MedhaReceipt';
@@ -52,7 +55,8 @@ const staggerContainer = {
   }
 };
 
-export default function MedhaParikshaPage() {
+function MedhaParikshaContent() {
+  const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<'grid' | 'table'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -64,10 +68,21 @@ export default function MedhaParikshaPage() {
     guardianName: '',
     category: 'Junior Category (Classes 9 & 10)',
     schoolName: '',
+    schoolCode: '',
+    referralCode: '',
     city: '',
     phone: '',
     email: '',
   });
+
+  // Automatically read referral code from URL query parameter (e.g. ?ref=TEACHER10)
+  useEffect(() => {
+    const refParam = searchParams.get('ref') || searchParams.get('referral');
+    if (refParam) {
+      setFormData((prev) => ({ ...prev, referralCode: refParam.toUpperCase() }));
+    }
+  }, [searchParams]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -94,7 +109,7 @@ export default function MedhaParikshaPage() {
     setErrorMessage(null);
 
     try {
-      // 1. Create order in Backend & Store initial record
+      // 1. Create order in Backend & Store initial record with school_code and referral_code
       const res = await fetch('/api/medha-pariksha/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -103,6 +118,8 @@ export default function MedhaParikshaPage() {
           guardian_name: formData.guardianName,
           category: formData.category,
           school_name: formData.schoolName,
+          school_code: formData.schoolCode,
+          referral_code: formData.referralCode,
           city: formData.city,
           phone: formData.phone,
           email: formData.email,
@@ -146,7 +163,7 @@ export default function MedhaParikshaPage() {
         }) {
           try {
             // 3. Verify Payment on Backend & Mark Record Completed
-            const verifyRes = await fetch('/api/medha-pariksha/verify', {
+            await fetch('/api/medha-pariksha/verify', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -157,8 +174,6 @@ export default function MedhaParikshaPage() {
               }),
             });
 
-            const verifyData = await verifyRes.json();
-
             // 4. Show Instant Official Receipt
             setActiveReceipt({
               registrationNo: registration_no,
@@ -167,6 +182,8 @@ export default function MedhaParikshaPage() {
               guardianName: formData.guardianName,
               category: formData.category,
               schoolName: formData.schoolName,
+              schoolCode: formData.schoolCode,
+              referralCode: formData.referralCode,
               city: formData.city,
               phone: formData.phone,
               email: formData.email,
@@ -187,6 +204,8 @@ export default function MedhaParikshaPage() {
               guardianName: '',
               category: 'Junior Category (Classes 9 & 10)',
               schoolName: '',
+              schoolCode: '',
+              referralCode: '',
               city: '',
               phone: '',
               email: '',
@@ -228,6 +247,8 @@ export default function MedhaParikshaPage() {
           guardianName: item.guardian_name,
           category: item.category,
           schoolName: item.school_name,
+          schoolCode: item.school_code,
+          referralCode: item.referral_code,
           city: item.city,
           phone: item.phone,
           email: item.email,
@@ -288,80 +309,71 @@ export default function MedhaParikshaPage() {
     },
     {
       name: 'Arshi Cafe',
-      category: 'Community & Refreshment Sponsor',
-      desc: 'Proud local hospitality partner fueling youth events, community gatherings, and talent drives.',
+      category: 'Community & Hospitality Sponsor',
+      desc: 'Proud local hospitality partner fueling youth talent drives and academic events.',
       tag: 'Official Sponsor',
     },
   ];
 
-  // Prizes data
+  // Combined Grand Prizes data
   const prizes = [
     {
-      rank: '1st Prize',
-      title: 'Mega Champion Trophy',
+      rank: '1st Mega Prize',
+      title: 'Grand Champion Trophy',
       amount: '₹21,000',
-      badge: 'Gold Laureate • Rank 1',
+      badge: 'Combined Overall Rank 1 • Gold Champion',
       badgeBg: 'bg-amber-100 text-amber-900 border-amber-300',
-      cardBorder: 'border-amber-400/90 shadow-[0_12px_40px_rgba(212,175,55,0.25)]',
-      cardBg: 'bg-gradient-to-b from-amber-50/70 via-white to-amber-50/30',
-      accentGlow: 'bg-[#d4af37]/20',
+      cardBorder: 'border-amber-400 shadow-[0_16px_50px_rgba(212,175,55,0.3)]',
+      cardBg: 'bg-gradient-to-b from-amber-50/90 via-white to-amber-50/40',
       icon: Trophy,
-      iconColor: 'text-amber-500 fill-amber-100',
-      iconBoxBg: 'bg-gradient-to-br from-amber-500 to-[#d4af37] text-white shadow-amber-300/50',
-      trophyText: 'Grand Championship Trophy',
+      iconBoxBg: 'bg-gradient-to-br from-amber-500 via-[#d4af37] to-amber-600 text-white shadow-amber-300/50',
       benefits: [
-        '₹21,000 Cash Scholarship Award',
-        'Official Gold Champion Trophy',
-        'State / National Merit Certificate of Honor',
-        'Special Felicitation at Grand Award Ceremony',
-        'Mentorship & Academic Guidance from Scholars',
-        'Featured in Trust Annual Magazine & Website'
+        '₹21,000 Direct Cash Scholarship',
+        'Official Gold Grand Champion Trophy',
+        'National Merit Certificate of Highest Distinction',
+        'Special Felicitation at Annual Trust Ceremony',
+        'Academic Mentorship from Eminent Educators',
+        'Featured in Foundation Annual Honor Roll'
       ],
       popular: true,
     },
     {
-      rank: '2nd Prize',
+      rank: '2nd Mega Prize',
       title: 'Excellence Trophy',
       amount: '₹11,000',
-      badge: 'Silver Achiever • Rank 2',
+      badge: 'Combined Overall Rank 2 • Silver Achiever',
       badgeBg: 'bg-slate-100 text-slate-800 border-slate-300',
-      cardBorder: 'border-slate-300 shadow-[0_10px_30px_rgba(100,116,139,0.12)]',
-      cardBg: 'bg-gradient-to-b from-slate-50/80 via-white to-slate-50/20',
-      accentGlow: 'bg-slate-400/15',
+      cardBorder: 'border-slate-300 shadow-[0_12px_40px_rgba(100,116,139,0.15)]',
+      cardBg: 'bg-gradient-to-b from-slate-50/90 via-white to-slate-50/30',
       icon: Medal,
-      iconColor: 'text-slate-600 fill-slate-200',
-      iconBoxBg: 'bg-gradient-to-br from-slate-600 to-slate-400 text-white shadow-slate-300/50',
-      trophyText: 'Silver Prestigious Trophy',
+      iconBoxBg: 'bg-gradient-to-br from-slate-700 via-slate-600 to-slate-500 text-white shadow-slate-300/50',
       benefits: [
-        '₹11,000 Cash Scholarship Award',
+        '₹11,000 Direct Cash Scholarship',
         'Official Silver Achiever Trophy',
-        'Distinguished Merit Certificate',
-        'Special Felicitation at Grand Award Ceremony',
-        'Exclusive Academic Skill Development Kit',
-        'Featured in Trust Honor Roll'
+        'National Merit Certificate of Excellence',
+        'Special Felicitation at Annual Trust Ceremony',
+        'Advanced Academic Development Guidance',
+        'Featured in Foundation Roll of Honor'
       ],
       popular: false,
     },
     {
-      rank: '3rd Prize',
+      rank: '3rd Mega Prize',
       title: 'Distinction Trophy',
       amount: '₹5,100',
-      badge: 'Bronze Laureate • Rank 3',
+      badge: 'Combined Overall Rank 3 • Bronze Laureate',
       badgeBg: 'bg-orange-100 text-orange-950 border-orange-300',
-      cardBorder: 'border-orange-300/80 shadow-[0_10px_30px_rgba(180,83,9,0.12)]',
-      cardBg: 'bg-gradient-to-b from-orange-50/60 via-white to-orange-50/20',
-      accentGlow: 'bg-amber-600/15',
+      cardBorder: 'border-orange-300 shadow-[0_12px_40px_rgba(180,83,9,0.15)]',
+      cardBg: 'bg-gradient-to-b from-orange-50/80 via-white to-orange-50/30',
       icon: Award,
-      iconColor: 'text-amber-700 fill-orange-200',
-      iconBoxBg: 'bg-gradient-to-br from-amber-700 to-amber-500 text-white shadow-orange-300/50',
-      trophyText: 'Bronze Distinction Trophy',
+      iconBoxBg: 'bg-gradient-to-br from-amber-700 via-amber-600 to-amber-500 text-white shadow-orange-300/50',
       benefits: [
-        '₹5,100 Cash Scholarship Award',
+        '₹5,100 Direct Cash Scholarship',
         'Official Bronze Distinction Trophy',
-        'State Merit Certificate of Excellence',
-        'Special Felicitation at Grand Award Ceremony',
-        'Official Recognition Certificate',
-        'Featured on Foundation Portal'
+        'National Merit Certificate of Honor',
+        'Special Felicitation at Annual Trust Ceremony',
+        'Academic Recognition & Scholarship Citation',
+        'Permanent Listing on Trust Portal'
       ],
       popular: false,
     },
@@ -372,14 +384,13 @@ export default function MedhaParikshaPage() {
     {
       id: 'sub-junior',
       name: 'Sub-Junior Category',
-      hindiName: 'सब-जूनियर वर्ग',
       classes: 'Classes 6 to 8',
-      classesDetail: 'Class 6th, 7th & 8th (Any Recognized Board)',
+      classesDetail: 'Open to Class 6th, 7th & 8th Students (CBSE, ICSE, State Boards)',
       subjects: ['Basic Maths', 'Science', 'GK', 'English'],
       subjectsDetail: [
         { name: 'Basic Mathematics', desc: 'Arithmetic, Fractions, Mensuration, Decimals, Number Systems' },
-        { name: 'General Science', desc: 'Physical, Chemical & Biological basics from NCERT syllabus' },
-        { name: 'General Knowledge & Current Affairs', desc: 'India, Great Personalities, Science Discoveries, Kalam Life' },
+        { name: 'General Science', desc: 'Physical, Chemical & Biological fundamentals from NCERT syllabus' },
+        { name: 'General Knowledge & Current Affairs', desc: 'National Awareness, Science Milestones, Kalam Life & Vision' },
         { name: 'English Language', desc: 'Grammar, Synonyms/Antonyms, Comprehension & Vocabulary' },
       ],
       examFormat: 'Objective Multiple Choice (MCQ)',
@@ -391,15 +402,14 @@ export default function MedhaParikshaPage() {
     {
       id: 'junior',
       name: 'Junior Category',
-      hindiName: 'जूनियर वर्ग',
       classes: 'Classes 9 & 10',
-      classesDetail: 'Class 9th & 10th (Secondary School Level)',
+      classesDetail: 'Open to Class 9th & 10th Students (Secondary School Level)',
       subjects: ['Maths', 'Science', 'English', 'Logical Reasoning'],
       subjectsDetail: [
-        { name: 'Mathematics', desc: 'Algebra, Geometry, Trigonometry, Statistics & Number Theory' },
-        { name: 'Science (Physics, Chemistry, Bio)', desc: 'Fundamental Laws, Reactions, Energy, Life Processes' },
+        { name: 'Mathematics', desc: 'Algebra, Geometry, Trigonometry, Statistics & Number Systems' },
+        { name: 'Science (Physics, Chemistry, Bio)', desc: 'Applied Laws, Chemical Reactions, Energy, Life Processes' },
         { name: 'English Language', desc: 'Analytical Reading, Applied Grammar, Idioms & Error Detection' },
-        { name: 'Logical Reasoning & Mental Ability', desc: 'Series, Patterns, Coding-Decoding, Blood Relations & Puzzles' },
+        { name: 'Logical Reasoning & Mental Ability', desc: 'Series, Patterns, Coding-Decoding, Blood Relations & Analytical Puzzles' },
       ],
       examFormat: 'Objective Multiple Choice (MCQ)',
       totalQuestions: '100 Questions',
@@ -410,15 +420,14 @@ export default function MedhaParikshaPage() {
     {
       id: 'senior',
       name: 'Senior Category',
-      hindiName: 'सीनियर वर्ग',
       classes: 'Classes 11 & 12',
-      classesDetail: 'Class 11th & 12th (Higher Secondary / Intermediate)',
+      classesDetail: 'Open to Class 11th & 12th Students (Higher Secondary / Intermediate)',
       subjects: ['Stream-wise', 'Aptitude'],
       subjectsDetail: [
-        { name: 'Stream-wise Core Subjects', desc: 'Science (PCM/PCB) / Commerce / Humanities foundational syllabus' },
+        { name: 'Stream-wise Core Foundations', desc: 'Science (PCM/PCB) / Commerce / Humanities foundational syllabus' },
         { name: 'Quantitative & Analytical Aptitude', desc: 'Higher level data interpretation, quantitative math, critical problem-solving' },
-        { name: 'General Aptitude & Reasoning', desc: 'Verbal & Non-verbal reasoning, competitive aptitude matching CUET/JEE/NEET foundation' },
-        { name: 'English & Current Awareness', desc: 'Advanced comprehension, global and national science/current events' },
+        { name: 'General Aptitude & Reasoning', desc: 'Verbal & Non-verbal reasoning matching CUET/JEE/NEET foundation' },
+        { name: 'English & Current Affairs', desc: 'Advanced comprehension, global and national science/current events' },
       ],
       examFormat: 'Objective Multiple Choice (MCQ)',
       totalQuestions: '100 Questions',
@@ -434,28 +443,32 @@ export default function MedhaParikshaPage() {
 
   const faqs = [
     {
+      q: 'How are the Mega Cash Prizes decided across the 3 categories?',
+      a: 'The Mega Cash Prizes (₹21,000 for 1st Prize, ₹11,000 for 2nd Prize, and ₹5,100 for 3rd Prize) represent the Combined Overall Grand Winners across all categories (Sub-Junior, Junior, and Senior). Scores from all three categories are normalized by the examination board to determine the top three overall merit scholars of the competition.'
+    },
+    {
       q: 'What is the examination registration fee?',
-      a: 'The registration fee is a nominal ₹100 only. This fee covers examination administration, bilingual question paper booklet, computerized OMR evaluation, and official Certificate of Participation for every candidate.'
+      a: 'The registration fee is a nominal ₹100 only. This covers the official test registration, computerized OMR evaluation, and an official Certificate of Participation for every registered student.'
     },
     {
-      q: 'Will I receive a receipt after paying ₹100?',
-      a: 'Yes, absolutely! Immediately upon successful payment via Razorpay, an official computer-generated receipt with your Unique Registration Number, Receipt Number, and Payment Transaction ID will appear on your screen to download or print.'
+      q: 'What is the role of School Code and Referral Code in the form?',
+      a: 'The School Code helps identify your educational institution for institutional awards and collective school reporting. The Referral Code tracks if you were referred by a teacher, student coordinator, partner NGO, or volunteer, ensuring complete transparency.'
     },
     {
-      q: 'Where is my registration stored?',
-      a: 'All registrations are securely recorded in the G Goodwill Trust central database. You can re-download your receipt anytime using your registration number or phone number on this page.'
-    },
-    {
-      q: 'Who are the partner NGOs and sponsors?',
-      a: 'This noble initiative is organized by G Goodwill Trust in collaboration with esteemed partner NGOs: Spread Smiles Foundation, No Crying Foundation, Musawat Welfare Trust, Nayab Training & Educational Trust, and Buniyadi Sahara Trust, proudly supported by sponsors Zarnetic and Arshi Cafe.'
-    },
-    {
-      q: 'What is the last date to apply?',
-      a: 'The last date to register and submit your ₹100 application is 31st December 2026.'
+      q: 'Will I receive an official receipt after paying ₹100?',
+      a: 'Yes! Upon successful payment via Razorpay, an official computer-generated receipt containing your Unique Registration Number, Receipt Number, and Payment Transaction ID will immediately open for you to print or save as a PDF.'
     },
     {
       q: 'When will the Exam Date and Award Ceremony be announced?',
-      a: 'The official Exam Date and Award Ceremony date will be announced soon on this website and notified directly via SMS and WhatsApp to all registered candidates.'
+      a: 'The official Exam Date and Award Ceremony schedule will be announced soon on this portal and communicated directly via SMS and WhatsApp to all registered candidates.'
+    },
+    {
+      q: 'Who are the collaborating partner NGOs and sponsors?',
+      a: 'This initiative is spearheaded by G Goodwill Trust in active partnership with Spread Smiles Foundation, No Crying Foundation, Musawat Welfare Trust, Nayab Training & Educational Trust, and Buniyadi Sahara Trust, with generous sponsorship from Zarnetic and Arshi Cafe.'
+    },
+    {
+      q: 'What is the last date to apply?',
+      a: 'The final date for registration and submitting your application is 31st December 2026.'
     },
   ];
 
@@ -484,7 +497,7 @@ export default function MedhaParikshaPage() {
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-300 text-[#b45309] text-xs font-bold uppercase tracking-widest shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
-              <span>G Goodwill Trust • National Scholarship Drive</span>
+              <span>G Goodwill Trust • National Merit Talent Hunt</span>
               <span className="w-1.5 h-1.5 rounded-full bg-[#b45309]" />
               <span className="text-slate-800 font-extrabold">2026-2027</span>
             </div>
@@ -505,21 +518,28 @@ export default function MedhaParikshaPage() {
               </span>
             </h1>
             <p className="text-lg sm:text-xl text-slate-700 font-normal leading-relaxed max-w-2xl mx-auto mb-4">
-              डॉ. ए.पी.जे. अब्दुल कलाम मेधा परीक्षा — A prestigious talent scholarship examination empowering students from Classes 6 to 12 with verified cash grants, grand trophies, and national honors.
+              A premier national merit scholarship examination empowering brilliant young minds from Classes 6 to 12 with direct cash awards, championship trophies, and official recognition.
             </p>
 
-            {/* Fee & Transparent Badge Pill */}
-            <div className="inline-flex flex-wrap items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white border border-amber-300/80 shadow-xs mb-4">
+            {/* Combined Winner Clarification & Fee Pill */}
+            <div className="flex flex-wrap items-center justify-center gap-2 max-w-2xl mx-auto mb-2">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-2xl bg-amber-100/70 border border-amber-300 text-xs text-amber-950 font-bold shadow-2xs">
+                <Trophy className="w-4 h-4 text-[#b45309]" />
+                <span>Combined Mega Winners Across Categories: ₹21,000 &bull; ₹11,000 &bull; ₹5,100</span>
+              </div>
+            </div>
+
+            <div className="inline-flex flex-wrap items-center justify-center gap-2 px-5 py-2 rounded-2xl bg-white border border-slate-200 shadow-xs mb-4">
               <span className="text-xs font-semibold text-slate-600">Application Fee:</span>
-              <span className="text-sm font-extrabold text-[#b45309] bg-amber-100/80 px-2.5 py-0.5 rounded-full">
+              <span className="text-sm font-extrabold text-[#b45309] bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">
                 ₹100 Only
               </span>
               <span className="text-slate-300">&bull;</span>
-              <span className="text-xs text-emerald-700 font-medium flex items-center gap-1">
+              <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Instant Printable Receipt
               </span>
               <span className="text-slate-300">&bull;</span>
-              <span className="text-xs text-slate-500 font-medium">100% Backend Transparent</span>
+              <span className="text-xs text-slate-500 font-medium">School Code &amp; Referral Supported</span>
             </div>
           </motion.div>
 
@@ -547,11 +567,11 @@ export default function MedhaParikshaPage() {
             </a>
 
             <a
-              href="#partners"
+              href="#prizes"
               className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-3.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-colors flex items-center gap-2 border border-slate-200"
             >
-              <HeartHandshake className="w-4 h-4 text-slate-600" />
-              <span>Partners &amp; Sponsors</span>
+              <Trophy className="w-4 h-4 text-slate-600" />
+              <span>Mega Prize Pool</span>
             </a>
 
             <button
@@ -600,7 +620,7 @@ export default function MedhaParikshaPage() {
                   </div>
                   <h4 className="text-xs uppercase font-bold text-slate-400 tracking-wider">Exam Date</h4>
                   <p className="text-2xl font-serif font-bold text-[#b45309] mt-0.5">To Be Announced</p>
-                  <p className="text-xs text-slate-500 mt-0.5">शीघ्र घोषित की जाएगी</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Will be announced soon</p>
                 </div>
               </div>
 
@@ -615,7 +635,7 @@ export default function MedhaParikshaPage() {
                   </div>
                   <h4 className="text-xs uppercase font-bold text-slate-400 tracking-wider">Award Ceremony</h4>
                   <p className="text-2xl font-serif font-bold text-slate-900 mt-0.5">To Be Announced</p>
-                  <p className="text-xs text-slate-500 mt-0.5">शीघ्र घोषित की जाएगी</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Will be announced soon</p>
                 </div>
               </div>
 
@@ -627,7 +647,7 @@ export default function MedhaParikshaPage() {
 
 
       {/* ═══════════════════════════════════════
-          MEGA PRIZE STRUCTURE (VISUALLY APPEALING CARDS)
+          MEGA PRIZE STRUCTURE (COMBINED 3 WINNERS)
           ═══════════════════════════════════════ */}
       <section id="prizes" className="py-20 lg:py-28 px-6 sm:px-8 lg:px-12 bg-white relative">
         <div className="max-w-7xl mx-auto">
@@ -636,14 +656,17 @@ export default function MedhaParikshaPage() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50 border border-amber-300 text-[#b45309] text-xs font-bold tracking-widest uppercase mb-4">
               <Trophy className="w-3.5 h-3.5 text-[#d4af37]" />
-              Mega Recognition &amp; Rewards
+              Combined Mega Prize Pool
             </div>
             <h2 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900 tracking-tight mb-4">
-              Mega Prize <span className="italic text-[#b45309] font-serif">Structure</span>
+              Mega Grand Prize <span className="italic text-[#b45309] font-serif">Structure</span>
             </h2>
-            <p className="text-base text-slate-600 font-light max-w-xl mx-auto leading-relaxed">
-              Every outstanding student deserves grand recognition. Top scholars are felicitated with handsome cash grants, prestigious engraved trophies, and national merit credentials.
-            </p>
+            <div className="max-w-2xl mx-auto bg-amber-50/70 border border-amber-300/80 rounded-2xl p-4 mb-6 text-xs text-slate-700 leading-relaxed">
+              <strong className="text-[#b45309] font-bold uppercase tracking-wider block mb-1">
+                Important Evaluation Note:
+              </strong>
+              The 3 Mega Cash Prizes (<span className="font-bold text-slate-950">₹21,000</span>, <span className="font-bold text-slate-950">₹11,000</span>, and <span className="font-bold text-slate-950">₹5,100</span>) are awarded to the <strong>Top 3 Combined Grand Winners Overall</strong> across all participating categories (Sub-Junior, Junior, and Senior). All categories are normalized to establish the overall highest merit scholars!
+            </div>
           </div>
 
           {/* 3 Mega Prize Cards */}
@@ -666,14 +689,14 @@ export default function MedhaParikshaPage() {
                   {/* Popular / Top Rank Banner */}
                   {prize.popular && (
                     <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-600 via-[#d4af37] to-amber-600 text-white text-[11px] font-bold tracking-widest uppercase px-4 py-1 rounded-full shadow-md shadow-amber-300/40">
-                      Most Prestigious Award
+                      Overall Grand Champion
                     </div>
                   )}
 
                   <div>
                     {/* Header: Badge & Icon */}
                     <div className="flex items-center justify-between gap-4 mb-6">
-                      <span className={`text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${prize.badgeBg}`}>
+                      <span className={`text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${prize.badgeBg}`}>
                         {prize.badge}
                       </span>
                       <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg ${prize.iconBoxBg}`}>
@@ -686,8 +709,8 @@ export default function MedhaParikshaPage() {
                       <h3 className="text-2xl font-serif font-bold text-slate-900">{prize.rank}</h3>
                       <p className="text-xs uppercase tracking-wider text-slate-500 font-medium mb-3">{prize.title}</p>
                       
-                      <div className="inline-block p-4 rounded-2xl bg-white/90 border border-slate-200/80 shadow-xs w-full">
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block mb-0.5">Cash Award</span>
+                      <div className="inline-block p-4 rounded-2xl bg-white/95 border border-slate-200 shadow-xs w-full">
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block mb-0.5">Grand Cash Award</span>
                         <div className="text-4xl sm:text-5xl font-serif font-extrabold text-slate-950 tracking-tight">
                           {prize.amount}
                         </div>
@@ -719,7 +742,7 @@ export default function MedhaParikshaPage() {
                           : 'bg-slate-900 hover:bg-slate-800 text-white'
                       }`}
                     >
-                      <span>Apply For This Rank (₹100)</span>
+                      <span>Enroll in Competition (₹100)</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </a>
                   </div>
@@ -740,9 +763,9 @@ export default function MedhaParikshaPage() {
                 <FileText className="w-7 h-7" />
               </div>
               <div>
-                <h4 className="text-lg font-serif font-bold text-slate-900">Certificate of Participation for All Candidates</h4>
+                <h4 className="text-lg font-serif font-bold text-slate-900">Official Certificate of Participation for Every Candidate</h4>
                 <p className="text-xs text-slate-600 font-light mt-0.5">
-                  Every candidate who registers (₹100) and attempts the Dr. A.P.J. Abdul Kalam Medha Pariksha will receive an official verifiable Certificate of Participation from G Goodwill Trust to boost their future academic portfolio.
+                  Beyond the Top 3 Combined Winners, every enrolled candidate attempting the examination receives a verifiable digital Certificate of Participation to enrich their academic portfolio.
                 </p>
               </div>
             </div>
@@ -776,7 +799,7 @@ export default function MedhaParikshaPage() {
                 Exam <span className="italic text-[#b45309] font-serif">Categories</span>
               </h2>
               <p className="text-sm sm:text-base text-slate-600 font-light mt-2 max-w-xl">
-                Structured into three distinct tiers catering from Middle School to Senior Secondary. Each tier features age-appropriate syllabus, bilingual question paper, and fair evaluation.
+                Structured into three distinct tiers catering from Middle School to Senior Secondary. Each tier features age-appropriate syllabus and transparent merit benchmarks.
               </p>
             </div>
 
@@ -852,7 +875,6 @@ export default function MedhaParikshaPage() {
                       <span className={`text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${cat.badgeColor}`}>
                         {cat.name}
                       </span>
-                      <span className="text-xs text-slate-400 font-medium">{cat.hindiName}</span>
                     </div>
 
                     <h3 className="text-2xl font-serif font-bold text-slate-900 mb-1">{cat.classes}</h3>
@@ -944,10 +966,7 @@ export default function MedhaParikshaPage() {
                             <span className={`w-2.5 h-2.5 rounded-full ${
                               cat.id === 'sub-junior' ? 'bg-blue-500' : cat.id === 'junior' ? 'bg-amber-500' : 'bg-emerald-500'
                             }`} />
-                            <div>
-                              <p className="font-bold text-sm text-slate-900">{cat.name}</p>
-                              <p className="text-[11px] text-slate-400">{cat.hindiName}</p>
-                            </div>
+                            <p className="font-bold text-sm text-slate-900">{cat.name}</p>
                           </div>
                         </td>
                         <td className="py-5 px-6 font-medium text-slate-800">
@@ -1011,7 +1030,7 @@ export default function MedhaParikshaPage() {
               Partner NGOs &amp; <span className="italic text-[#b45309] font-serif">Sponsors</span>
             </h2>
             <p className="text-base text-slate-600 font-light max-w-2xl mx-auto leading-relaxed">
-              Dr. A.P.J. Abdul Kalam Medha Pariksha is organized with the joint collaboration of esteemed non-profit organizations and philanthropic sponsors committed to transparent student development.
+              Dr. A.P.J. Abdul Kalam Medha Pariksha is organized with the collective collaboration of esteemed non-profit organizations and philanthropic sponsors committed to transparent student development.
             </p>
           </div>
 
@@ -1023,7 +1042,7 @@ export default function MedhaParikshaPage() {
               </div>
               <div>
                 <h3 className="text-xl font-serif font-bold text-slate-900">Partner Non-Profit Organizations</h3>
-                <p className="text-xs text-slate-500">Collaborating trusts supporting outreach, invigilation, and scholarship disbursement</p>
+                <p className="text-xs text-slate-500">Collaborating trusts supporting educational outreach and scholarship supervision</p>
               </div>
             </div>
 
@@ -1176,6 +1195,40 @@ export default function MedhaParikshaPage() {
                     onChange={(e) => setFormData({ ...formData, schoolName: e.target.value })}
                     className="w-full px-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-[#d4af37] focus:bg-white transition-all"
                   />
+                </div>
+
+                {/* School Code (New requested field) */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    School Code (Optional)
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="e.g. SCH-10492 / CBSE Code"
+                      value={formData.schoolCode}
+                      onChange={(e) => setFormData({ ...formData, schoolCode: e.target.value })}
+                      className="w-full pl-10 pr-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-[#d4af37] focus:bg-white transition-all"
+                    />
+                    <School className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                </div>
+
+                {/* Referral Code (New requested field) */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
+                    Referral Code / Referred By (Optional)
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="e.g. REF-TEACHER / NGO Code / Volunteer Name"
+                      value={formData.referralCode}
+                      onChange={(e) => setFormData({ ...formData, referralCode: e.target.value })}
+                      className="w-full pl-10 pr-4 py-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-[#d4af37] focus:bg-white transition-all uppercase"
+                    />
+                    <Tag className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
                 </div>
 
                 {/* City / State */}
@@ -1418,5 +1471,17 @@ export default function MedhaParikshaPage() {
       />
 
     </div>
+  );
+}
+
+export default function MedhaParikshaPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#fafaf8]">
+        <Loader2 className="w-8 h-8 text-[#b45309] animate-spin" />
+      </div>
+    }>
+      <MedhaParikshaContent />
+    </Suspense>
   );
 }

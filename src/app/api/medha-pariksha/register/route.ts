@@ -12,6 +12,8 @@ export async function POST(req: NextRequest) {
       guardian_name,
       category,
       school_name,
+      school_code,
+      referral_code,
       city,
       phone,
       email,
@@ -41,6 +43,8 @@ export async function POST(req: NextRequest) {
     const sanitizedGuardianName = sanitize(guardian_name.trim());
     const sanitizedCategory = sanitize(category.trim());
     const sanitizedSchoolName = sanitize(school_name.trim());
+    const sanitizedSchoolCode = school_code ? sanitize(school_code.trim().toUpperCase()) : '';
+    const sanitizedReferralCode = referral_code ? sanitize(referral_code.trim().toUpperCase()) : '';
     const sanitizedCity = sanitize(city.trim());
     const sanitizedPhone = sanitize(phone.trim());
     const sanitizedEmail = email ? sanitize(email.trim().toLowerCase()) : '';
@@ -78,6 +82,9 @@ export async function POST(req: NextRequest) {
           registration_no,
           student_name: sanitizedStudentName,
           category: sanitizedCategory,
+          school_name: sanitizedSchoolName,
+          school_code: sanitizedSchoolCode,
+          referral_code: sanitizedReferralCode,
           phone: sanitizedPhone,
         },
       });
@@ -99,6 +106,8 @@ export async function POST(req: NextRequest) {
       guardian_name: sanitizedGuardianName,
       category: sanitizedCategory,
       school_name: sanitizedSchoolName,
+      school_code: sanitizedSchoolCode,
+      referral_code: sanitizedReferralCode,
       city: sanitizedCity,
       phone: sanitizedPhone,
       email: sanitizedEmail,

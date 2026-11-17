@@ -22,6 +22,8 @@ export async function GET(req: NextRequest) {
         { student_name: { $regex: search, $options: 'i' } },
         { phone: { $regex: search, $options: 'i' } },
         { school_name: { $regex: search, $options: 'i' } },
+        { school_code: { $regex: search, $options: 'i' } },
+        { referral_code: { $regex: search, $options: 'i' } },
       ];
     }
 

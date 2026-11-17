@@ -1149,10 +1149,11 @@ export default function AdminDashboard() {
                   <thead className="bg-slate-50 text-slate-600 uppercase font-bold text-[10px] tracking-wider border-b border-slate-200">
                     <tr>
                       <th className="py-3 px-4">Reg No &amp; Date</th>
-                      <th className="py-3 px-4">Student Name</th>
+                      <th className="py-3 px-4">Student &amp; Guardian</th>
                       <th className="py-3 px-4">Category</th>
-                      <th className="py-3 px-4">School &amp; City</th>
-                      <th className="py-3 px-4">Phone / WhatsApp</th>
+                      <th className="py-3 px-4">School &amp; Code</th>
+                      <th className="py-3 px-4">Referred By</th>
+                      <th className="py-3 px-4">Phone / City</th>
                       <th className="py-3 px-4">Status &amp; Fee</th>
                       <th className="py-3 px-4">Transaction ID</th>
                     </tr>
@@ -1160,7 +1161,7 @@ export default function AdminDashboard() {
                   <tbody className="divide-y divide-slate-100 text-slate-700">
                     {scholarshipRegistrations.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="py-8 text-center text-slate-400">
+                        <td colSpan={8} className="py-8 text-center text-slate-400">
                           No registrations recorded yet. Once students apply on /medha-pariksha, their verified records will appear here.
                         </td>
                       </tr>
@@ -1180,14 +1181,30 @@ export default function AdminDashboard() {
                           <td className="py-3 px-4">
                             <span className="font-semibold text-[#b45309]">{item.category}</span>
                           </td>
-                          <td className="py-3 px-4 max-w-[180px] truncate">
+                          <td className="py-3 px-4 max-w-[180px]">
                             <span className="block font-medium truncate">{item.school_name}</span>
-                            <span className="text-[10px] text-slate-400">{item.city}</span>
+                            {item.school_code ? (
+                              <span className="font-mono text-[10px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-600">
+                                Code: {item.school_code}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] text-slate-400">No Code</span>
+                            )}
                           </td>
-                          <td className="py-3 px-4 font-mono">
-                            <a href={`tel:${item.phone}`} className="hover:underline text-slate-800">
+                          <td className="py-3 px-4">
+                            {item.referral_code ? (
+                              <span className="font-mono text-[11px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded-full inline-block">
+                                {item.referral_code}
+                              </span>
+                            ) : (
+                              <span className="text-[10px] text-slate-400 italic">Direct</span>
+                            )}
+                          </td>
+                          <td className="py-3 px-4">
+                            <a href={`tel:${item.phone}`} className="hover:underline font-mono text-slate-800 block">
                               {item.phone}
                             </a>
+                            <span className="text-[10px] text-slate-400">{item.city}</span>
                           </td>
                           <td className="py-3 px-4">
                             <span

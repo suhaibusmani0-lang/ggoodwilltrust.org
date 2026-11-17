@@ -83,6 +83,8 @@ const ScholarshipRegistrationSchema = new mongoose.Schema({
   guardian_name: { type: String, required: true, trim: true },
   category: { type: String, required: true, trim: true },
   school_name: { type: String, required: true, trim: true },
+  school_code: { type: String, trim: true, uppercase: true, default: '' },
+  referral_code: { type: String, trim: true, uppercase: true, default: '' },
   city: { type: String, required: true, trim: true },
   phone: { type: String, required: true, trim: true },
   email: { type: String, trim: true, lowercase: true },
