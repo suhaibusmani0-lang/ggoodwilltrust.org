@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 270 50" width="270" height="50">
+  <defs>
+    <linearGradient id="ng" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="5" width="40" height="40" rx="10" fill="url(#ng)" />
+  <!-- Academic Cap / Skill icon -->
+  <path d="M24 16 L34 21 L24 26 L14 21 Z" fill="#ffffff" />
+  <path d="M18 24 L18 30 C18 33 30 33 30 30 L30 24" fill="none" stroke="#ffffff" stroke-width="1.8" />
+  <path d="M34 21 L34 29" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+  <text x="54" y="24" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="14" font-weight="800" fill="#1e293b" letter-spacing="0.5">NAYAB TRAINING</text>
+  <text x="54" y="38" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="8.5" font-weight="700" fill="#4f46e5" letter-spacing="1.2">&amp; EDUCATIONAL TRUST</text>
+</svg>

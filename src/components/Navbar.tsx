@@ -93,15 +93,13 @@ export default function Navbar() {
                 className={
                   'text-xs tracking-wider uppercase font-semibold transition-all duration-200 px-3.5 py-2 rounded-full whitespace-nowrap flex items-center gap-1.5 ' +
                   (pathname === link.href
-                    ? 'bg-slate-100 text-slate-900 border border-slate-300/80 shadow-2xs'
-                    : link.isNew
-                    ? 'text-[#b45309] bg-amber-50 hover:bg-amber-100/80 border border-amber-300/90 shadow-2xs'
+                    ? 'bg-slate-100 text-slate-900 border border-slate-300/80 shadow-2xs font-bold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70')
                 }
               >
                 <span>{link.name}</span>
                 {link.isNew && (
-                  <span className="bg-[#d4af37] text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded-full uppercase leading-none shadow-2xs">
+                  <span className="bg-red-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full uppercase leading-none shadow-xs animate-pulse tracking-wide">
                     NEW
                   </span>
                 )}
@@ -147,16 +145,14 @@ export default function Navbar() {
                 className={
                   'text-base font-semibold py-3.5 px-5 rounded-2xl transition-all flex items-center justify-between ' +
                   (pathname === link.href
-                    ? 'bg-slate-100 text-slate-900 border border-slate-300'
-                    : link.isNew
-                    ? 'bg-amber-50 text-[#b45309] border border-amber-300'
+                    ? 'bg-slate-100 text-slate-900 border border-slate-300 font-bold'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900')
                 }
               >
                 <span>{link.name}</span>
                 {link.isNew && (
-                  <span className="bg-[#d4af37] text-black text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase">
-                    Scholarship
+                  <span className="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse shadow-xs">
+                    NEW
                   </span>
                 )}
               </Link>
