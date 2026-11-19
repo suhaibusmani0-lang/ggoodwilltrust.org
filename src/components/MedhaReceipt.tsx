@@ -17,6 +17,7 @@ import {
   Check,
   FileCheck2,
 } from 'lucide-react';
+import { RECEIPT_ASSETS } from '@/lib/receipt-assets';
 
 export interface MedhaReceiptData {
   registrationNo: string;
@@ -77,18 +78,19 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
       const element = receiptRef.current;
 
       const canvas = await html2canvas(element, {
-        scale: 2.2, // High resolution rendering
+        scale: 2, // High resolution rendering
         useCORS: true,
+        allowTaint: true,
         backgroundColor: '#ffffff',
         logging: false,
-        windowWidth: 900,
+        windowWidth: 850,
       });
 
       const imgData = canvas.toDataURL('image/jpeg', 0.96);
       const pdfWidth = 210; // A4 standard width in mm
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-      // Create PDF: if taller than standard A4, create custom dimension so receipt remains on 1 pristine page
+      // Fit cleanly on A4 or proportional page
       const doc =
         pdfHeight > 297
           ? new jsPDF({ orientation: 'p', unit: 'mm', format: [pdfWidth, pdfHeight] })
@@ -97,7 +99,7 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
       doc.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
       doc.save(`Dr-APJ-Abdul-Kalam-Medha-Pariksha-Receipt-${receipt.registrationNo}.pdf`);
     } catch (err) {
-      console.error('Error generating PDF download, falling back to print:', err);
+      console.error('Error generating PDF download, triggering print dialog:', err);
       window.print();
     } finally {
       setIsDownloadingPDF(false);
@@ -112,11 +114,12 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
       const element = receiptRef.current;
 
       const canvas = await html2canvas(element, {
-        scale: 2.5, // 2.5x high resolution for crisp viewing
+        scale: 2.2, // 2.2x high resolution for crisp viewing
         useCORS: true,
+        allowTaint: true,
         backgroundColor: '#ffffff',
         logging: false,
-        windowWidth: 900,
+        windowWidth: 850,
       });
 
       const image = canvas.toDataURL('image/png', 1.0);
@@ -127,7 +130,7 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
       link.click();
       document.body.removeChild(link);
     } catch (err) {
-      console.error('Error generating image download, falling back to print:', err);
+      console.error('Error generating image download, triggering print dialog:', err);
       window.print();
     } finally {
       setIsDownloadingImage(false);
@@ -159,16 +162,17 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
     'Buniyadi Sahara Trust',
   ];
 
-  // Official single lead sponsor
+  // Official lead sponsor
   const sponsors = ['Zarnetic'];
 
   return (
     <div
+      id="medha-receipt-modal"
       data-lenis-prevent
       className="fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-slate-950/85 backdrop-blur-md p-2 sm:p-4 md:p-6 print:p-0 print:bg-white print:static print:overflow-visible"
       style={{ WebkitOverflowScrolling: 'touch' }}
     >
-      <div className="min-h-full w-full flex items-start justify-center py-2 sm:py-6">
+      <div className="min-h-full w-full flex items-start justify-center py-2 sm:py-6 print:py-0 print:block">
         
         {/* Outer Modal Container */}
         <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-300 print:border-none print:shadow-none print:max-w-none print:rounded-none">
@@ -255,8 +259,9 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
 
           {/* Printable Official Board Receipt Document */}
           <div
+            id="medha-receipt-printable"
             ref={receiptRef}
-            className="relative p-6 sm:p-10 text-slate-900 bg-[#fffdf9] font-sans selection:bg-amber-100 print:p-8"
+            className="relative p-6 sm:p-10 text-slate-900 bg-[#fffdf9] font-sans selection:bg-amber-100 print:p-6"
           >
             {/* Subtle Security Border Frame */}
             <div className="absolute inset-3 pointer-events-none border-2 border-double border-[#d4af37]/40 rounded-2xl print:inset-0 print:border print:border-slate-300" />
@@ -264,7 +269,7 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
             {/* Watermark Crest Emblem (Centered in Background) */}
             <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-center opacity-[0.045] overflow-hidden">
               <img
-                src="/logo-icon.png"
+                src={RECEIPT_ASSETS.logoIcon}
                 alt="Watermark"
                 className="w-72 sm:w-84 h-auto object-contain grayscale"
               />
@@ -277,7 +282,7 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
                 {/* Trust Official Logo & Credentials */}
                 <div className="flex flex-col sm:flex-row items-center gap-3.5">
                   <img
-                    src="/logo-icon.png"
+                    src={RECEIPT_ASSETS.logoIcon}
                     alt="G Goodwill Trust Official Logo"
                     className="h-14 sm:h-16 w-auto object-contain shrink-0 drop-shadow-xs"
                   />
@@ -536,7 +541,7 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
               <div className="flex items-center gap-3.5 text-left">
                 <div className="relative shrink-0">
                   <img
-                    src="/seal-ggoodwill.png"
+                    src={RECEIPT_ASSETS.seal}
                     alt="Official Seal of G Goodwill Trust"
                     className="w-24 h-24 sm:w-28 sm:h-28 object-contain transform -rotate-2"
                   />
@@ -563,7 +568,7 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
                   {/* Real Signature Graphic */}
                   <div className="h-16 flex items-end justify-center sm:justify-end pb-0.5">
                     <img
-                      src="/signature-safia.png"
+                      src={RECEIPT_ASSETS.signature}
                       alt="Signature of Miss Safia"
                       className="h-14 sm:h-16 w-auto object-contain transform -rotate-1"
                     />

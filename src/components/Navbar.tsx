@@ -59,7 +59,7 @@ export default function Navbar() {
   return (
     <>
       <div 
-        className={`w-full flex justify-center px-4 pt-4 fixed top-0 z-50 transition-transform duration-500 ease-in-out ${
+        className={`print:hidden w-full flex justify-center px-4 pt-4 fixed top-0 z-50 transition-transform duration-500 ease-in-out ${
           visible ? 'translate-y-0' : '-translate-y-28'
         }`}
       >

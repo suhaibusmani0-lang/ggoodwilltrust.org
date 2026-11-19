@@ -513,6 +513,11 @@ function MedhaParikshaContent() {
     <div className="min-h-screen bg-[#fafaf8] text-slate-900 selection:bg-[#d4af37] selection:text-black">
       
       {/* ═══════════════════════════════════════
+          PAGE CONTENT (HIDDEN ON RECEIPT PRINT)
+          ═══════════════════════════════════════ */}
+      <div id="medha-page-content" className="print:hidden">
+
+      {/* ═══════════════════════════════════════
           1. HERO SECTION (TIGHTENED SPACING)
           ═══════════════════════════════════════ */}
       <section className="relative overflow-hidden pt-8 pb-10 lg:pt-12 lg:pb-14 border-b border-slate-200">
@@ -1519,6 +1524,8 @@ function MedhaParikshaContent() {
           </div>
         </div>
       </section>
+
+      </div>
 
       {/* ═══════════════════════════════════════
           OFFICIAL PRINTABLE RECEIPT MODAL
