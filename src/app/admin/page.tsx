@@ -1138,7 +1138,7 @@ export default function AdminDashboard() {
                 <strong>Partner NGOs:</strong> Spread Smiles Foundation &bull; No Crying Foundation &bull; Musawat Welfare Trust &bull; Nayab Training &amp; Educational Trust &bull; Buniyadi Sahara Trust
               </p>
               <p className="text-[11px] mt-1">
-                <strong>Sponsors:</strong> Zarnetic &bull; Arshi Cafe
+                <strong>Official Sponsor:</strong> Zarnetic
               </p>
             </div>
 

@@ -27,7 +27,6 @@ export const metadata: Metadata = {
     'Nayab Training Educational Trust',
     'Buniyadi Sahara Trust Scholarship',
     'Zarnetic Medha Pariksha Sponsor',
-    'Arshi Cafe Goodwill Scholarship',
     'Kalam Scholarship Syllabus and Dates',
     'Download Medha Pariksha Receipt',
     'Dr APJ Abdul Kalam Talent Award'
@@ -146,7 +145,6 @@ const jsonLdEvent = {
     { '@type': 'Organization', name: 'Nayab Training & Educational Trust' },
     { '@type': 'Organization', name: 'Buniyadi Sahara Trust' },
     { '@type': 'Organization', name: 'Zarnetic' },
-    { '@type': 'Organization', name: 'Arshi Cafe' },
   ],
 };
 

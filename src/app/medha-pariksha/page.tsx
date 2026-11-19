@@ -353,13 +353,6 @@ function MedhaParikshaContent() {
       desc: 'Powering high-performance digital platforms and educational tech for social impact.',
       tag: 'Lead Sponsor',
     },
-    {
-      name: 'Arshi Cafe',
-      logo: '/partners/arshi-cafe.svg',
-      category: 'Community & Hospitality Sponsor',
-      desc: 'Proud local hospitality partner fueling youth talent drives and academic events.',
-      tag: 'Official Sponsor',
-    },
   ];
 
   // Combined Grand Prizes data
@@ -508,7 +501,7 @@ function MedhaParikshaContent() {
     },
     {
       q: 'Who are the collaborating partner NGOs and sponsors?',
-      a: 'The programme is organized by G Goodwill Trust in collaboration with Spread Smiles Foundation, No Crying Foundation, Musawat Welfare Trust, Nayab Training & Educational Trust, and Buniyadi Sahara Trust, proudly supported by Zarnetic and Arshi Cafe.'
+      a: 'The programme is organized by G Goodwill Trust in collaboration with Spread Smiles Foundation, No Crying Foundation, Musawat Welfare Trust, Nayab Training & Educational Trust, and Buniyadi Sahara Trust, proudly supported by Zarnetic.'
     },
     {
       q: 'What is the last date to apply?',
