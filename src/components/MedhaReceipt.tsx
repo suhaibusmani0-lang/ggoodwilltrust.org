@@ -14,7 +14,6 @@ import {
   Copy,
   Check,
   FileCheck2,
-  QrCode
 } from 'lucide-react';
 
 export interface MedhaReceiptData {
@@ -97,6 +96,7 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
       `*School:* ${receipt.schoolName} ${receipt.schoolCode ? `(Code: ${receipt.schoolCode})` : ''}%0A` +
       (receipt.referralCode ? `*Referred By:* ${receipt.referralCode}%0A` : '') +
       `*Fee Paid:* ₹${receipt.amount} (COMPLETED & VERIFIED)%0A` +
+      `*Authorized Person:* Miss Safia%0A` +
       `*Transaction ID:* ${receipt.paymentId}%0A%0A` +
       `*Verify Receipt & Download:* https://www.ggoodwilltrust.org/medha-pariksha`;
     window.open(`https://api.whatsapp.com/send?phone=91${receipt.phone}&text=${text}`, '_blank');
@@ -184,40 +184,39 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
           <div className="absolute inset-3 pointer-events-none border-2 border-double border-[#d4af37]/40 rounded-2xl print:inset-0 print:border print:border-slate-300" />
 
           {/* Watermark Crest Emblem (Centered in Background) */}
-          <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-center opacity-[0.035] overflow-hidden">
-            <div className="w-[500px] h-[500px] rounded-full border-[20px] border-slate-900 flex items-center justify-center">
-              <span className="text-[180px] font-serif font-black tracking-tighter text-slate-900">
-                G
-              </span>
-            </div>
+          <div className="absolute inset-0 pointer-events-none select-none flex items-center justify-center opacity-[0.045] overflow-hidden">
+            <img
+              src="/logo-icon.png"
+              alt="Watermark"
+              className="w-72 sm:w-84 h-auto object-contain grayscale"
+            />
           </div>
 
           {/* Receipt Header */}
           <div className="relative border-b-2 border-slate-900 pb-5 mb-5">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
               
-              {/* Trust Crest & Credentials */}
-              <div className="space-y-0.5">
-                <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-[#b45309] text-white font-serif font-bold text-xl flex items-center justify-center shadow-sm">
-                    G
-                  </div>
-                  <div>
-                    <h1 className="text-2xl sm:text-3xl font-serif font-black tracking-tight text-slate-950 uppercase leading-none">
-                      G Goodwill Trust
-                    </h1>
-                    <p className="text-[10px] font-bold text-[#b45309] uppercase tracking-wider mt-0.5">
-                      Academic Examination Cell &bull; Registered Public Charitable Trust
-                    </p>
-                  </div>
+              {/* Trust Official Logo & Credentials */}
+              <div className="flex flex-col sm:flex-row items-center gap-3.5">
+                <img
+                  src="/logo-icon.png"
+                  alt="G Goodwill Trust Official Logo"
+                  className="h-14 sm:h-16 w-auto object-contain shrink-0 drop-shadow-xs"
+                />
+                <div className="space-y-0.5">
+                  <h1 className="text-2xl sm:text-3xl font-serif font-black tracking-tight text-slate-950 uppercase leading-none">
+                    G Goodwill Trust
+                  </h1>
+                  <p className="text-[10.5px] font-bold text-[#b45309] uppercase tracking-wider mt-0.5">
+                    Academic Examination Cell &bull; Registered Public Charitable Trust
+                  </p>
+                  <p className="text-[10px] text-slate-600 font-medium">
+                    Section 80G Tax Exempted &bull; Govt. Registration Recognized
+                  </p>
+                  <p className="text-[9.5px] text-slate-500 font-light">
+                    Central Secretariat: G-48 Shaheen Bagh, Okhla, New Delhi - 110025, India
+                  </p>
                 </div>
-                
-                <p className="text-[10.5px] text-slate-600 font-medium">
-                  Section 80G Tax Exempted &bull; Govt. Registration Recognized
-                </p>
-                <p className="text-[10px] text-slate-500 font-light">
-                  Central Secretariat: G-48 Shaheen Bagh, Okhla, New Delhi - 110025, India
-                </p>
               </div>
 
               {/* Verified Digital Seal Badge */}
@@ -453,42 +452,53 @@ export default function MedhaReceipt({ receipt, onClose }: MedhaReceiptProps) {
           </div>
 
           {/* Signatures & Seal Authorization Footer */}
-          <div className="relative mt-6 pt-4 border-t-2 border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          <div className="relative mt-6 pt-4 border-t-2 border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs">
             
-            {/* Left Seal Stamp */}
-            <div className="flex items-center gap-3 text-left">
-              <div className="w-14 h-14 rounded-full border-2 border-dashed border-emerald-700 flex flex-col items-center justify-center p-1 text-center bg-emerald-50/60 shrink-0">
-                <span className="text-[7px] font-bold uppercase text-emerald-800 leading-tight">GOODWILL</span>
-                <span className="text-[8px] font-black uppercase text-emerald-900 tracking-wider">SEAL</span>
-                <span className="text-[6.5px] font-medium text-emerald-700">EXAM CELL</span>
+            {/* Left: Authentic Round Seal Stamp */}
+            <div className="flex items-center gap-3.5 text-left">
+              <div className="relative shrink-0">
+                <img
+                  src="/seal-ggoodwill.png"
+                  alt="Official Seal of G Goodwill Trust"
+                  className="w-24 h-24 sm:w-28 sm:h-28 object-contain transform -rotate-2"
+                />
               </div>
-              <div>
-                <p className="font-bold text-slate-900 leading-tight">G Goodwill Trust</p>
-                <p className="text-[10px] text-slate-500">Board of Academic Examinations</p>
-                <p className="text-[9.5px] text-slate-400">Shaheen Bagh, Okhla, New Delhi - 110025</p>
+              <div className="space-y-0.5">
+                <p className="font-serif font-black text-slate-950 text-sm leading-tight uppercase">
+                  G Goodwill Trust
+                </p>
+                <p className="text-[10px] font-bold text-blue-900 uppercase tracking-wide">
+                  Official Seal of Examination Cell
+                </p>
+                <p className="text-[9.5px] text-slate-600 font-medium">
+                  Shaheen Bagh, Okhla, New Delhi - 110025
+                </p>
+                <p className="text-[9px] text-slate-500 font-mono">
+                  Govt. Registered &bull; Section 80G Tax Exempted
+                </p>
               </div>
             </div>
 
-            {/* Right Authorized Signatures */}
-            <div className="flex items-center gap-6 text-center sm:text-right">
-              <div>
-                <div className="inline-block border-b border-slate-400 px-4 pb-0.5 mb-1 font-serif italic text-slate-800 font-bold">
-                  Dr. M. Q. Alam
+            {/* Right: Authentic Signature of Miss Safia */}
+            <div className="text-center sm:text-right shrink-0">
+              <div className="flex flex-col items-center sm:items-end">
+                {/* Real Signature Graphic */}
+                <div className="h-16 flex items-end justify-center sm:justify-end pb-0.5">
+                  <img
+                    src="/signature-safia.png"
+                    alt="Signature of Miss Safia"
+                    className="h-14 sm:h-16 w-auto object-contain transform -rotate-1"
+                  />
                 </div>
-                <p className="text-[9.5px] font-bold text-slate-700 uppercase tracking-wider">
-                  Controller of Examinations
-                </p>
-                <p className="text-[8.5px] text-slate-400">Academic Evaluation Committee</p>
-              </div>
-
-              <div>
-                <div className="inline-block border-b border-slate-400 px-4 pb-0.5 mb-1 font-serif italic text-slate-800 font-bold">
-                  Authorized Trustee
+                <div className="border-b-2 border-slate-800 w-44 pb-0.5 mb-1 font-serif text-slate-950 font-bold text-sm">
+                  Miss Safia
                 </div>
-                <p className="text-[9.5px] font-bold text-slate-700 uppercase tracking-wider">
-                  General Secretary
+                <p className="text-[10px] font-black text-slate-900 uppercase tracking-wider">
+                  Authorized Person / Signatory
                 </p>
-                <p className="text-[8.5px] text-slate-400">G Goodwill Trust</p>
+                <p className="text-[9px] text-slate-600 font-semibold">
+                  G Goodwill Trust &bull; Academic Examination Cell
+                </p>
               </div>
             </div>
 
